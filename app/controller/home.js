@@ -1,12 +1,16 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-class HomeController extends Controller {
+const BaseController = require('./base_controller');
+class HomeController extends BaseController {
   async index() {
     const {
       ctx
     } = this;
-    ctx.body = 'hi, egg134';
+    let data = await this.ctx.service.admin.getAdminList();
+    this.success({
+      data
+    })
   }
 }
 module.exports = HomeController;

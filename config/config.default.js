@@ -1,7 +1,7 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
-
+const moment = require('moment')
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -36,7 +36,21 @@ module.exports = appInfo => {
       define: {
         freezeTableName: true,
         createdAt: 'createdTime',
-        updatedAt: 'lastModifiedTime',
+        updatedAt: 'lastModifierTime',
+        getterMethods: {
+          createdTime() {
+            const createdTime = this.getDataValue('createdTime');
+            if (createdTime) {
+              return moment(createdTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+          },
+          lastModifierTime() {
+            const lastModifierTime = this.getDataValue('lastModifierTime');
+            if (lastModifierTime) {
+              return moment(lastModifierTime).format('YYYY-MM-DD HH:mm:ss');
+            }
+          },
+        }
       }
     }
   };

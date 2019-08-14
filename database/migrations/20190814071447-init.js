@@ -31,8 +31,7 @@ module.exports = {
         userType: 'admin',
         name: '管理员',
         userName: 'admin',
-        password: 'admin',
-        version2: '11'
+        password: 'admin'
       }])
     } catch (error) {
       console.log(error);
