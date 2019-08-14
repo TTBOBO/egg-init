@@ -1,0 +1,15 @@
+{
+  "extends": "eslint-config-egg",
+  "rules": {
+    "editor.formatOnSave": true,
+    "newline-after-var": ["error", "never"],
+    "comma-dangle": ["error", {
+      "arrays": "never",
+      "objects": "never",
+      "imports": "never",
+      "exports": "never",
+      "functions": "never"
+    }],
+    "arrow-parens": ["never", "nevver"]
+  }
+}
