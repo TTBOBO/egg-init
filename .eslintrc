@@ -10,6 +10,6 @@
       "exports": "never",
       "functions": "never"
     }],
-    "arrow-parens": ["never", "nevver"]
+    // "arrow-parens": ["never", "nevver"]
   }
 }

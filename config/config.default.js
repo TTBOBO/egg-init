@@ -1,7 +1,7 @@
 /* eslint valid-jsdoc: "off" */
 
 'use strict';
-const moment = require('moment')
+const moment = require('moment');
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
@@ -10,7 +10,7 @@ module.exports = appInfo => {
    * built-in config
    * @type {Egg.EggAppConfig}
    **/
-  const config = exports = {
+  const config = (exports = {
     cluster: {
       listen: {
         port: 7002,
@@ -31,6 +31,7 @@ module.exports = appInfo => {
       database: 'egg-init-shop',
       host: '127.0.0.1',
       port: 3306,
+      timezone: '+08:00',
       username: 'root',
       password: '123456',
       define: {
@@ -49,11 +50,11 @@ module.exports = appInfo => {
             if (lastModifierTime) {
               return moment(lastModifierTime).format('YYYY-MM-DD HH:mm:ss');
             }
-          },
+          }
         }
       }
     }
-  };
+  });
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1565625687216_9155';
 
