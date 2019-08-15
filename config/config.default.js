@@ -53,6 +53,14 @@ module.exports = appInfo => {
           }
         }
       }
+    },
+    security: {
+      csrf: {
+        enable: false
+      }
+    },
+    jwt: {
+      secret: 'application'
     }
   });
   // use for cookie sign key, should change to your own and keep security
