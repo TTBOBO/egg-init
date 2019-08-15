@@ -6,26 +6,41 @@ module.exports = app => {
   const { schema } = require('../schema/admin.js')(app);
   const Admin = model.define('admin', schema);
   Admin.getAdminList = async () => {
-    return await Admin.destroy({
-      where: {
-        userName: 'admin8'
-      }
-    });
-    // return await Admin.findCreateFind({
+    // return await Admin.destroy({
     //   where: {
-    //     userName: "admin7"
-    //   },
-    //   defaults: {
-    //     lastModifierName: 'system2',
-    //     lastModifierId: 'system2',
-    //     creatorName: 'system2',
-    //     creatorId: 'system2',
-    //     userType: 'admin',
-    //     name: '管理员2',
-    //     userName: 'admin7',
-    //     password: 'admin'
+    //     userName: 'admin8'
     //   }
-    // })
+    // });
+    // console.log(app.model);
+    const transaction = await app.getTransaction();
+    const data = await Admin.create(
+      {
+        lastModifierName: 'system2',
+        lastModifierId: 'system2',
+        creatorName: 'system2',
+        creatorId: 'system2',
+        userType: 'admin',
+        name: '管理员8',
+        userName: 'admin7',
+        password: 'admin'
+      },
+      { transaction } // transaction
+    );
+    const userData = await app.model.User.create(
+      {
+        lastModifierName: 'system2',
+        lastModifierTime: new Date(),
+        creatorName: 'system2',
+        userType: 'user',
+        name: 'test1',
+        password: '123456'
+      },
+      { transaction } // transaction
+    );
+    return {
+      admin: data,
+      user: userData
+    };
     // return await Admin.update({
     //   name: "管理员2"
     // }, {

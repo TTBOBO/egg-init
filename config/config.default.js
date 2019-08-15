@@ -59,7 +59,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1565625687216_9155';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = [ 'dataHandler' ];
 
   // add your user config here
   const userConfig = {

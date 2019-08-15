@@ -10,6 +10,6 @@ module.exports = app => {
   //   await app.model.sync({
   //     alter: true
   //   });
-  // })
+  // });
   router.get('/', controller.home.index);
 };

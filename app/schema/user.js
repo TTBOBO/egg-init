@@ -7,8 +7,8 @@ module.exports = app => {
       uuid: {
         type: STRING(38),
         allowNull: false,
-        defaultValue: UUIDV1,
-        primaryKey: true
+        primaryKey: true,
+        defaultValue: UUIDV1
       },
       lastModifierTime: {
         type: DATE,
@@ -18,49 +18,44 @@ module.exports = app => {
         type: STRING(76),
         allowNull: false
       },
-      lastModifierId: {
-        type: STRING(38),
-        allowNull: false,
-        comment: '最后修改人的id'
-      },
       createdTime: {
         type: DATE,
         allowNull: false,
-        defaultValue: new Date(),
-        comment: '创建时间'
+        comment: '创建时间',
+        defaultValue: new Date()
       },
       creatorName: {
         type: STRING(76),
         allowNull: false,
-        comment: '创建用户名'
-      },
-      creatorId: {
-        type: STRING(38),
-        allowNull: false,
-        comment: '创建用户id'
-      },
-      userType: {
-        type: ENUM('admin'),
-        allowNull: true
+        comment: '创建人用户名'
       },
       name: {
         type: STRING(76),
-        allowNull: false,
-        comment: '用户名称'
-      },
-      userName: {
-        type: STRING(12),
         allowNull: false,
         unique: true,
         comment: '用户名'
       },
       password: {
         type: STRING(100),
-        allowNull: false
+        allowNull: false,
+        comment: '密码'
+      },
+      enableStatus: {
+        type: ENUM('0', '1'),
+        comment: '用户状态 0 禁用状态 1可使用状态',
+        defaultValue: '1'
+      },
+      address: {
+        type: STRING(255),
+        comment: '用户地址'
+      },
+      mobilPhone: {
+        type: STRING(12),
+        comment: '用户号码'
       }
     },
     options: {
-      comment: '管理员表' // comment for table
+      comment: '用户表' // comment for table
     }
   };
 };
