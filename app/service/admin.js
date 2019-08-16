@@ -1,6 +1,11 @@
 'use strict';
 
 const Service = require('egg').Service;
+/**
+ * @class AdminService
+ * @extends extend Service
+ * description 管理员Server
+ */
 class AdminService extends Service {
   async login(userName) {
     const userinfo = this.app.model.Admin.getOne({
