@@ -22,6 +22,9 @@ class AdminService extends Service {
     //   type: 'findAll'
     // });
   }
+  async deleteAdmin() {
+    return await this.app.model.Admin.deleteOne({});
+  }
 }
 
 module.exports = AdminService;

@@ -2,7 +2,7 @@
 class BaseModel {
   constructor(model) {
     this.model = model;
-    this.baseFun = [ 'getOne', 'grid', 'createOne' ];
+    this.baseFun = [ 'getOne', 'grid', 'createOne', 'deleteOne' ];
   }
   async getOne(where) {
     return await this.findOne(where);
@@ -31,6 +31,15 @@ class BaseModel {
   }
   async createOne(data, option = {}) {
     return await this.create(data, { ...option });
+  }
+  async deleteOne({ where = {}, limit, transaction }) {
+    let option = {
+      where
+    };
+    if (transaction) {
+      option.transaction = transaction;
+    }
+    return await this.destroy(option);
   }
 }
 

@@ -16,5 +16,9 @@ class HomeController extends BaseController {
       }
     });
   }
+  async deleteAdmin() {
+    let res = await this.ctx.service.admin.deleteAdmin();
+    this.success({ data: res });
+  }
 }
 module.exports = HomeController;
