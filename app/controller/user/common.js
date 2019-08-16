@@ -5,7 +5,7 @@ class Common extends baseController {
     const { ctx } = this;
     ctx.validate({
       userName: { type: 'string' },
-      password: { type: 'number' }
+      password: { type: 'string' }
     });
     let { userName, password } = ctx.request.body;
     let user = await ctx.service.admin.login(userName, password);
@@ -17,10 +17,10 @@ class Common extends baseController {
           data: { userInfo: data.dataValues, token: this.ctx.getToken() }
         });
       } else {
-        this.fail(201, '密码不正确');
+        this.fail('密码不正确');
       }
     } else {
-      this.fail(201, '用户不存在');
+      this.fail('用户不存在');
     }
   }
 }

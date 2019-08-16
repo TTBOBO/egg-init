@@ -3,8 +3,7 @@
 const Service = require('egg').Service;
 class AdminService extends Service {
   async login(userName) {
-    console.log(userName);
-    const userinfo = this.app.model.Admin.findOne({
+    const userinfo = this.app.model.Admin.getOne({
       where: {
         userName
       }
@@ -13,6 +12,10 @@ class AdminService extends Service {
   }
   async getAdminList() {
     return await this.app.model.Admin.getAdminList();
+    // return await this.app.model.Admin.grid({
+    //   pagination: { page: 1, pageSize: 1 },
+    //   type: 'findAll'
+    // });
   }
 }
 

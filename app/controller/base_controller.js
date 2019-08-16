@@ -2,11 +2,7 @@
 
 const Controller = require('egg').Controller;
 class BaseController extends Controller {
-  success({
-    data,
-    status,
-    message = ''
-  }) {
+  success({ data, status, message = '' }) {
     this.ctx.body = {
       code: this.ctx.SUCCESS_CODE,
       message,
@@ -15,9 +11,9 @@ class BaseController extends Controller {
     this.ctx.status = status || 200;
   }
 
-  fail(code, message) {
+  fail(message, code) {
     this.ctx.body = {
-      code: this.ctx.ERR_CODE || code,
+      code: code || this.ctx.ERR_CODE,
       message,
       data: {}
     };

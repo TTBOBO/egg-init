@@ -1,19 +1,21 @@
 'use strict';
+const concatModel = require('../core/concatModel');
 module.exports = app => {
   const { model } = app;
   // const Op = Sequelize.Op;
 
   const { schema } = require('../schema/admin.js')(app);
-  const Admin = model.define('admin', schema);
+  let Admin = model.define('admin', schema);
+  Admin = concatModel(Admin);
   Admin.getAdminList = async () => {
     // return await Admin.destroy({
     //   where: {
     //     userName: 'admin8'
     //   }
     // });
-    // console.log(app.model);
+
     const transaction = await app.getTransaction();
-    const data = await Admin.create(
+    const data = await Admin.createOne(
       {
         lastModifierName: 'system2',
         lastModifierId: 'system2',
@@ -26,7 +28,7 @@ module.exports = app => {
       },
       { transaction } // transaction
     );
-    const userData = await app.model.User.create(
+    const userData = await app.model.User.createOne(
       {
         lastModifierName: 'system2',
         lastModifierTime: new Date(),
