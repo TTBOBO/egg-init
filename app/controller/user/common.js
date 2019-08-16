@@ -3,13 +3,19 @@ const baseController = require('../base_controller');
 class Common extends baseController {
   async login() {
     const { ctx } = this;
-    const { userName, password } = ctx.request.body;
-    const user = await ctx.service.admin.login(userName, password);
+    ctx.validate({
+      userName: { type: 'string' },
+      password: { type: 'number' }
+    });
+    let { userName, password } = ctx.request.body;
+    let user = await ctx.service.admin.login(userName, password);
     if (user) {
       if (user.password === password) {
-        const { password, ...userInfo } = user;
-        console.log(JSON.stringify(userInfo));
-        this.success({ data: userInfo });
+        const { password, ...data } = user;
+        ctx.setToken(data.dataValues);
+        this.success({
+          data: { userInfo: data.dataValues, token: this.ctx.getToken() }
+        });
       } else {
         this.fail(201, '密码不正确');
       }
