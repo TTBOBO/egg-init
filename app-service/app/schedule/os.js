@@ -4,8 +4,7 @@ module.exports = {
   schedule: {
     cron: '0 */2 * * * *',
     type: 'all',
-    disable: false,
-    immediate: false
+    disable: false
   },
   async task(ctx) {
     const os = require('os');
