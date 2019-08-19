@@ -20,5 +20,18 @@ class HomeController extends BaseController {
     let res = await this.ctx.service.admin.deleteAdmin();
     this.success({ data: res });
   }
+  async exec() {
+    const { exec } = require('child_process');
+    try {
+      exec(
+        'node C:/Users/Administrator/Desktop/node.js/test.js',
+        (error, stdout, stderr) => {
+          console.log(error, stdout, stderr);
+        }
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 module.exports = HomeController;

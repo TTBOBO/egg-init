@@ -2,7 +2,7 @@
 
 module.exports = () => {
   return async function auth(ctx, next) {
-    const noAuth = [ '/login' ];
+    const noAuth = [ '/login', '/public', '/exec' ];
     const { verify, message } = await ctx.verifyToken();
     verify || noAuth.indexOf(ctx.path) !== -1
       ? await next()

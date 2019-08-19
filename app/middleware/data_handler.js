@@ -13,7 +13,8 @@ module.exports = () => {
     } catch (err) {
       ctx.app.emit('error', err, ctx);
       // 返回错误信息
-      const { message, field } = err.errors[0];
+      console.log(err);
+      const { message, field } = err.errors ? err.errors[0] : err;
       ctx.body = {
         code: ctx.ERR_CODE,
         message: (err.status === 422 ? field + ' ' : '') + message // 422的时候代表egg-validate 验证失败

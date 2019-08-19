@@ -16,6 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mysql2": "^1.6.5",
+    "os-utils": "0.0.14",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

@@ -14,4 +14,5 @@ module.exports = app => {
   router.get('/', controller.home.index);
   router.post('/login', controller.user.common.login);
   router.get('/deleteAdmin', controller.home.deleteAdmin);
+  router.get('/exec', controller.home.exec);
 };

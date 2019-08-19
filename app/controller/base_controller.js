@@ -8,7 +8,7 @@ class BaseController extends Controller {
       message,
       data
     };
-    this.ctx.status = status || 200;
+    this.ctx.status = status || 0;
   }
 
   fail(message, code) {
@@ -17,7 +17,7 @@ class BaseController extends Controller {
       message,
       data: {}
     };
-    this.ctx.status = 200;
+    this.ctx.status = 0;
   }
 }
 module.exports = BaseController;
