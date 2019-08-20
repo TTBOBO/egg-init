@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = {
-  SUCCESS_CODE: 200,
-  ERR_CODE: 500,
+  SUCCESS_CODE: 0,
+  ERR_CODE: -1,
   getToken() {
     return this.cookies.get('token', { signed: false });
   },
@@ -31,6 +31,7 @@ module.exports = {
     this.cookies.set('userName', userName, cookiesConfig);
     this.cookies.set('userType', userType, cookiesConfig);
     this.cookies.set('token', token, cookiesConfig);
+    this.cookies.set('code', null);
   },
   async verifyToken() {
     const { app } = this;

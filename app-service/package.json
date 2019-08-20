@@ -14,9 +14,11 @@
     "egg-sequelize": "^5.2.0",
     "egg-validate": "^2.0.2",
     "jsonwebtoken": "^8.5.1",
+    "md5-node": "^1.0.1",
     "moment": "^2.24.0",
     "mysql2": "^1.6.5",
     "os-utils": "0.0.14",
+    "svg-captcha": "^1.4.0",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

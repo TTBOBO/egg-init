@@ -16,12 +16,14 @@ module.exports = app => {
       },
       lastModifierName: {
         type: STRING(76),
-        allowNull: false
+        allowNull: false,
+        defaultValue: ''
       },
       lastModifierId: {
         type: STRING(38),
         allowNull: false,
-        comment: '最后修改人的id'
+        comment: '最后修改人的id',
+        defaultValue: ''
       },
       createdTime: {
         type: DATE,
@@ -32,16 +34,19 @@ module.exports = app => {
       creatorName: {
         type: STRING(76),
         allowNull: false,
-        comment: '创建用户名'
+        comment: '创建用户名',
+        defaultValue: ''
       },
       creatorId: {
         type: STRING(38),
         allowNull: false,
-        comment: '创建用户id'
+        comment: '创建用户id',
+        defaultValue: ''
       },
       userType: {
         type: ENUM('admin'),
-        allowNull: true
+        allowNull: true,
+        defaultValue: 'admin'
       },
       name: {
         type: STRING(76),
@@ -57,6 +62,11 @@ module.exports = app => {
       password: {
         type: STRING(100),
         allowNull: false
+      },
+      ip: {
+        type: STRING(38),
+        allowNull: false,
+        comment: '登录ip'
       }
     },
     options: {

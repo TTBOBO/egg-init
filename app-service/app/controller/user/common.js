@@ -5,23 +5,48 @@ class Common extends baseController {
     const { ctx } = this;
     ctx.validate({
       userName: { type: 'string' },
+      password: { type: 'string' },
+      code: { type: 'string' }
+    });
+    let { userName, password, code } = ctx.request.body;
+    if (this.verifyCode(code)) {
+      this.fail('图形验证码错误');
+      return;
+    }
+    let userInfo = await ctx.service.admin.login(userName, password);
+    if (userInfo) {
+      ctx.setToken(userInfo);
+      this.success({
+        data: { userInfo, token: this.ctx.getToken() }
+      });
+    } else {
+      this.fail('用户或密码不正确');
+    }
+  }
+
+  async register() {
+    const { ctx } = this;
+    ctx.validate({
+      userName: { type: 'string' },
       password: { type: 'string' }
     });
     let { userName, password } = ctx.request.body;
-    let user = await ctx.service.admin.login(userName, password);
-    if (user) {
-      if (user.password === password) {
-        const { password, ...data } = user;
-        ctx.setToken(data.dataValues);
-        this.success({
-          data: { userInfo: data.dataValues, token: this.ctx.getToken() }
-        });
-      } else {
-        this.fail('密码不正确');
-      }
+    let regStaus = await ctx.service.admin.getUserInfo(userName);
+    if (!regStaus) {
+      this.success({
+        data: await ctx.service.admin.register(userName, password)
+      });
     } else {
-      this.fail('用户不存在');
+      this.fail('用户已注册');
     }
+  }
+
+  async loginOut() {
+    this.ctx.removecookies();
+    this.success({ data: '退出成功' });
+  }
+  async getCodeImg() {
+    await this.getCode();
   }
 }
 module.exports = Common;

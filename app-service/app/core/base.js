@@ -18,7 +18,6 @@ class BaseModel {
   }) {
     const { page = 1, pageSize: limit = 10 } = pagination;
     let option = {
-      limit,
       offset: (page - 1) * limit,
       order: sort.length ? [ sort ] : [[ 'createdTime', 'DESC' ]],
       where,
@@ -26,6 +25,9 @@ class BaseModel {
     };
     if (transaction) {
       option.transaction = transaction;
+    }
+    if (type !== 'findAll') {
+      option.limit = limit;
     }
     return await this[type](option);
   }

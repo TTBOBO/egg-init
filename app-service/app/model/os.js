@@ -3,8 +3,8 @@ const concatModel = require('../core/concatModel');
 module.exports = app => {
   const { model } = app;
   const { schema } = require('../schema/os.js')(app);
-  let Loadavg = model.define('os', schema);
-  Loadavg = concatModel(Loadavg);
+  let Os = model.define('os', schema);
+  Os = concatModel(Os);
 
-  return Loadavg;
+  return Os;
 };

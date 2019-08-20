@@ -59,6 +59,9 @@ module.exports = appInfo => {
         enable: false
       }
     },
+    multipart: {
+      mode: 'file'
+    },
     jwt: {
       secret: 'application'
     }
