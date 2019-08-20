@@ -7,6 +7,7 @@ module.exports = () => {
       '/user/register',
       '/user/login_out',
       '/user/get_code_img',
+      '/upload',
       '/public',
       '/exec'
     ];

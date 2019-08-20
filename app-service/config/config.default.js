@@ -60,11 +60,21 @@ module.exports = appInfo => {
       }
     },
     multipart: {
-      mode: 'file'
+      fileExtensions: [ '.py' ]
     },
     jwt: {
       secret: 'application'
-    }
+    },
+    openCos: true, // 是否上传到 cos 云储存里面
+    cos: {
+      Appid: '1251403076',
+      SecretId: 'AKIDwga7SX6tAk58PcoFKFxOcePt51mEeNDn',
+      SecretKey: 'TjodF4d192hBP4SZUBLGDvNdmgCTUJre',
+      Bucket: 'tab-1251403076',
+      Region: 'ap-shenzhen-fsi',
+      baseUrl: 'https://tab-1251403076.cos.ap-shenzhen-fsi.myqcloud.com'
+    },
+    uplaodBasePath: 'app/public/upload/'
   });
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1565625687216_9155';

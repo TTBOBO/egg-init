@@ -20,6 +20,9 @@ class HomeController extends BaseController {
     let res = await this.ctx.service.admin.deleteAdmin();
     this.success({ data: res });
   }
+  // async uploadFile() {
+  //   await this.upload();
+  // }
   async exec() {
     const { exec } = require('child_process');
     try {
