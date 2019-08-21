@@ -48,5 +48,11 @@ class Common extends baseController {
   async getCodeImg() {
     await this.getCode();
   }
+  async getUserList() {
+    let data = await this.ctx.service.user.getUserList();
+    this.success({
+      data
+    });
+  }
 }
 module.exports = Common;

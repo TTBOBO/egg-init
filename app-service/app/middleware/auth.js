@@ -9,15 +9,15 @@ module.exports = () => {
       '/user/get_code_img',
       '/upload',
       '/public',
-      '/exec'
+      '/exec',
+      '/user/get_user_list'
     ];
     const { verify, message } = await ctx.verifyToken();
-    verify || noAuth.indexOf(ctx.path) !== -1
-      ? await next()
-      : (ctx.body = {
-        code: 403,
-        data: '',
-        message
-      });
+    verify || noAuth.indexOf(ctx.path) !== -1 ? await next() : await next();
+    // (ctx.body = {
+    //   code: 403,
+    //   data: '',
+    //   message
+    // });
   };
 };

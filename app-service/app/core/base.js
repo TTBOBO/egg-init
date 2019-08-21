@@ -13,6 +13,7 @@ class BaseModel {
     sort = [],
     attributes = {},
     pagination = {},
+    include,
     transaction = null,
     type = 'findAndCountAll' // findAll
   }) {
@@ -21,10 +22,14 @@ class BaseModel {
       offset: (page - 1) * limit,
       order: sort.length ? [ sort ] : [[ 'createdTime', 'DESC' ]],
       where,
-      attributes
+      attributes,
+      include
     };
     if (transaction) {
       option.transaction = transaction;
+    }
+    if (include) {
+      option.include = include;
     }
     if (type !== 'findAll') {
       option.limit = limit;

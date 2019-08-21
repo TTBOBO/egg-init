@@ -3,7 +3,6 @@ const CosController = require('./cos');
 const fs = require('fs');
 const path = require('path');
 const moment = require('moment');
-const awaitStreamReady = require('await-stream-ready').write;
 const sendToWormhole = require('stream-wormhole');
 const Controller = require('egg').Controller;
 class BaseController extends Controller {
