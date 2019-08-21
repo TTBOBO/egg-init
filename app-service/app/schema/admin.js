@@ -56,7 +56,7 @@ module.exports = app => {
       userName: {
         type: STRING(12),
         allowNull: false,
-        unique: true,
+        // unique: true,
         comment: '用户名'
       },
       password: {

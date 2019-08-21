@@ -6,7 +6,7 @@ module.exports = app => {
       id: {
         type: INTEGER.UNSIGNED,
         primaryKey: true,
-        defaultValue: UUIDV1,
+        // defaultValue: UUIDV1,
         autoIncrement: true
       },
       age: {

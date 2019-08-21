@@ -14,6 +14,7 @@ class BaseModel {
     attributes = {},
     pagination = {},
     include,
+    distinct = false,
     transaction = null,
     type = 'findAndCountAll' // findAll
   }) {
@@ -23,7 +24,8 @@ class BaseModel {
       order: sort.length ? [ sort ] : [[ 'createdTime', 'DESC' ]],
       where,
       attributes,
-      include
+      include,
+      distinct // 唯一值
     };
     if (transaction) {
       option.transaction = transaction;
@@ -34,7 +36,14 @@ class BaseModel {
     if (type !== 'findAll') {
       option.limit = limit;
     }
-    return await this[type](option);
+    let data = await this[type](option);
+    return type === 'findAll'
+      ? data
+      : data || {
+        data: data.rows,
+        data_total_num: data.count,
+        data_total_page: Math.ceil(data.count / limit)
+      };
   }
   async createOne(data, option = {}) {
     return await this.create(data, { ...option });

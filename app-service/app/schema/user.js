@@ -32,7 +32,7 @@ module.exports = app => {
       name: {
         type: STRING(76),
         allowNull: false,
-        unique: true,
+        // unique: true,
         comment: '用户名'
       },
       password: {

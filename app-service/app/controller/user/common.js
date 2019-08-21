@@ -50,8 +50,12 @@ class Common extends baseController {
   }
   async getUserList() {
     let data = await this.ctx.service.user.getUserList();
+    // let createData = await this.ctx.service.user.createUser();
     this.success({
-      data
+      data: {
+        select: data
+        // createData
+      }
     });
   }
 }
