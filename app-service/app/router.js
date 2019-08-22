@@ -6,11 +6,11 @@
 
 module.exports = app => {
   const { router, controller } = app;
-  // app.beforeStart(async () => {
-  //   await app.model.sync({
-  //     alter: true
-  //   });
-  // });
+  app.beforeStart(async () => {
+    await app.model.sync({
+      alter: true
+    });
+  });
   router.get('/', controller.home.index);
   router.post('/user/login', controller.user.common.login);
   router.post('/user/register', controller.user.common.register);

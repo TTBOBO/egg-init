@@ -14,13 +14,27 @@ class User extends Service {
     //   }
     // });
     return await app.model.User.grid({
-      // type: 'findAll',
+      type: 'findAll',
       // pagination: { page: 1, pageSize: 1000 },
       attributes: [
         'name',
-        'createdTime'
-        // [ sequelize.fn('COUNT', sequelize.col('password')), 'pswcount' ]
+        'createdTime',
+        [
+          sequelize.fn('COUNT', sequelize.col('taskdata.taskname')),
+          'tasknamecount'
+        ]
       ],
+      // attributes: {
+      //   include: [
+      //     sequelize.col('taskdata.taskname')
+
+      //     // sequelize.fn('COUNT', sequelize.col('taskdata.taskname')),
+      //     // 'tasknamecount'
+      //   ]
+      // },
+      // where: {
+      //   uuid: '$taskdata.userid$'
+      // },
       // distinct: true
       // attributes: {
       //   exclude: [ 'password', 'address' ],
@@ -30,22 +44,33 @@ class User extends Service {
         {
           model: this.app.model.Task,
           as: 'taskdata'
+          // attributes: [
+          //   // [ sequelize.fn('COUNT', sequelize.col('taskname')), 'tasknamecount' ]
+          // ]
+          // attributes: {
+          //   include: [
+          //     [
+          //       sequelize.fn('COUNT', sequelize.col('taskdata.taskname')),
+          //       'tasknamecount'
+          //     ]
+          //   ]
+          // }
           // where: {
           //   taskname: '测试name'
           // }
-        },
-        {
-          model: this.app.model.UserInfo,
-          // required: true,
-          where: {
-            age: {
-              [Op.gte]: 18
-            }
-          },
-          attributes: {
-            exclude: [ 'createdTime' ]
-          }
         }
+        // {
+        //   model: this.app.model.UserInfo,
+        //   // required: true,
+        //   where: {
+        //     age: {
+        //       [Op.gte]: 18
+        //     }
+        //   },
+        //   attributes: {
+        //     exclude: [ 'createdTime' ]
+        //   }
+        // }
       ]
     });
   }
@@ -123,6 +148,30 @@ class User extends Service {
         ]
       }
     );
+  }
+
+  async createTasks() {
+    let createTime = new Date();
+    let data = await this.app.model.Task.bulkCreate([
+      {
+        taskname: '任务三',
+        taskInfo: '任务三详情',
+        createdTime: createTime
+      },
+      {
+        taskname: '任务四',
+        taskInfo: '任务四详情',
+        createdTime: createTime
+      }
+    ]);
+    console.log(JSON.stringify(data));
+    await this.app.model.Task.update(
+      { taskname: '任务四修改' },
+      {
+        where: { taskname: '任务四' }
+      }
+    );
+    return this.app.model.Task.findAll();
   }
 }
 module.exports = User;

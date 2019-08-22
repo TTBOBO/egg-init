@@ -69,5 +69,12 @@ module.exports = app => {
     // return await Admin.findByPk('a1e86d50-be86-11e9-a542-ff069356da44')
   };
 
+  Admin.associate = () => {
+    Admin.belongsToMany(app.model.User, {
+      through: app.model.Task,
+      foreignKey: 'uuid',
+      otherKey: 'userid'
+    });
+  };
   return Admin;
 };

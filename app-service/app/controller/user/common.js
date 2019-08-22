@@ -49,12 +49,12 @@ class Common extends baseController {
     await this.getCode();
   }
   async getUserList() {
-    let data = await this.ctx.service.user.getUserList();
-    // let createData = await this.ctx.service.user.createUser();
+    // let data = await this.ctx.service.user.createTasks();
+    let createData = await this.ctx.service.user.getUserList();
     this.success({
       data: {
-        select: data
-        // createData
+        // select: data
+        createData
       }
     });
   }
