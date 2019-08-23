@@ -81,6 +81,10 @@ module.exports = appInfo => {
 
   // add your middleware config here
   config.middleware = [ 'auth', 'dataHandler' ];
+  // egg-grpc配置
+  config.grpc = {
+    endpoint: 'localhost:50051' // 服务端地址
+  };
 
   // add your user config here
   const userConfig = {
