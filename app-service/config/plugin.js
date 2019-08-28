@@ -18,7 +18,7 @@ exports.validate = {
   enable: true,
   package: 'egg-validate'
 };
-exports.grpc = {
-  enable: true,
-  package: 'egg-grpc'
-};
+// exports.grpc = {
+//   enable: true,
+//   package: 'egg-grpc'
+// };
