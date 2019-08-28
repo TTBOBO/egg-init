@@ -9,7 +9,7 @@ class Common extends baseController {
       code: { type: 'string' }
     });
     let { userName, password, code } = ctx.request.body;
-    if (this.verifyCode(code)) {
+    if (!this.verifyCode(code)) {
       this.fail('图形验证码错误');
       return;
     }

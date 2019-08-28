@@ -3,8 +3,8 @@
 module.exports = {
   SUCCESS_CODE: 0,
   ERR_CODE: -1,
-  getToken() {
-    return this.cookies.get('token', { signed: false });
+  getCookie(key = 'token') {
+    return this.cookies.get(key, { signed: false });
   },
   removecookies() {
     this.cookies.set('token', null);
@@ -35,7 +35,7 @@ module.exports = {
   },
   async verifyToken() {
     const { app } = this;
-    const token = this.getToken(this);
+    const token = this.getCookie();
     return await new Promise(resolve => {
       app.jwt.verify(token, app.config.jwt.secret, function(err, decoded) {
         if (err) {

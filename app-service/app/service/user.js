@@ -5,7 +5,7 @@ class User extends Service {
   async getUserList() {
     const { app } = this;
     const sequelize = app.Sequelize;
-    const { Op } = sequelize;
+    // const { Op } = sequelize;
     // return await app.model.UserInfo.grid({
     //   type: 'findAll',
     //   include: {

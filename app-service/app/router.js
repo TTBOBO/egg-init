@@ -15,6 +15,11 @@ module.exports = app => {
   router.post('/user/login', controller.user.common.login);
   router.post('/user/register', controller.user.common.register);
   router.post('/upload', controller.home.uploadFile);
+  router.get('/user/address', controller.user.address.getAddressList);
+  router.post('/user/updateAddress', controller.user.address.updateAddress);
+  router.post('/user/deleteAddress', controller.user.address.deleteAddress);
+  router.post('/user/addAddress', controller.user.address.addAddress);
+
   router.get('/user/login_out', controller.user.common.loginOut);
   router.get('/user/get_code_img', controller.user.common.getCodeImg);
   router.get('/user/get_user_list', controller.user.common.getUserList);
