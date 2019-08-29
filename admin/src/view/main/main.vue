@@ -24,7 +24,9 @@
       </el-header>
       <el-main>
         <div class="main-container">
-          <router-view />
+          <div>
+            <router-view />
+          </div>
         </div>
       </el-main>
     </el-container>
@@ -97,10 +99,13 @@ export default {
     }
   }
   .el-main {
+    display: flex;
     .main-container {
+      padding: 15px;
       background: #fff;
-      height: 100%;
       border-radius: 5px;
+      flex: 1;
+      padding-bottom: 50px;
     }
   }
   .el-aside {

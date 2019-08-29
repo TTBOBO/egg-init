@@ -44,7 +44,7 @@ export const ajaxPut = async (url, params = {}) =>
   await doAjax(url, params, 'put')
 function doAjax(url, params = {}, type) {
   return axios[type](
-    request[url],
+    url || request[url],
     type === 'get'
       ? {
           params
