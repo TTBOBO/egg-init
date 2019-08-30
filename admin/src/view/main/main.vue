@@ -1,13 +1,14 @@
 <template>
   <el-container class="container">
     <el-aside :style="{width:!collapsed ? '200px' : '65px'}">
+      <div class="logo"> </div>
       <sliderMenu :menuList="menuList"
                   @on-select="handSelect"
                   :active-name="$route.name"
                   :collapsed="collapsed"></sliderMenu>
     </el-aside>
     <el-container>
-      <el-header>
+      <el-header style="height:auto;">
         <div class="user-con">
           <i @click="collapsedSider"
              :class="{'el-icon-s-fold':!collapsed,'el-icon-s-unfold':collapsed}"
@@ -54,14 +55,9 @@ export default {
       this.collapsed = !this.collapsed;
     },
     handSelect (name) {
-      if (name.indexOf("href_") != -1) {
-        window.open(name.split("_")[1]);
-        return false;
-      }
-      this.$router.push({
+      name.indexOf("href_") != -1 ? window.open(name.split("_")[1]) : this.$router.push({
         name: name
       })
-
     },
     dropClick (name) {
       console.log(name)
@@ -74,8 +70,16 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  .slider-container {
+  .el-aside {
+    display: flex;
+    flex-flow: column;
     background: #fff;
+    .logo {
+      height: 45px;
+      background: #737070;
+      border-radius: 5px;
+      margin: 10px;
+    }
   }
   .user-con {
     display: flex;
@@ -98,8 +102,14 @@ export default {
       font-size: 24px;
     }
   }
+  .el-header,
+  .el-main {
+    padding-right: 0;
+    padding-bottom: 0;
+  }
   .el-main {
     display: flex;
+
     .main-container {
       padding: 15px;
       background: #fff;

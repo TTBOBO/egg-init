@@ -9,16 +9,16 @@
         <template v-if="item.children && item.children.length === 1">
           <el-menu-item :index="getNameOrHref(item, true)"
                         :key="index">
-            <i :class="[item.children[0].meta.icon]"></i><span slot="title">{{ item.children[0].meta.title }}</span>
+            <i :class="[item.children[0].meta.icon]"></i><span slot="title">{{ item.children[0].meta.title }}222</span>
           </el-menu-item>
         </template>
         <template v-else>
           <SidemenuItem v-if="showChildren(item)"
                         :key="index"
                         :parent-item="item"></SidemenuItem>
-          <el-menu-item v-else
+          <!-- <el-menu-item v-else
                         :index="getNameOrHref(item)"
-                        :key="`menu-${item.meta.title}`"><i :class="[item.meta.icon]"></i><span slot="title">{{ item.meta.title }}</span></el-menu-item>
+                        :key="`menu-${item.meta.title}`"><i :class="[item.meta.icon]"></i><span slot="title">{{ item.meta.title }}111</span></el-menu-item> -->
         </template>
       </template>
     </el-menu>
@@ -99,7 +99,7 @@ export default {
       this.openedNames = res;
     },
     openedNames (val) {
-      console.log(val)
+      // console.log(val)
       // this.$nextTick(() => {
       //   this.$refs.menu.open(val);
       // });
@@ -111,6 +111,10 @@ export default {
 <style lang='less'>
 .slider-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  // height: 100%;
+  .el-menu {
+    border-right-width: 0px;
+  }
 }
 </style>

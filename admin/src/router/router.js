@@ -1,6 +1,15 @@
 import Main from '@/view/main/main'
 export default [
   {
+    path: '/403',
+    name: 'page403',
+    meta: {
+      title: '没有权限',
+      hideInMenu: true
+    },
+    component: () => import('@/view/error-page/403.vue')
+  },
+  {
     path: '/',
     name: '/name',
     // redirect: '/home',
@@ -45,31 +54,7 @@ export default [
         },
         component: resolve => {
           require(['@/view/home/home'], resolve)
-        },
-        children: [
-          {
-            path: 'userlist1',
-            name: 'userlist1',
-            meta: {
-              icon: 'el-icon-eleme',
-              title: '系统会员'
-            },
-            component: resolve => {
-              require(['@/view/home/home'], resolve)
-            }
-          },
-          {
-            path: 'address1',
-            name: 'address1',
-            meta: {
-              icon: 'el-icon-eleme',
-              title: '会员地址'
-            },
-            component: resolve => {
-              require(['@/view/home/home'], resolve)
-            }
-          }
-        ]
+        }
       },
       {
         path: 'address',
@@ -108,5 +93,15 @@ export default [
         }
       }
     ]
+  },
+  {
+    path: '*',
+    name: 'page404',
+    // redirect: '/404',
+    meta: {
+      title: '页面不存在',
+      hideInMenu: true
+    },
+    component: () => import('@/view/error-page/404.vue')
   }
 ]
