@@ -56,8 +56,15 @@ module.exports = appInfo => {
     },
     security: {
       csrf: {
-        enable: false
-      }
+        enable: false,
+        ignoreJSON: true
+      },
+      domainWhiteList: [ 'http://10.6.52.41:8080' ]
+    },
+    cors: {
+      origin: 'http://10.6.52.41:8080',
+      credentials: true,
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
     },
     multipart: {
       fileExtensions: [ '.py' ]

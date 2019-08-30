@@ -36,6 +36,7 @@
 
 <script>
 import sliderMenu from './components/sliderMenu'
+import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
@@ -51,6 +52,7 @@ export default {
     sliderMenu
   },
   methods: {
+    ...mapMutations(['LOGINOUT', 'SETUSERINFO']),
     collapsedSider () {
       this.collapsed = !this.collapsed;
     },
@@ -59,17 +61,29 @@ export default {
         name: name
       })
     },
+    goLogin () {
+      this.$router.replace('/login');
+    },
     dropClick (name) {
-      console.log(name)
+      switch (name) {
+        case 'loginOut':
+          this.LOGINOUT();
+          this.goLogin();
+          break;
+        default:
+          break;
+      }
     }
+  },
+  created () {
+    const userInfo = util.getLocalStorage('userInfo');
+    userInfo ? this.SETUSERINFO(JSON.parse(userInfo)) : this.goLogin();
   }
 }
 </script>
 
 <style lang='less'>
 .container {
-  width: 100%;
-  height: 100%;
   .el-aside {
     display: flex;
     flex-flow: column;

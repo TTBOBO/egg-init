@@ -17,7 +17,7 @@ class Common extends baseController {
     if (userInfo) {
       ctx.setToken(userInfo);
       this.success({
-        data: { userInfo, token: this.ctx.getToken() }
+        data: { userInfo, token: this.ctx.getCookie() }
       });
     } else {
       this.fail('用户或密码不正确');

@@ -2,9 +2,19 @@ import Axios from 'axios'
 import request from './api'
 const axios = Axios.create({
   timeout: 1300000,
-  withCredentials: false
+  withCredentials: true
 })
-
+axios.interceptors.request.use(
+  config => {
+    config.headers = {
+      'Content-Type': 'application/json;charset=UTF-8'
+    }
+    return config
+  },
+  err => {
+    return Promise.reject(err)
+  }
+)
 axios.interceptors.response.use(
   response => {
     return response.data
@@ -33,7 +43,9 @@ axios.interceptors.response.use(
   }
 )
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'production' ? 'localhost:7002' : 'localhost:7002'
+  process.env.NODE_ENV === 'production'
+    ? 'http://localhost:7002'
+    : 'http://localhost:7002'
 export const ajaxGet = async (url, params = {}) =>
   await doAjax(url, params, 'get')
 export const ajaxPost = async (url, params = {}) =>
@@ -44,7 +56,7 @@ export const ajaxPut = async (url, params = {}) =>
   await doAjax(url, params, 'put')
 function doAjax(url, params = {}, type) {
   return axios[type](
-    url || request[url],
+    request[url],
     type === 'get'
       ? {
           params

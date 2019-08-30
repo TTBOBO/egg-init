@@ -11,6 +11,7 @@
     "cos-nodejs-sdk-v5": "^2.5.11",
     "egg": "^2.15.1",
     "egg-core": "^4.17.0",
+    "egg-cors": "^2.2.0",
     "egg-jwt": "^3.1.6",
     "egg-mysql": "^3.0.0",
     "egg-scripts": "^2.11.0",

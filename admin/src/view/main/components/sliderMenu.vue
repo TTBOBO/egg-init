@@ -82,7 +82,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.menuList)
     this.openedNames = this.getUnion(
       this.openedNames,
       this.getOpenedNamesByActiveName(name)
@@ -99,7 +98,7 @@ export default {
       this.openedNames = res;
     },
     openedNames (val) {
-      // console.log(val)
+      console.log(val)
       // this.$nextTick(() => {
       //   this.$refs.menu.open(val);
       // });

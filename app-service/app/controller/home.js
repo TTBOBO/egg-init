@@ -7,12 +7,14 @@ class HomeController extends BaseController {
     const name = this.ctx.cookies.get('name', { signed: false });
     const userName = this.ctx.cookies.get('userName', { signed: false });
     const userType = this.ctx.cookies.get('userType', { signed: false });
+    const code = this.ctx.cookies.get('code', { signed: false });
     this.success({
       data: {
         uuid,
         name,
         userName,
-        userType
+        userType,
+        code
       }
     });
     // const ctx = this.ctx;

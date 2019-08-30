@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === 'production') {
   prodPlugins.push(new BundleAnalyzerPlugin(), new BasicPlugin())
 }
 module.exports = {
+  assetsDir: 'static',
   productionSourceMap: false,
   configureWebpack: {
     resolve: {
@@ -44,6 +45,6 @@ module.exports = {
     open: true,
     host: '0.0.0.0',
     disableHostCheck: true,
-    port: 8081
+    port: 8080
   }
 }

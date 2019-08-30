@@ -6,12 +6,22 @@
 </template>
 
 <script>
-
+import { mapMutations } from 'vuex';
 export default {
   name: 'app',
   components: {
   },
+  computed: {
+
+  },
+  methods: {
+    ...mapMutations(['SETUSERINFO'])
+  },
   mounted () {
+    const userInfo = util.getLocalStorage('userInfo');
+    if (userInfo) {
+      this.SETUSERINFO(JSON.parse(userInfo));
+    }
   }
 }
 </script>
@@ -32,5 +42,9 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+}
+.container {
+  width: 100%;
+  height: 100%;
 }
 </style>

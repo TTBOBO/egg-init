@@ -15,7 +15,6 @@ class BaseController extends Controller {
       height: 44
     };
     var captcha = svgCaptcha.create(codeConfig);
-    console.log(captcha.text);
     this.ctx.cookies.set('code', captcha.text.toLowerCase()); // 存session用于验证接口获取文字码
     var codeData = {
       img: captcha.data

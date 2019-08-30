@@ -1,6 +1,15 @@
 import Main from '@/view/main/main'
 export default [
   {
+    path: '/login',
+    name: 'login',
+    meta: {
+      title: '登录',
+      hideInMenu: true
+    },
+    component: () => import('@/view/sign/login.vue')
+  },
+  {
     path: '/403',
     name: 'page403',
     meta: {
@@ -97,7 +106,6 @@ export default [
   {
     path: '*',
     name: 'page404',
-    // redirect: '/404',
     meta: {
       title: '页面不存在',
       hideInMenu: true
