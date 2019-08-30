@@ -97,11 +97,7 @@ export default {
         .filter(item => item != name);
       this.openedNames = res;
     },
-    openedNames (val) {
-      console.log(val)
-      // this.$nextTick(() => {
-      //   this.$refs.menu.open(val);
-      // });
+    openedNames () {
     }
   }
 }

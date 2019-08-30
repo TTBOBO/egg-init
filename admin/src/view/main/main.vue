@@ -76,6 +76,7 @@ export default {
     }
   },
   created () {
+    console.log(util);
     const userInfo = util.getLocalStorage('userInfo');
     userInfo ? this.SETUSERINFO(JSON.parse(userInfo)) : this.goLogin();
   }

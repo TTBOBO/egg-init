@@ -12,6 +12,7 @@
     "axios": "^0.19.0",
     "core-js": "^2.6.5",
     "element-ui": "^2.11.1",
+    "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-webpack": "^0.11.1",
     "md5": "^2.2.1",
     "vue": "^2.6.10",
@@ -42,8 +43,10 @@
     ],
     "settings": {
       "import/resolver": {
-        "webpack": {
-          "util": "./src/assets/js/util.js"
+        "alias": {
+          "map": [
+            ["util", "./src/assets/js/util.js"]
+          ]
         }
       }
     },
