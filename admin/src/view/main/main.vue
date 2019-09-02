@@ -10,9 +10,12 @@
     <el-container>
       <el-header style="height:auto;">
         <div class="user-con">
-          <i @click="collapsedSider"
-             :class="{'el-icon-s-fold':!collapsed,'el-icon-s-unfold':collapsed}"
-             size="24"></i>
+          <div class="user-con-left">
+            <i @click="collapsedSider"
+               :class="{'el-icon-s-fold':!collapsed,'el-icon-s-unfold':collapsed}"
+               size="24"></i>
+            <Breadcrumb style="min-width:300px;height:17px;"></Breadcrumb>
+          </div>
           <el-dropdown @command="dropClick">
             <img src="../../assets/logo.png"
                  class="auth-pic" />
@@ -25,9 +28,11 @@
       </el-header>
       <el-main>
         <div class="main-container">
-          <div>
-            <router-view />
-          </div>
+          <transition :name="transitionName">
+            <keep-alive :include="catchRoutes">
+              <router-view :key="key" />
+            </keep-alive>
+          </transition>
         </div>
       </el-main>
     </el-container>
@@ -36,20 +41,29 @@
 
 <script>
 import sliderMenu from './components/sliderMenu'
+import Breadcrumb from '@/components/Breadcrumb'
 import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
-      collapsed: false
+      collapsed: false,
+      transitionName: "slide-left"
     }
   },
   computed: {
     menuList () {
       return this.$store.getters.menuList
     },
+    key () {
+      return this.$route.path
+    },
+    catchRoutes () {
+      return [];
+    }
   },
   components: {
-    sliderMenu
+    sliderMenu,
+    Breadcrumb
   },
   methods: {
     ...mapMutations(['LOGINOUT', 'SETUSERINFO']),
@@ -76,10 +90,10 @@ export default {
     }
   },
   created () {
-    console.log(util);
+    // console.log(util);
     const userInfo = util.getLocalStorage('userInfo');
     userInfo ? this.SETUSERINFO(JSON.parse(userInfo)) : this.goLogin();
-  }
+  },
 }
 </script>
 
@@ -105,6 +119,14 @@ export default {
     padding: 0 20px;
     // margin-right: 20px;
     border-radius: 0 0 5px 5px;
+    .user-con-left {
+      display: flex;
+      align-items: center;
+      position: relative;
+      i {
+        margin-right: 30px;
+      }
+    }
     .auth-pic {
       width: 45px;
       height: 45px;
@@ -131,10 +153,31 @@ export default {
       border-radius: 5px;
       flex: 1;
       padding-bottom: 50px;
+      overflow: hidden;
+      position: relative;
     }
   }
   .el-aside {
     transition: 0.3s linear;
+  }
+  .slide-right-enter-active,
+  .slide-right-leave-active,
+  .slide-left-enter-active,
+  .slide-left-leave-active {
+    transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+    position: absolute;
+  }
+  .slide-left-enter,
+  .slide-right-leave-active {
+    opacity: 0;
+    -webkit-transform: translate(-30px, 0);
+    transform: translate(-30px, 0);
+  }
+  .slide-left-leave-active,
+  .slide-right-enter {
+    opacity: 0;
+    -webkit-transform: translate(30px, 0);
+    transform: translate(30px, 0);
   }
 }
 </style>

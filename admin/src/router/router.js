@@ -19,9 +19,21 @@ export default [
     component: () => import('@/view/error-page/403.vue')
   },
   {
+    path: '/home1',
+    name: 'home1',
+    meta: {
+      icon: 'el-icon-eleme',
+      hideInMenu: false,
+      title: '首页'
+    },
+    component: resolve => {
+      require(['@/view/home/home1'], resolve)
+    }
+  },
+  {
     path: '/',
-    name: '/name',
-    // redirect: '/home',
+    name: 'home',
+    redirect: '/home',
     component: Main,
 
     meta: {
@@ -47,6 +59,7 @@ export default [
   {
     path: '/user',
     name: 'user',
+    redirect: '/user/userlist',
     meta: {
       title: '用户管理',
       //   href: 'https://lison16.github.io/iview-admin-doc/#/',
@@ -62,7 +75,7 @@ export default [
           title: '系统会员'
         },
         component: resolve => {
-          require(['@/view/home/home'], resolve)
+          require(['@/view/home/home1'], resolve)
         }
       },
       {
@@ -81,7 +94,7 @@ export default [
   {
     path: '/rule',
     name: 'rule',
-    // redirect: '/home',
+    redirect: '/rule/address2',
     component: Main,
 
     meta: {
@@ -98,7 +111,7 @@ export default [
           title: '会员地址2'
         },
         component: resolve => {
-          require(['@/view/home/home'], resolve)
+          require(['@/view/home/home1'], resolve)
         }
       }
     ]

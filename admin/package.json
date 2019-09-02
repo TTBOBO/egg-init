@@ -15,6 +15,7 @@
     "eslint-import-resolver-alias": "^1.1.2",
     "eslint-import-resolver-webpack": "^0.11.1",
     "md5": "^2.2.1",
+    "path-to-regexp": "^3.1.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.2",
     "vuedraggable": "^2.23.0",
@@ -45,7 +46,10 @@
       "import/resolver": {
         "alias": {
           "map": [
-            ["util", "./src/assets/js/util.js"]
+            [
+              "util",
+              "./src/assets/js/util.js"
+            ]
           ]
         }
       }

@@ -6,7 +6,8 @@ import util from '../../assets/js/util'
 
 const pageInfo = {
   state: {
-    userInfo: null
+    userInfo: null,
+    cachedViews: []
   },
   getters: {
     menuList: () => {

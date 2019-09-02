@@ -9,7 +9,7 @@
         <template v-if="item.children && item.children.length === 1">
           <el-menu-item :index="getNameOrHref(item, true)"
                         :key="index">
-            <i :class="[item.children[0].meta.icon]"></i><span slot="title">{{ item.children[0].meta.title }}222</span>
+            <i :class="[item.children[0].meta.icon]"></i><span slot="title">{{ item.children[0].meta.title }}</span>
           </el-menu-item>
         </template>
         <template v-else>
