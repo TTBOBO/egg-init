@@ -19,8 +19,8 @@ module.exports = app => {
   router.post('/user/updateAddress', controller.user.address.updateAddress);
   router.post('/user/deleteAddress', controller.user.address.deleteAddress);
   router.post('/user/addAddress', controller.user.address.addAddress);
-
   router.get('/user/login_out', controller.user.common.loginOut);
+  router.get('/order/order_week_data', controller.order.weekCount);
   router.get('/user/get_code_img', controller.user.common.getCodeImg);
   router.get('/user/get_user_list', controller.user.common.getUserList);
   router.get('/deleteAdmin', controller.home.deleteAdmin);

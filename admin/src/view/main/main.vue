@@ -1,5 +1,5 @@
 <template>
-  <el-container class="container">
+  <el-container class="container ">
     <el-aside :style="{width:!collapsed ? '200px' : '65px'}">
       <div class="logo"> </div>
       <sliderMenu :menuList="menuList"
@@ -71,9 +71,8 @@ export default {
       this.collapsed = !this.collapsed;
     },
     handSelect (name) {
-      name.indexOf("href_") != -1 ? window.open(name.split("_")[1]) : this.$router.push({
-        name: name
-      })
+      const curName = this.$route.name;
+      name.indexOf("href_") != -1 ? window.open(name.split("_")[1]) : (curName != name ? this.$router.push({ name }) : '');
     },
     goLogin () {
       this.$router.replace('/login');
@@ -152,7 +151,7 @@ export default {
       background: #fff;
       border-radius: 5px;
       flex: 1;
-      padding-bottom: 50px;
+      // padding-bottom: 50px;
       overflow: hidden;
       position: relative;
     }
@@ -178,6 +177,14 @@ export default {
     opacity: 0;
     -webkit-transform: translate(30px, 0);
     transform: translate(30px, 0);
+  }
+  .pointer {
+    cursor: pointer;
+  }
+  .shadow {
+    &:hover {
+      box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.25);
+    }
   }
 }
 </style>

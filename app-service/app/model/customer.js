@@ -8,7 +8,7 @@ module.exports = app => {
   Customer.associate = () => {
     Customer.hasMany(app.model.Order, {
       foreignKey: 'uuid',
-      targetKey: 'uuid'
+      targetKey: 'id'
     });
   };
   return Customer;

@@ -11,6 +11,7 @@
       "functions": "never"
     }],
     "space-before-blocks": "off",
+    "object-curly-spacing": "off",
     "no-var": "off",
     "prefer-const": "off" //去除强制转 const  声明变量
     // "arrow-parens": ["never", "nevver"]

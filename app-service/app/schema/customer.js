@@ -1,13 +1,13 @@
 'use strict';
 module.exports = app => {
-  const { STRING, DATE, UUIDV1 } = app.Sequelize;
+  const { STRING, DATE, INTEGER } = app.Sequelize;
   return {
     schema: {
-      uuid: {
-        type: STRING(38),
-        primarykey: true,
+      id: {
+        type: INTEGER.UNSIGNED,
+        primaryKey: true,
         allowNull: false,
-        defalutValue: UUIDV1
+        autoIncrement: true
       },
       createdTime: {
         type: DATE,

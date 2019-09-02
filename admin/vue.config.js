@@ -17,7 +17,9 @@ module.exports = {
         '@': path.join(__dirname, 'src')
       }
     },
-    externals: {}, //配置全局变量
+    externals: {
+      echarts: 'echarts'
+    }, //配置全局变量
     optimization: {
       minimizer: [
         new UglifyJsPlugin({

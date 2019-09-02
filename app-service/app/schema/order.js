@@ -29,10 +29,6 @@ module.exports = app => {
         type: STRING(38),
         allowNull: false
       },
-      customerId: {
-        type: STRING(38),
-        allowNull: false
-      },
       shopName: STRING(76),
       remark: STRING(255),
       freightAmount: {

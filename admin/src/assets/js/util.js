@@ -636,6 +636,15 @@ let util = {
       [0]
     )
     return obj
+  },
+  async createJs(regexp, jsUrl) {
+    let script = [...document.getElementsByTagName('script')]
+    let creat_status = script.some(item => {
+      return item.src.indexOf(regexp) != -1
+    })
+    if (!creat_status) {
+      await util.str.createScript(jsUrl)
+    }
   }
 }
 
