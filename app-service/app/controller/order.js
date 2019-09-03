@@ -2,9 +2,9 @@
 const baseController = require('./base_controller');
 class Order extends baseController {
   async weekCount() {
-    let data = await this.service.order.weekCount();
+    let result = await this.service.order.weekCount();
     this.success({
-      data
+      result
     });
   }
 }

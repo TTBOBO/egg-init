@@ -3,7 +3,7 @@ const Service = require('egg').Service;
 class Address extends Service {
   async getAddressList(creatorId) {
     return await this.app.model.Address.grid({
-      type: 'findAll',
+      // type: 'findAll',
       where: {
         creatorId
       }

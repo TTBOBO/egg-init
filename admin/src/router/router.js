@@ -75,7 +75,7 @@ export default [
           title: '系统会员'
         },
         component: resolve => {
-          require(['@/view/home/home1'], resolve)
+          require(['@/view/user/user'], resolve)
         }
       },
       {

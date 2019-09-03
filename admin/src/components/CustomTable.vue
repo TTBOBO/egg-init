@@ -89,7 +89,9 @@
               @select-all="selectChange"
               @expand-change="expandChange"
               :row-key="optionData.evalKey || 'job_name'"
-              :expand-row-keys="expandedRows">
+              :expand-row-keys="expandedRows"
+              :default-sort="defaultSort"
+              v-if="showTable">
       <el-table-column type="selection"
                        align="center"
                        v-if="optionData.selection">
@@ -199,9 +201,10 @@ export default {
     return {
       expandedRows: [],
       index: 0,
-      showTable: true,
+      showTable: false,
       columnData: null, //存储 列的数据
-      columnDataObj: {}
+      columnDataObj: {},
+      defaultSort: null
     }
   },
   props: {
@@ -236,6 +239,17 @@ export default {
     columnItem,
   },
   methods: {
+    getDefaultSort () {
+      let orderByConfig = {
+        desc: "descending",
+        asc: "ascending"
+      }
+      const res = this.optionData.columns.filter(item => item.sort)[0];
+      this.defaultSort = res ? { prop: res.value, order: orderByConfig[res.sortOrder] || 'descending' } : {};
+      if (!this.defaultSort.prop) {  //没有默认sort的时候不会触发sort-change事件，所以手动触发获取table表格数据
+        this.getTaskTableData();
+      }
+    },
     reverse (data, option = {
       reverse: true
     }) {
@@ -466,8 +480,16 @@ export default {
         column
       });
     },
-    sortChange (params) {
-      this.$emit('sortChange', params);
+    sortChange ({ prop, order }) {
+      let orderByConfig = {
+        descending: "desc",
+        ascending: "asc"
+      }
+      this.search.sort_by = prop
+      console.log(orderByConfig[order], order)
+      this.search.sort_type = orderByConfig[order];
+      this.getTaskTableData();
+      this.$emit('sortChange', prop, order);
     },
     toggleRowSelection () {
       this.$nextTick(() => {
@@ -616,7 +638,9 @@ export default {
       }); //设置显示隐藏列
       this.initDbClick();
       this.getCol();
-      this.getTaskTableData();
+
+      this.getDefaultSort();
+      this.showTable = true;
     },
     async getTaskTableData (params = {}) {
       if (this.optionData.tableLoadIcon)
@@ -628,33 +652,29 @@ export default {
         this.$emit("tableData", this.defaultData);
         return false;
       }
-      this[this.optionData.ajaxType || '$ajaxGet'](this.optionData.baseUrl, this.search, this.optionData.urlType ||
-        3).then(res => {
-          console.log(res);
-          if (res.err_code == 0 || res.code == 200 || res.code == 0) {
-            let dataKey = this.optionData.dataKey;
-            const data = this.optionData.urlType == 1 ? res.result[dataKey] : res.result.data;
-            this.$emit("tableData", res.result, this.dataKey);
-
-            this.setTabelData(data);
-            if (params.saveSelection)
-              this.toggleRowSelection();
-            if (this.optionData.tableLoadIcon)
-              this.taskListloading = false;
-            this.search.count = this.optionData.urlType == 1 ? res.result.jobs_total_num : res.result
-              .data_total_num;
-          } else {
-            this.$alert(res.err_msg || res.data.message || res.data.err_msg, "获取列表失败", {
-              dangerouslyUseHTMLString: true
-            });
-            this.taskTableData = [];
-          }
+      let res = await this[this.optionData.ajaxType || '$ajaxGet'](this.optionData.baseUrl, this.search, this.optionData.urlType || 3);
+      if (res.err_code == 0 || res.code == 200 || res.code == 0) {
+        let dataKey = this.optionData.dataKey;
+        const data = this.optionData.urlType == 1 ? res.result[dataKey] : res.result.data;
+        this.$emit("tableData", res.result, this.dataKey);
+        this.setTabelData(data);
+        if (params.saveSelection)
+          this.toggleRowSelection();
+        if (this.optionData.tableLoadIcon)
+          this.taskListloading = false;
+        this.search.count = this.optionData.urlType == 1 ? res.result.jobs_total_num : res.result.data_total_num;
+      } else {
+        this.$alert(res.err_msg || res.data.message || res.data.err_msg, "获取列表失败", {
+          dangerouslyUseHTMLString: true
         });
+        this.taskTableData = [];
+      }
+
+      this.showTable = true;
     },
     setTabelData (data) {
-      if (this.formData) {
+      if (this.formData)
         data = this.formData(data);
-      }
       //当table 有双击编辑的功能的话
       if (this.optionData.dbEdit) {
         this.columns.forEach((col) => {
@@ -702,7 +722,11 @@ export default {
         }, 1000)
       })
     }
+
     this.init();
+  },
+  created () {
+
   },
   destroyed () {
     window.onresize = () => { }

@@ -5,10 +5,11 @@
                    :prop="item.value"
                    tooltip-effect="light"
                    :show-overflow-tooltip="item.tooltip || false"
-                   :resizable="item.resizable || false"
+                   :resizable="item.resizable || true"
                    :label="item.lable"
                    :align="item.align || 'center'"
                    :width="item.width || 'auto'"
+                   :sort-orders="sortOrders"
                    v-if="item.isShow && !item.type && !item.filters"
                    :sortable="item.sort || false">
     <template slot-scope="scope">
@@ -51,10 +52,11 @@
                    :prop="item.value"
                    tooltip-effect="light"
                    :show-overflow-tooltip="item.tooltip || false"
-                   :resizable="item.resizable || false"
+                   :resizable="item.resizable || true"
                    :label="item.lable"
                    :align="item.align || 'center'"
                    :width="item.width || 'auto'"
+                   :sort-orders="sortOrders"
                    v-else-if="item.isShow && item.type && !item.filters"
                    :sortable="item.sort || false">
     <template slot-scope="scope">
@@ -104,10 +106,11 @@
                    :prop="item.value"
                    tooltip-effect="light"
                    :show-overflow-tooltip="item.tooltip || false"
-                   :resizable="item.resizable || false"
+                   :resizable="item.resizable || true"
                    :label="item.lable"
                    :align="item.align || 'center'"
                    :width="item.width || 'auto'"
+                   :sort-orders="sortOrders"
                    v-else-if="item.isShow && !item.type && item.filters"
                    :sortable="item.sort || false">
     <template slot-scope="scope">
@@ -195,8 +198,7 @@ export default {
   data () {
     return {
       ctx: null,
-      // columnData:null, //存储 列的数据
-      // columnDataObj:{}
+      sortOrders: ['ascending', 'descending', null] || ['ascending', 'descending', 'ascending']
     }
   },
   props: {

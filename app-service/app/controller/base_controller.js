@@ -79,11 +79,11 @@ class BaseController extends Controller {
     return code.toLowerCase() === this.ctx.cookies.get('code');
   }
 
-  success({ data, status, message = '' }) {
+  success({ result, status, message = '' }) {
     this.ctx.body = {
       code: this.ctx.SUCCESS_CODE,
       message,
-      data
+      result
     };
     this.ctx.status = status || 200;
   }

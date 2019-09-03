@@ -28,7 +28,6 @@ export default {
     getBreadcrumb () {
       let matched = this.$route.matched.filter(item => item.meta && item.meta.title);
       let { meta } = matched[0];
-      console.log(matched)
       this.breadcrumbList = meta && meta.title !== '首页' ? [{ path: '/', meta: { title: '首页' } }].concat(matched) : [matched[1]];
     },
     handleClick ({ redirect, path }) {

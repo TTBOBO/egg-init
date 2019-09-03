@@ -74,12 +74,12 @@ export default {
   },
   methods: {
     async getOrderCount () {
-      let { data } = await this.$ajaxGet('order_week_data');
-      this.cardData.orderCount = data.values.reduce((cur, item) => cur + item, 0)
-      this.initChart(this.getOption(data), 'order-count');
-      this.initChart(this.getOption(data), 'order-count1')
-      this.initChart(this.getOption(data), 'order-count2')
-      this.initChart(this.getOption(data), 'order-count3')
+      let { result } = await this.$ajaxGet('order_week_data');
+      this.cardData.orderCount = result.values.reduce((cur, item) => cur + item, 0)
+      this.initChart(this.getOption(result), 'order-count');
+      this.initChart(this.getOption(result), 'order-count1')
+      this.initChart(this.getOption(result), 'order-count2')
+      this.initChart(this.getOption(result), 'order-count3')
     },
     initChart (option, chartId) {
       this.orderCountChart = echarts.init(document.getElementById(chartId));
