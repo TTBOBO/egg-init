@@ -27,6 +27,43 @@ class Order extends Service {
       }
     );
   }
+  async orderList({
+    page,
+    size,
+    uuid,
+    billNumber,
+    status,
+    shopName,
+    sort_type,
+    sort_by,
+    createdTime
+  }) {
+    const { app } = this;
+    const {
+      Sequelize: { Op }
+    } = app;
+    let where = {
+      uuid,
+      billNumber,
+      status,
+      shopName
+    };
+    if (createdTime) {
+      where.createdTime = {
+        [Op.between]: createdTime.split(',').map(item => new Date(item))
+      };
+    }
+    return await app.model.Order.grid({
+      pagination: { page, size },
+      where,
+      sort: [ sort_by, sort_type ],
+      include: [
+        {
+          model: this.app.model.Customer
+        }
+      ]
+    });
+  }
 }
 
 module.exports = Order;

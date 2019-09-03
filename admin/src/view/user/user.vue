@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <CustomTable ref="customTable"
                  :optionData="tableOption"
                  @info="info"></CustomTable>
@@ -8,7 +8,14 @@
                width="800px">
       <CustomTable ref="addressTable"
                    :optionData="addressOption"
-                   v-if="showAddress"></CustomTable>
+                   v-if="showAddress">
+        <template slot-scope="props"
+                  slot="isDefault">
+          <span class="circular"
+                :style="{background:props.row.isDefault === 'is' ?'#409eff':'#909399'}"></span>
+          {{props.column.selectOPtion[props.row.isDefault]}}
+        </template>
+      </CustomTable>
       <span slot="footer"
             class="dialog-footer">
         <el-button type="primary"
@@ -27,7 +34,6 @@ export default {
       tableOption: {
         baseUrl: "user_list",
         toolEventWidth: "200px",
-        selection: true,
         initheight: true,
         search: {
           page: 1,  //页数
@@ -35,10 +41,10 @@ export default {
         },
         columns: [
           { lable: "用户id", value: "id", type: "", search: "", tooltip: true, tipAlign: "right", },
-          { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right", width: 120, sort: 'custom', sortOrder: 'desc' },
-          { lable: "用户名", value: "nickName", type: "", search: "nickName", tooltip: true, tipAlign: "right", width: 120 },
-          { lable: "用户头像", value: "authorPic", type: "", search: "", tooltip: true, tipAlign: "right", width: 120 },
-          { lable: "手机号", value: "phone", type: "", search: "phone", tooltip: true, tipAlign: "right", width: 120 },
+          { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right", sort: 'custom', sortOrder: 'desc' },
+          { lable: "用户名", value: "nickName", type: "", search: "nickName", tooltip: true, tipAlign: "right" },
+          { lable: "用户头像", value: "authorPic", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "手机号", value: "phone", type: "", search: "phone", tooltip: true, tipAlign: "right" },
         ],
         toolEvent: [{ type: "primary", emit: "info", title: "地址列表" }],
         topBtnGroup: [
@@ -51,7 +57,6 @@ export default {
       addressOption: {
         baseUrl: "address_list",
         toolEventWidth: "200px",
-        selection: true,
         initheight: true,
         hiddenPage: true,
         search: {
@@ -60,18 +65,13 @@ export default {
         },
         columns: [
           { lable: "联系电话", value: "phone", type: "", search: "", tooltip: true, tipAlign: "right", },
-          { lable: "联系人", value: "linkMan", type: "", search: "", tooltip: true, tipAlign: "right", width: 120 },
-          { lable: "是否默认", value: "isDefault", type: "", search: "", tooltip: true, tipAlign: "right", width: 120 },
-          { lable: "地址", value: "address", type: "", search: "", tooltip: true, tipAlign: "right", width: 120 },
-          { lable: "性别", value: "sex", type: "select", search: "", tooltip: true, tipAlign: "right", width: 120, selectOPtion: { man: "男", female: "女" } },
+          { lable: "联系人", value: "linkMan", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "是否默认", value: "isDefault", type: "", search: "", tooltip: true, tipAlign: "right", selectOPtion: { is: "是", no: "否" }, scoped: true },
+          { lable: "地址", value: "address", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "性别", value: "sex", type: "select", search: "", tooltip: true, tipAlign: "right", selectOPtion: { man: "男", female: "女" } },
         ],
-        toolEvent: [{ type: "primary", emit: "info", title: "地址列表" }],
-        topBtnGroup: [
-          // { name: "查看任务配置", bgcolor: "primary", emit:"viewTask", icon: "plus", hasSel: 1, hasMore: ''},
-          // { name: "复制任务配置", bgcolor: "primary", emit:"cloneTask", icon: "plus", hasSel: 1, hasMore: "",noloading:true },
-          // { name: "终止任务", bgcolor: "warning", emit:"delTask", icon: "plus", hasSel: 1, hasMore: 'more'},
-          // { name: "断开客户端", bgcolor: "warning", emit:"decClientTask", icon: "plus", hasSel: 1, hasMore: "more",noloading:true },
-        ]
+        toolEvent: [],
+        topBtnGroup: []
       }
     }
   },
@@ -93,5 +93,11 @@ export default {
 }
 </script>
 
-<style>
+<style lang='less'>
+.circular {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
 </style>

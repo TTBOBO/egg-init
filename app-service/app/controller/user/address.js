@@ -2,7 +2,6 @@
 const baseController = require('../base_controller');
 class Address extends baseController {
   async getAddressList() {
-    console.log(this.ctx.query);
     this.ctx.validate(
       {
         id: { type: 'string' }

@@ -92,6 +92,30 @@ export default [
     ]
   },
   {
+    path: '/order',
+    name: 'order',
+    redirect: '/order/orderlist',
+    meta: {
+      title: '首页',
+      //   href: 'https://lison16.github.io/iview-admin-doc/#/',
+      icon: 'el-icon-eleme'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'orderlist',
+        name: 'orderlist',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '订单管理'
+        },
+        component: resolve => {
+          require(['@/view/order/order'], resolve)
+        }
+      }
+    ]
+  },
+  {
     path: '/rule',
     name: 'rule',
     redirect: '/rule/address2',

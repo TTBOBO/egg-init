@@ -29,4 +29,5 @@ module.exports = app => {
   router.get('/deleteAdmin', controller.home.deleteAdmin);
   router.get('/os/get_network_io', controller.os.getNetworkIo);
   router.get('/exec', controller.home.exec);
+  router.get('/order/orderList', controller.order.orderList);
 };

@@ -41,7 +41,12 @@ module.exports = app => {
       },
       reductionAmount: {
         type: DECIMAL,
-        comment: '订单金额'
+        comment: '折扣金额',
+        defaultValue: 0.0
+      },
+      totalAmount: {
+        type: DECIMAL,
+        comment: '总金额'
       }
     },
     option: {

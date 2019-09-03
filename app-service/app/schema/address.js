@@ -1,6 +1,6 @@
 'use strict';
 module.exports = app => {
-  const { STRING, DATE, INTEGER, BOOLEAN, ENUM } = app.Sequelize;
+  const { STRING, DATE, INTEGER, ENUM } = app.Sequelize;
   return {
     schema: {
       id: {
@@ -27,8 +27,8 @@ module.exports = app => {
         allowNull: false
       },
       isDefault: {
-        type: BOOLEAN,
-        defaultValue: false
+        type: ENUM('is', 'no'),
+        comment: '是否为默认  { is: "是", female: "否" }'
       },
       address: {
         type: STRING(255),

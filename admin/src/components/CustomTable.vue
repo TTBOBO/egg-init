@@ -1,45 +1,43 @@
 <template>
   <div style=''>
     <div ref="top-form">
-      <div>
-        <el-form :inline="true"
-                 size="mini"
-                 class="demo-form-inline"
-                 v-if="getSearchLength"
-                 @submit.native.prevent>
-          <template v-for="(item,index) in searchData">
-            <el-form-item :key='index'
-                          v-if="item"
-                          :label="item.lable+'：'">
-              <el-input v-if="item.type == '' || item.type == 'input'"
-                        :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
-                        v-model="item.value"
-                        :placeholder="item.pla || '请输入'+item.lable"></el-input>
-              <el-date-picker v-else-if="item.type == 'time'"
-                              :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
-                              v-model="item.value"
-                              type="daterange"
-                              range-separator="至"
-                              start-placeholder="开始日期"
-                              end-placeholder="结束日期">
-              </el-date-picker>
-              <el-select v-else-if="item.type == 'select' || item.type == 'switch' "
-                         filterable
-                         v-model="item.value"
-                         :placeholder="item.pla || '请选择'+item.lable">
-                <el-option v-for="_item in item.selectOPtion"
-                           :key="_item.value"
-                           :label="_item.label"
-                           :value="_item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </template>
-          <el-button type="primary"
-                     @click="onSubmit"
-                     size="mini">查询</el-button>
-        </el-form>
-      </div>
+      <el-form :inline="true"
+               size="mini"
+               v-if="getSearchLength"
+               class="search-form"
+               @submit.native.prevent>
+        <template v-for="(item,index) in searchData">
+          <el-form-item :key='index'
+                        v-if="item"
+                        :label="item.lable+'：'">
+            <el-input v-if="item.type == '' || item.type == 'input'"
+                      :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
+                      v-model="item.value"
+                      :placeholder="item.pla || '请输入'+item.lable"></el-input>
+            <el-date-picker v-else-if="item.type == 'time'"
+                            :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
+                            v-model="item.value"
+                            type="datetimerange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+            </el-date-picker>
+            <el-select v-else-if="item.type == 'select' || item.type == 'switch' "
+                       filterable
+                       v-model="item.value"
+                       :placeholder="item.pla || '请选择'+item.lable">
+              <el-option v-for="_item in item.selectOPtion"
+                         :key="_item.value"
+                         :label="_item.label"
+                         :value="_item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </template>
+        <el-button type="primary"
+                   @click="onSubmit"
+                   size="mini">查询</el-button>
+      </el-form>
       <el-button size="small"
                  v-if="optionData.showhideColumn"
                  @click.stop="setColums"
@@ -61,16 +59,6 @@
              style="width:0px;height:0px;"></a>{{item.title}}</el-button>
       </span>
     </div>
-    <el-pagination style="margin-bottom: 9px;"
-                   v-if="!optionData.hiddenPage"
-                   @size-change='sizeChange'
-                   @current-change="pageChange"
-                   :current-page.sync="search.page"
-                   :page-size.sync="search.size"
-                   layout="total, prev, pager, next, jumper,sizes"
-                   :total="search.count"
-                   :page-sizes="optionData.pageSizes || pageSizes"
-                   class="page-wrap"></el-pagination>
     <el-table ref="table"
               :span-method="optionData.arraySpanMethod || arraySpanMethod"
               :data="taskTableData"
@@ -167,6 +155,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination style="margin-bottom: 9px;"
+                   v-if="!optionData.hiddenPage"
+                   @size-change='sizeChange'
+                   @current-change="pageChange"
+                   :current-page.sync="search.page"
+                   :page-size.sync="search.size"
+                   layout="total, prev, pager, next, jumper,sizes"
+                   :total="search.count"
+                   :page-sizes="optionData.pageSizes || pageSizes"
+                   class="page-wrap"></el-pagination>
     <el-dialog title="显示隐藏列"
                :visible.sync="showhideCol"
                width="50%"
@@ -411,8 +409,7 @@ export default {
          */
         if (item.search && item.value != "") {
           if (item.type == "time") {
-            filter[item.search] = util.time.getTime(item.value[0], true) + "," + util.time.getTime(item.value[1],
-              true)
+            filter[item.search] = item.value.join(',') // util.time.getTime(item.value[0], true) + "," + util.time.getTime(item.value[1], true)
           } else {
             item.value != 'empty' ? filter[item.search] = item.value : (this.search[item.search] && delete this
               .search[item.search]);
@@ -426,7 +423,8 @@ export default {
       if (num == 0) {
         filter = {};
         this.search = JSON.parse(JSON.stringify(this.defaultSearch));
-        return false;
+        this.getTaskTableData();
+        // return false;
       } else {
         //初始化搜索数据  value为空
         // this.clearSearchValue();
@@ -747,8 +745,11 @@ export default {
 }
 
 .page-wrap {
-  /* margin-bottom: 30px; */
-  text-align: right;
+  margin: 10px 0;
+  text-align: center;
+}
+.search-form {
+  margin-bottom: 10px;
 }
 
 .checkbox-group .el-checkbox-group div {

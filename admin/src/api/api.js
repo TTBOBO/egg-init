@@ -4,6 +4,7 @@ const REQUEST = {
   index: '/',
   order_week_data: '/order/order_week_data', //近7天订单数
   user_list: '/user/get_user_list',
-  address_list: '/user/get_user_addressList'
+  address_list: '/user/get_user_addressList',
+  orderList: '/order/orderList'
 }
 export default REQUEST

@@ -7,5 +7,11 @@ class Order extends baseController {
       result
     });
   }
+  async orderList() {
+    let result = await this.service.order.orderList(this.ctx.query);
+    this.success({
+      result
+    });
+  }
 }
 module.exports = Order;
