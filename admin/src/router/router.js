@@ -91,6 +91,42 @@ export default [
       }
     ]
   },
+
+  {
+    path: '/goods',
+    name: 'goods',
+    redirect: '/goods/goodsList',
+    component: Main,
+    meta: {
+      icon: 'el-icon-eleme',
+      title: '商品',
+      hideInMenu: false
+    },
+    children: [
+      {
+        path: 'goodsList',
+        name: 'goodsList',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '商品管理'
+        },
+        component: resolve => {
+          require(['@/view/goods/goodsList'], resolve)
+        }
+      },
+      {
+        path: 'goodsCategory',
+        name: 'goodsCategory',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '商品类型'
+        },
+        component: resolve => {
+          require(['@/view/goods/goodsCategory'], resolve)
+        }
+      }
+    ]
+  },
   {
     path: '/order',
     name: 'order',
@@ -111,31 +147,6 @@ export default [
         },
         component: resolve => {
           require(['@/view/order/order'], resolve)
-        }
-      }
-    ]
-  },
-  {
-    path: '/rule',
-    name: 'rule',
-    redirect: '/rule/address2',
-    component: Main,
-
-    meta: {
-      icon: 'el-icon-eleme',
-      title: '首页',
-      hideInMenu: false
-    },
-    children: [
-      {
-        path: 'address2',
-        name: 'address2',
-        meta: {
-          icon: 'el-icon-eleme',
-          title: '会员地址2'
-        },
-        component: resolve => {
-          require(['@/view/home/home1'], resolve)
         }
       }
     ]

@@ -3,11 +3,11 @@ module.exports = app => {
   const { STRING, DATE, UUIDV1, ENUM, TEXT, DECIMAL } = app.Sequelize;
   return {
     schema: {
-      goodid: {
+      goodsId: {
         type: STRING(38),
-        primarykey: true,
+        primaryKey: true,
         allowNull: false,
-        defalutValue: UUIDV1
+        defaultValue: UUIDV1
       },
       createdTime: {
         type: DATE,

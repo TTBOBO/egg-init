@@ -536,12 +536,20 @@ let util = {
   //status 1 option:{0:"测试",1:"测试1"}   转化成  [{value:0,label:'测试'},{value:1,label:'测试1'}]
   //status 2 ["bolansu","hytondeng"]  转化成  [{value:'bolansu',label:'bolansu'},{value:"hytondeng",label:'hytondeng'}]
   //status 3 {Abnormal: {label: "异常", value: "Abnormal"},Deleting: {label: "删除中", value: "Deleting"}} 转化成  [{value:'Abnormal',label:'异常'},{value:"Deleting",label:'删除中'}]
-  getSelectOpt(data = [], status) {
+  //status 4 [{name:"张三",id:1}] 转化成 [{label:"张三",value:1}]
+  getSelectOpt(data = [], status, params = {}) {
     let optArr = []
+    console.log(data)
+    const { colKey, colName } = params
     for (var i in data) {
       optArr.push({
-        value: status == 2 ? data[i] : i,
-        label: status == 1 || status == 2 ? data[i] : data[i].label
+        value: status == 2 ? data[i] : status == 4 ? data[i][colKey] : i,
+        label:
+          status == 1 || status == 2
+            ? data[i]
+            : status == 4
+            ? data[i][colName]
+            : data[i].label
       })
     }
     optArr.forEach((item, index) => {
@@ -551,6 +559,7 @@ let util = {
         return false
       }
     })
+    console.log(optArr)
     return optArr
   },
   getSelectReverse(data = []) {

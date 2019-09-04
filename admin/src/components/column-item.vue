@@ -181,7 +181,7 @@ export default {
     }
   },
   components: {
-    'expandDom': {
+    expandDom: {
       name: "expandDom",
       functional: true,
       props: {

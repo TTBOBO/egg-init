@@ -3,9 +3,10 @@ module.exports = app => {
   const { STRING, DATE, INTEGER } = app.Sequelize;
   return {
     schema: {
-      categoryId: {
+      id: {
         type: INTEGER.UNSIGNED,
         primaryKey: true,
+        allowNull: false,
         autoIncrement: true
       },
       createdTime: {
@@ -13,14 +14,17 @@ module.exports = app => {
         allowNull: false,
         defaultValue: new Date()
       },
-      categoryName: STRING(76),
+      categoryName: {
+        type: STRING(76),
+        allowNull: false
+      },
       categoryDes: {
         type: STRING(255),
         comment: '类型描述'
       }
     },
-    option: {
-      comment: '商品类型表'
+    options: {
+      comment: '商品类型表' // comment for table
     }
   };
 };

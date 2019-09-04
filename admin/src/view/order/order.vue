@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <CustomTable ref="customTable"
-                 :optionData="tableOption"
-                 @info="info">
+                 :optionData="tableOption">
       <template slot-scope="props"
                 slot="status">
         <el-button :type="statusType[props.row.status]"

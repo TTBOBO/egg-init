@@ -3,11 +3,10 @@ const concatModel = require('../core/concatModel');
 module.exports = app => {
   const { model } = app;
   const { schema } = require('../schema/goods.js')(app);
-
-  let Goods = model.define('goods', schema);
+  let Goods = model.define('Goods', schema);
   Goods = concatModel(Goods);
   Goods.associate = () => {
-    // console.log(app.model);
+    Goods.belongsTo(app.model.Category);
   };
   return Goods;
 };

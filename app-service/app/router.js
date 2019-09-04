@@ -30,4 +30,9 @@ module.exports = app => {
   router.get('/os/get_network_io', controller.os.getNetworkIo);
   router.get('/exec', controller.home.exec);
   router.get('/order/orderList', controller.order.orderList);
+  router.get('/goods/goodsList', controller.goods.goodsList);
+  router.get('/goods/categoryList', controller.goods.categoryList);
+  router.post('/category/addCategory', controller.goods.addCategory);
+  router.post('/category/deleteCategory', controller.goods.deleteCategory);
+  router.post('/category/updateCateGory', controller.goods.updateCateGory);
 };

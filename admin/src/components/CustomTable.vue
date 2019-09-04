@@ -349,8 +349,9 @@ export default {
             let res = await this[item.mock ? '$ajaxMock' : '$ajaxGet'](item.url, {}, item.urlType || 1);
             //当selectDataType为1时，  selectOPtion为obj类型使用第一种方式处理数据 反之是数组类型  用第二种方式处理
             serArr = item.mock ? util.getSelectOpt(res, 3) : util.getSelectOpt(res.result[item.url] || res
-              .result[item.keyurl], item.selectDataType || 2);
+              .result[item.keyurl], item.selectDataType || 2, { colKey: item.colKey, colName: item.colName });
             if (item.selectOPtion) {
+
               serArr = [...util.getSelectOpt(item.selectOPtion, 1), ...serArr]; //默认的数据放前面，接口数据放后面
             }
             obj.selectOPtion = serArr; //下拉框数据   //select switch 存在
@@ -365,6 +366,7 @@ export default {
           }
         }
       }
+      console.log(this.searchData)
     },
     onSubmit () {
       let filter = {}; //[]
@@ -450,7 +452,6 @@ export default {
         ascending: "asc"
       }
       this.search.sort_by = prop
-      console.log(orderByConfig[order], order)
       this.search.sort_type = orderByConfig[order];
       this.getTaskTableData();
       this.$emit('sortChange', prop, order);
