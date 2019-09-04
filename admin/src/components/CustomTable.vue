@@ -229,7 +229,7 @@ export default {
   },
   computed: {
     getSearchLength () {
-      return this.searchData.filter(item => item).length > 0
+      return this.searchData.filter(item => item).length
     }
   },
   components: {
@@ -247,18 +247,6 @@ export default {
       if (!this.defaultSort.prop) {  //没有默认sort的时候不会触发sort-change事件，所以手动触发获取table表格数据
         this.getTaskTableData();
       }
-    },
-    reverse (data, option = {
-      reverse: true
-    }) {
-      data.forEach(item => {
-        if (item.child)
-          item.child.unshift(item.child.pop()) //this.reverse(item.child);
-      })
-      return option.reverse ? JSON.parse(JSON.stringify(data)) : JSON.parse(JSON.stringify(data));
-    },
-    getRowKeys (row) {
-      return this.getEvalKey(this.optionData.evalKey, row);
     },
     getCol () {
       let obj = {};
@@ -300,17 +288,17 @@ export default {
       return item.judgement_con ? eval(item.judgement_con) : false;
     },
     end () { },
-    hideDialog () {
-      this.$set(this.columns, this.checkGroups);
-      this.showhideCol = false;
-    },
+    // hideDialog () {
+    //   this.$set(this.columns, this.checkGroups);
+    //   this.showhideCol = false;
+    // },
     changeGroup (group) {
       this.columns.forEach((item, index) => {
         item.isShow = group.indexOf(item.lable) != -1 ? true : false;
         this.$set(this.columns, index, item);
       });
       this.testColumn = JSON.parse(JSON.stringify(this.optionData.columnData ? this.assignData(this.optionData
-        .columnData, obj) : this.columns));
+        .columnData) : this.columns));
       this.getColumnDataObj();
       this.showTable = false;
       this.taskListloading = true;
@@ -339,66 +327,44 @@ export default {
     setColums () {
       this.showhideCol = !this.showhideCol;
     },
-    getSearchList () {
+    async getSearchList () {
       let serArr;
       let obj = {};
-      if (!this.optionData.columns)
-        return false;
+      let item = null;
+      if (!this.optionData.columns) return false;
       this.searchData = new Array(this.optionData.columns.length);
-      this.optionData.columns.forEach((item, index) => {
+      for (var i = 0; i < this.optionData.columns; i++) {
+        item = this.optionData.columns[i];
         if (item.search && item.type != "img") {
-          if (item.type == 'select' || item.type == "switch" && item.selectOPtion) {
-            if (item.url) {
-              this[item.mock ? '$ajaxMock' : '$ajaxGet'](item.url, {}, item.urlType || 1).then(res => {
-                let currentIndex = index;
-                obj = {
-                  range: "",
-                  search: item.search, //搜索条件
-                  lable: item.lable, //显示的字
-                  value: item.searchVal || "", //默认值
-                  type: item.type, //搜索 type   类型  time   select   普通框
-                  pla: item.pla, // placeholder值
-                  seaW: item.seaW, //搜索宽度
-                };
-
-                //当selectDataType为1时，  selectOPtion为obj类型使用第一种方式处理数据 反之是数组类型  用第二种方式处理
-                serArr = item.mock ? util.getSelectOpt(res, 3) : util.getSelectOpt(res.result[item.url] || res
-                  .result[item.keyurl], item.selectDataType || 2);
-                if (item.selectOPtion) {
-                  serArr = [...util.getSelectOpt(item.selectOPtion, 1), ...serArr]; //默认的数据放前面，接口数据放后面
-                }
-                obj.selectOPtion = serArr; //下拉框数据   //select switch 存在
-                this.searchData.splice(currentIndex, 1, obj); // 防止
-                item.selectOPtion = util.getSelectReverse(serArr); //反序列化给table表格提供数据，合并 默认设置 以及接口返回的数据
-              })
-            } else {
-              obj = {
-                range: "",
-                search: item.search, //搜索条件
-                lable: item.lable, //显示的字
-                value: item.searchVal || "", //默认值
-                type: item.type, //搜索 type   类型  time   select   普通框
-                pla: item.pla, // placeholder值
-                seaW: item.seaW, //搜索宽度
-              };
+          obj = {
+            range: "",
+            search: item.search, //搜索条件
+            lable: item.lable, //显示的字
+            value: item.searchVal || "", //默认值
+            type: item.type, //搜索 type   类型  time   select   普通框
+            pla: item.pla, // placeholder值
+            seaW: item.seaW, //搜索宽度
+          };
+          if (item.url) {
+            let res = await this[item.mock ? '$ajaxMock' : '$ajaxGet'](item.url, {}, item.urlType || 1);
+            //当selectDataType为1时，  selectOPtion为obj类型使用第一种方式处理数据 反之是数组类型  用第二种方式处理
+            serArr = item.mock ? util.getSelectOpt(res, 3) : util.getSelectOpt(res.result[item.url] || res
+              .result[item.keyurl], item.selectDataType || 2);
+            if (item.selectOPtion) {
+              serArr = [...util.getSelectOpt(item.selectOPtion, 1), ...serArr]; //默认的数据放前面，接口数据放后面
+            }
+            obj.selectOPtion = serArr; //下拉框数据   //select switch 存在
+            this.searchData.splice(i, 1, obj); // 防止
+            item.selectOPtion = util.getSelectReverse(serArr); //反序列化给table表格提供数据，合并 默认设置 以及接口返回的数据
+          } else {
+            if (item.type == 'select' || item.type == "switch" && item.selectOPtion) {
               serArr = util.getSelectOpt(item.selectOPtion, 1);
               obj.selectOPtion = serArr;
-              this.searchData.splice(index, 0, obj);
             }
-          } else {
-            obj = {
-              range: "",
-              search: item.search, //搜索条件
-              lable: item.lable, //显示的字
-              value: item.searchVal || "", //默认值
-              type: item.type, //搜索 type   类型  time   select   普通框
-              pla: item.pla, // placeholder值
-              seaW: item.seaW, //搜索宽度
-            };
-            this.searchData.splice(index, 0, obj);
+            this.searchData.splice(i, 0, obj);
           }
         }
-      })
+      }
     },
     onSubmit () {
       let filter = {}; //[]
@@ -542,18 +508,16 @@ export default {
     },
     //跟局 状态 返回对应的字
     getHandTitle: function (data, obj) {
-      return obj[data] || "未发布";
+      return obj[data] || "";
     },
     //返回  按钮根据 状态 显示  的type 类型
     getHandType: function (data, obj) {
-      return obj[data] || "host";
+      return obj[data] || "";
     },
     topBtnGroup (group) {
       if (!group || group.length == 0)
         return false;
-      group.forEach(item => {
-        this.getButtonOption(item);
-      })
+      group.forEach(item => this.getButtonOption(item));
     },
     getButtonOption (item) {
       this.btnGroup.push({
@@ -573,9 +537,7 @@ export default {
     handBtn (item, index) {
       if (!item.noloading) {
         this.btnGroup[index].loading = true;
-        setTimeout(() => {
-          this.btnGroup[index].loading = false;
-        }, 1000)
+        setTimeout(() => this.btnGroup[index].loading = false, 1000);
       }
       if (item.emit)
         this.$emit(item.emit, this.selectItem)
@@ -624,7 +586,6 @@ export default {
       this.search = this.optionData.assignSearch ? this.optionData.search : Object.assign(this.search, this
         .optionData.search);
       this.topBtnGroup(this.optionData.topBtnGroup);
-
       await this.getSearchList();
       this.columns = this.optionData.columns;
       if (!this.columns)
@@ -636,7 +597,6 @@ export default {
       }); //设置显示隐藏列
       this.initDbClick();
       this.getCol();
-
       this.getDefaultSort();
       this.showTable = true;
     },
@@ -667,7 +627,6 @@ export default {
         });
         this.taskTableData = [];
       }
-
       this.showTable = true;
     },
     setTabelData (data) {
@@ -687,14 +646,14 @@ export default {
       //   data
       // }, this.dataKey);
     },
-    addColumn (cols) {
+    async addColumn (cols) {
       let colsArr = cols.filter(item => {
         item.isShow = true;
         this.checkGroup.push(item.lable);
         return !item.hidden;
       });
       this.columns.push(...colsArr);
-      this.getSearchList();
+      await this.getSearchList();
       if (this.optionData.dbEdit) {
         this.columns.forEach((col) => {
           this.taskTableData.forEach((item, index) => {
@@ -720,14 +679,11 @@ export default {
         }, 1000)
       })
     }
-
     this.init();
   },
-  created () {
-
-  },
+  created () { },
   destroyed () {
-    window.onresize = () => { }
+    window.onresize = () => { };
   },
   watch: {
     defaultData (newV) {
@@ -736,14 +692,12 @@ export default {
   }
 };
 </script>
-
 <style>
 .img {
   cursor: pointer;
   width: 50px;
   height: 50px;
 }
-
 .page-wrap {
   margin: 10px 0;
   text-align: center;
@@ -751,21 +705,17 @@ export default {
 .search-form {
   margin-bottom: 10px;
 }
-
 .checkbox-group .el-checkbox-group div {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-
 .checkbox-group .el-checkbox + .el-checkbox {
   margin-left: 0 !important;
 }
-
 .expand .el-table__expand-column .cell {
   display: none;
 }
-
 .el-table__expanded-cell {
   background: #f7f7f7 !important;
 }
