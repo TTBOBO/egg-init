@@ -19,5 +19,9 @@ module.exports = {
   parserOptions: {
     sourceType: 'module',
     parser: 'babel-eslint'
+  },
+  globals: {
+    util: true,
+    echarts: true
   }
 }

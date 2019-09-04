@@ -63,7 +63,7 @@ export default {
     renderHeader (h, { column }) {
       return h('span', column.label)
     },
-    formatter (row, column) {
+    formatter (row) {
       return row.address;
     }
   }

@@ -21,8 +21,6 @@ export default {
     const userInfo = util.getLocalStorage('userInfo');
     if (userInfo) {
       this.SETUSERINFO(JSON.parse(userInfo));
-    } else {
-
     }
   }
 }

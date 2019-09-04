@@ -1,7 +1,6 @@
 <template>
   <el-table-column :fixed="item.fixed|| false"
                    :min-width="item.MinWidth"
-                   :render-header="renderHeader"
                    :prop="item.value"
                    tooltip-effect="light"
                    :show-overflow-tooltip="item.tooltip || false"
@@ -42,13 +41,20 @@
         <span>{{(scope.row[item.value] !== null || scope.row[item.value] != undefined) ? scope.row[item.value] : item.defaultVal}}</span>
       </template>
     </template>
+    <template slot="header"
+              slot-scope="scope">
+      <expandDom :column="item"
+                 v-if="item.solt_header"
+                 :index="scope.$index"
+                 :ctx="{}"></expandDom>
+      <span v-else>{{scope.column.label}}</span>
+    </template>
     <slot></slot>
   </el-table-column>
 
   <el-table-column :type="item.type"
                    :fixed="item.fixed|| false"
                    :min-width="item.MinWidth"
-                   :render-header="renderHeader"
                    :prop="item.value"
                    tooltip-effect="light"
                    :show-overflow-tooltip="item.tooltip || false"
@@ -64,12 +70,19 @@
                      :render="item.render"></expand-solt>
       </template>
     </template>
+    <template slot="header"
+              slot-scope="scope">
+      <expandDom :column="item"
+                 v-if="item.solt_header"
+                 :index="scope.$index"
+                 :ctx="{}"></expandDom>
+      <span v-else>{{scope.column.label}}</span>
+    </template>
     <slot></slot>
   </el-table-column>
 
   <el-table-column :fixed="item.fixed|| false"
                    :min-width="item.MinWidth"
-                   :render-header="renderHeader"
                    :filter-method="filterHandler"
                    :filters="item.filters"
                    :prop="item.value"
@@ -112,55 +125,20 @@
         <span>{{(scope.row[item.value] !== null || scope.row[item.value] != undefined) ? scope.row[item.value] : item.defaultVal}}</span>
       </template>
     </template>
+    <template slot="header"
+              slot-scope="scope">
+      <expandDom :column="item"
+                 v-if="item.solt_header"
+                 :index="scope.$index"
+                 :ctx="{}"></expandDom>
+      <span v-else>{{scope.column.label}}</span>
+    </template>
     <slot></slot>
   </el-table-column>
 </template>
 
 <script>
-import table_column from '../minix/table_column.js'
-const {
-  expandDom
-} = {
-  'expandDom': {
-    name: "expandDom",
-    functional: true,
-    props: {
-      row: Object,
-      render: Function,
-      index: Number,
-      column: {
-        type: Object,
-        default: null
-      },
-      ctx: Object,
-      header: Boolean
-    },
-    render: (h, ctx) => {
-      const params = {
-        row: ctx.props.row,
-        index: ctx.props.index
-      };
-      if (ctx.props.column) {
-        const value = ctx.props.column[ctx.props.column.scopedKey] || ctx.props.column.value;
-        if (ctx.props.column) params.column = ctx.props.column;
-        let scoped = ctx.props.ctx['$scopedSlots']; //取出当前组件对应的table组件的$scopedSlots
-        if (ctx.props.column.solt_header && scoped[value + '_header']) {
-
-          try {
-            return h('span', scoped[value + '_header'](params));
-          } catch (error) {
-            console.error(error);
-            return h('span', {}, "");
-          }
-        }
-      }
-    },
-    renderError: (h, err) => {
-      return (h, {}, err);
-    }
-  }
-}
-
+import table_column from '../minix/table_column.js';
 export default {
   name: "column-item",
   mixins: [table_column],
@@ -203,7 +181,44 @@ export default {
     }
   },
   components: {
-    expandDom,
+    'expandDom': {
+      name: "expandDom",
+      functional: true,
+      props: {
+        row: Object,
+        render: Function,
+        index: Number,
+        column: {
+          type: Object,
+          default: null
+        },
+        ctx: Object,
+        header: Boolean
+      },
+      render: (h, ctx) => {
+        const params = {
+          row: ctx.props.row,
+          index: ctx.props.index
+        };
+        if (ctx.props.column) {
+          const value = ctx.props.column[ctx.props.column.scopedKey] || ctx.props.column.value;
+          if (ctx.props.column) params.column = ctx.props.column;
+          let scoped = ctx.parent.ctx['$scopedSlots']; //取出当前组件对应的table组件的$scopedSlots
+
+          if (ctx.props.column.solt_header && scoped[value + '_header']) {
+            try {
+              return h('span', scoped[value + '_header'](params));
+            } catch (error) {
+              console.error(error);
+              return h('span', {}, "");
+            }
+          }
+        }
+      },
+      renderError: (h, err) => {
+        return (h, {}, err);
+      }
+    },
     'expand-solt': {
       name: "expand-solt",
       functional: true,
@@ -254,20 +269,6 @@ export default {
     filterHandler (value, row, column) {
       const property = column['property'];
       return row[property] == value;
-    },
-    renderHeader (h, {
-      column,
-      $index
-    }) {
-      let index = this.optionData.selection ? $index - 1 : $index;
-      if (!this.columnData) return '';
-      return this.columnDataObj[column.property].solt_header && this.t_columns.length ? h(expandDom, {
-        props: {
-          index: index,
-          column: this.columnDataObj[column.property],
-          ctx: this.ctx
-        }
-      }) : h('span', {}, column.label);
     },
     get_solt_scoped (ctx) {
       return (ctx.$options._componentTag != 'CustomTable' && ctx.$options._componentTag != 'Custom-table' && ctx.$options._componentTag) ? this.get_solt_scoped(ctx.$parent) : ctx;

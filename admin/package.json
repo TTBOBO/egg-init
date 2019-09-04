@@ -40,7 +40,8 @@
       "echarts": true
     },
     "globals": {
-      "echarts": true
+      "echarts": true,
+      "util": true
     },
     "extends": [
       "plugin:vue/essential",

@@ -14,7 +14,6 @@
     </CustomTable>
   </div>
 </template>
-
 <script>
 import CustomTable from '@/components/CustomTable';
 export default {

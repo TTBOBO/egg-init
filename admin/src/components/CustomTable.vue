@@ -285,7 +285,7 @@ export default {
     },
     getBtnStatus (scope, item) {
       let data = scope.row;
-      return item.judgement_con ? eval(item.judgement_con) : false;
+      return item.judgement_con ? eval(data + '.' + item.judgement_con) : false;
     },
     end () { },
     // hideDialog () {
@@ -333,7 +333,7 @@ export default {
       let item = null;
       if (!this.optionData.columns) return false;
       this.searchData = new Array(this.optionData.columns.length);
-      for (var i = 0; i < this.optionData.columns; i++) {
+      for (var i = 0; i < this.optionData.columns.length; i++) {
         item = this.optionData.columns[i];
         if (item.search && item.type != "img") {
           obj = {
