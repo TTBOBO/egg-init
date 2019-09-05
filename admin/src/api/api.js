@@ -7,6 +7,9 @@ const REQUEST = {
   address_list: '/user/get_user_addressList',
   orderList: '/order/orderList',
   categoryList: '/goods/categoryList',
-  goodsList: '/goods/goodsList'
+  goodsList: '/goods/goodsList',
+  addGoods: '/goods/addGoods',
+  getSTS: '/getSTS',
+  changeGoodsStatus: '/goods/changeGoodsStatus'
 }
 export default REQUEST

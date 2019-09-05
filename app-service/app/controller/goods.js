@@ -7,6 +7,35 @@ class Goods extends baseController {
       result
     });
   }
+  async addGoods() {
+    const { ctx } = this;
+    ctx.validate({
+      name: { type: 'string' },
+      status: { type: 'string' },
+      salePrice: { type: 'number' },
+      categoryId: { type: 'number' },
+      goodsInfo: { type: 'string?' }
+    });
+    this.success({
+      result: await this.ctx.service.goods.addGoods({
+        ...ctx.request.body
+      })
+    });
+  }
+
+  async changeGoodsStatus() {
+    const { ctx } = this;
+    ctx.validate({
+      ids: { type: 'array' },
+      status: { type: 'string' }
+    });
+    this.success({
+      result: await this.ctx.service.goods.changeGoodsStatus({
+        ...ctx.request.body
+      })
+    });
+  }
+
   async categoryList() {
     let result = await this.service.goods.categoryList(this.ctx.query);
     this.success({

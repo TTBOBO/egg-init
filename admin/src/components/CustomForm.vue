@@ -1,21 +1,21 @@
 <template>
   <div class="">
     <el-form ref="form"
+             v-if="showForm"
              :model="paramsData"
              :inline="optionData['inline'] || false"
              :rules="validata"
              :label-width="optionData.LabelWidth || '120px'"
-             v-if="showForm"
              :inline-message="optionData['inline-message']"
              :status-icon="true"
              :border="optionData.border || true"
              @submit.native.prevent>
       <el-form-item v-for="(item,index) in optionData.formList"
+                    v-show="!item.hidden"
                     :label="item.title+'：'"
                     :prop="item.field"
                     :key='index'
-                    :style="{width:item.width}"
-                    v-show="!item.hidden">
+                    :style="{width:item.width}">
         <span slot="label">
           <span class="mb"
                 v-show="item.slotMark"> ~ </span>
@@ -92,6 +92,8 @@
                      active-color="#13ce66"
                      :active-text="item.activeT"
                      :inactive-text="item.inactiveT"
+                     :active-value="item.activeV || true"
+                     :inactive-value="item.inactiveV || false"
                      inactive-color="#ff4949"> </el-switch>
         </template>
         <template v-else-if="item.type == 'datetime'">

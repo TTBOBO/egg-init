@@ -119,10 +119,23 @@ export default [
         name: 'goodsCategory',
         meta: {
           icon: 'el-icon-eleme',
-          title: '商品类型'
+          title: '商品类型',
+          hideInMenu: true
         },
         component: resolve => {
           require(['@/view/goods/goodsCategory'], resolve)
+        }
+      },
+      {
+        path: 'addGoods',
+        name: 'addGoods',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '添加商品',
+          hideInMenu: false
+        },
+        component: resolve => {
+          require(['@/view/goods/addGoods'], resolve)
         }
       }
     ]

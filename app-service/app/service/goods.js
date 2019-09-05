@@ -33,6 +33,30 @@ class Goods extends Service {
     });
   }
 
+  async addGoods(body = {}) {
+    return await this.app.model.Goods.createOne({ ...body });
+  }
+
+  async changeGoodsStatus(body = {}) {
+    const { ids, status } = body;
+    const { app } = this;
+    const {
+      Sequelize: { Op }
+    } = app;
+    return await this.app.model.Goods.update(
+      {
+        status
+      },
+      {
+        where: {
+          goodsid: {
+            [Op.or]: ids
+          }
+        }
+      }
+    );
+  }
+
   async categoryList({ categoryName }) {
     const { app } = this;
     const {

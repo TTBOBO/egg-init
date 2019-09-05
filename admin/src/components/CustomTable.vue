@@ -45,7 +45,7 @@
                  style="margin-right: 3px;margin-bottom:20px;"><a style="width:0px;height:0px;"></a>显示隐藏列</el-button>
       <span class="btn-items"
             v-if="btnGroup.length > 0"
-            style="margin-bottom:20px;">
+            style="margin-bottom:10px;display: inline-block;">
         <el-button v-for="(item,index) in btnGroup"
                    size="small"
                    :loading="item.loading"
@@ -123,10 +123,11 @@
                        :key="index"
                        :type="btn.handStatus ? getHandType(scope.row[btn.handStatus.obj],btn.handStatus.type) : (btn.type || 'primary')"
                        size="mini"
+                       :loading="toolLoading[scope.$index] && btn.hasloading"
                        :icon="btn.icon"
                        :disabled="getBtnStatus(scope,btn)"
                        :plain="btn.plain"
-                       @click.native.prevent="btnMethod(btn,scope.row, index)">
+                       @click.native.prevent="btnMethod(btn,scope.row, scope.$index)">
               {{btn.handStatus ? getHandTitle(scope.row[btn.handStatus.obj],btn.handStatus.title) : btn.title }}
             </el-button>
             <el-dropdown :key="index"
@@ -143,6 +144,7 @@
                              :type="child.handStatus ? getHandType(scope.row[child.handStatus.obj],child.handStatus.type) : (child.type || 'primary')"
                              size="mini"
                              :icon="child.icon"
+                             :loading="toolLoading[scope.$index] && child.hasloading"
                              :disabled="getBtnStatus(scope,child)"
                              :plain="child.plain"
                              @click.native.prevent="btnMethod(child,scope.row, index)">
@@ -202,7 +204,8 @@ export default {
       showTable: false,
       columnData: null, //存储 列的数据
       columnDataObj: {},
-      defaultSort: null
+      defaultSort: null,
+      toolLoading: []
     }
   },
   props: {
@@ -366,7 +369,6 @@ export default {
           }
         }
       }
-      console.log(this.searchData)
     },
     onSubmit () {
       let filter = {}; //[]
@@ -530,22 +532,25 @@ export default {
         icon: item.icon || "",
         disabled: this.getDisStatus(item),
         loading: false,
-        noloading: item.noloading,
+        hasloading: item.hasloading,
         hasSel: item.hasSel, //需要选中几个
         hasMore: item.hasMore //( more,  less,   == ) =>  item.hasSel
       })
     },
     handBtn (item, index) {
-      if (!item.noloading) {
+      if (item.hasloading) {
         this.btnGroup[index].loading = true;
         setTimeout(() => this.btnGroup[index].loading = false, 1000);
       }
       if (item.emit)
         this.$emit(item.emit, this.selectItem)
     },
-
     //table  表格的 按钮事件
     btnMethod (item, row, key) {
+      if (item.hasloading) {
+        this.toolLoading[key] = true;
+        setTimeout(() => this.$set(this.toolLoading, key, false), 1000);
+      }
       if (item.emit)
         this.$emit(item.emit, {
           row,
@@ -704,7 +709,6 @@ export default {
   text-align: center;
 }
 .search-form {
-  margin-bottom: 10px;
 }
 .checkbox-group .el-checkbox-group div {
   display: flex;

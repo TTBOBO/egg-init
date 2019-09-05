@@ -40,7 +40,9 @@ export default {
           { lable: "备注", value: "remark", type: "", search: "", tooltip: true, tipAlign: "right" },
         ],
         toolEvent: [],
-        topBtnGroup: []
+        topBtnGroup: [
+
+        ]
       }
     }
   },

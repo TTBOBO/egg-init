@@ -539,7 +539,6 @@ let util = {
   //status 4 [{name:"张三",id:1}] 转化成 [{label:"张三",value:1}]
   getSelectOpt(data = [], status, params = {}) {
     let optArr = []
-    console.log(data)
     const { colKey, colName } = params
     for (var i in data) {
       optArr.push({
@@ -559,7 +558,6 @@ let util = {
         return false
       }
     })
-    console.log(optArr)
     return optArr
   },
   getSelectReverse(data = []) {

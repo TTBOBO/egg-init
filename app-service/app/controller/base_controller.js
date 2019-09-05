@@ -72,7 +72,13 @@ class BaseController extends Controller {
   }
   async uploadFile() {
     let filePath = await this.upload();
-    this.success({ data: filePath });
+    this.success({ result: filePath });
+  }
+  async getSTS() {
+    const Cos = new CosController(this.config.cos);
+    this.success({
+      result: await Cos.getCredential()
+    });
   }
 
   verifyCode(code) {

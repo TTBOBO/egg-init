@@ -22,6 +22,7 @@ module.exports = {
   },
   globals: {
     util: true,
-    echarts: true
+    echarts: true,
+    COS: true
   }
 }

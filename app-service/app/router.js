@@ -31,8 +31,11 @@ module.exports = app => {
   router.get('/exec', controller.home.exec);
   router.get('/order/orderList', controller.order.orderList);
   router.get('/goods/goodsList', controller.goods.goodsList);
+  router.post('/goods/addGoods', controller.goods.addGoods);
+  router.post('/goods/changeGoodsStatus', controller.goods.changeGoodsStatus);
   router.get('/goods/categoryList', controller.goods.categoryList);
   router.post('/category/addCategory', controller.goods.addCategory);
   router.post('/category/deleteCategory', controller.goods.deleteCategory);
   router.post('/category/updateCateGory', controller.goods.updateCateGory);
+  router.get('/getSTS', controller.home.getSTS);
 };
