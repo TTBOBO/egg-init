@@ -33,14 +33,13 @@ export default {
       addGoodsData: null,
       addGoodsOption: {
         formList: [
-          { field: "name", title: "商品名称", value: 'required', validate: "", type: "input" },
+          { field: "name", title: "商品名称", value: '', validate: "", type: "input" },
           { field: "categoryId", title: "商品类型", value: '', validate: "required", type: "select", optionUrl: "categoryList", urlkey: "data", colKey: "id", colName: "categoryName" },
           { field: "status", title: "商品状态", value: "down", validate: "required", type: "switch", activeT: "上架", activeV: "up", inactiveT: "下架", inactiveV: "down" },
-          { field: "salePrice", title: "销售价格", value: 0, validate: "required", type: "input", inputType: 'number' },
+          { field: "salePrice", title: "销售价格", value: '', validate: "required", type: "input" },
           { field: "goodsInfo", title: "商品描述", value: '', validate: "", type: "textarea" },
           // { field: "thumbnail", title: "thumbnail", value: "", validate: "", scoped: true },
         ],
-        infoUrl: "",
         validata: {},
         LabelWidth: '100px',
       }
@@ -54,9 +53,13 @@ export default {
       let res = await this.$refs.goodsForm.validate();
       if (!res) return;
       this.loading = true;
-      let addData = await this.$ajaxPost('addGoods', this.addGoodsData);
+      let { goodsId } = this.$route.query;
+      if (goodsId) {
+        this.addGoodsData.goodsId = goodsId;
+      }
+      let addData = await this.$ajaxPost(goodsId ? 'updateGoods' : 'addGoods', this.addGoodsData);
       if (addData.result) {
-        this.$message.success("添加商品成功");
+        this.$message.success(`${goodsId ? '编辑' : '添加'}商品成功`);
         this.$router.back();
       } else {
         this.$message.error(addData.message);
@@ -77,12 +80,11 @@ export default {
   },
   async created () {
     await util.createJs('cos-js-sdk-v5', '/static/js/cos-js-sdk-v5.min.js');
-  },
-  watch: {
-    addGoodsData: {
-      deep: true,
-      handler (newV) {
-        console.log(newV);
+    const goodsId = this.$route.query.goodsId;
+    if (goodsId) {
+      let { result: { data } } = await this.$ajaxGet('goodsList', { goodsId });
+      if (data.length) {
+        this.addGoodsData = data[0];
       }
     }
   }

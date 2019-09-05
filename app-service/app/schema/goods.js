@@ -1,6 +1,6 @@
 'use strict';
 module.exports = app => {
-  const { STRING, DATE, UUIDV1, ENUM, TEXT, DECIMAL } = app.Sequelize;
+  const { STRING, UUIDV1, ENUM, TEXT, DECIMAL } = app.Sequelize;
   return {
     schema: {
       goodsId: {
@@ -8,11 +8,6 @@ module.exports = app => {
         primaryKey: true,
         allowNull: false,
         defaultValue: UUIDV1
-      },
-      createdTime: {
-        type: DATE,
-        allowNull: false,
-        defaultValue: new Date()
       },
       name: STRING(76),
       status: {

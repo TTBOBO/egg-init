@@ -409,8 +409,11 @@ export default {
       },
       deep: true
     },
-    formDataInfo () {
-      this.updateData();
+    formDataInfo: {
+      handler () {
+        this.updateData();
+      },
+      deep: true
     }
   }
 };

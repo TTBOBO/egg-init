@@ -7,8 +7,12 @@ const REQUEST = {
   address_list: '/user/get_user_addressList',
   orderList: '/order/orderList',
   categoryList: '/goods/categoryList',
+  addCategory: '/category/addCategory',
+  deleteCategory: '/category/deleteCategory',
+  updateCateGory: '/category/updateCateGory',
   goodsList: '/goods/goodsList',
   addGoods: '/goods/addGoods',
+  updateGoods: '/goods/updateGoods',
   getSTS: '/getSTS',
   changeGoodsStatus: '/goods/changeGoodsStatus'
 }

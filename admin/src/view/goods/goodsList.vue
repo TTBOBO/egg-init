@@ -7,6 +7,12 @@
                  @edit="edit"
                  @changeStauts="changeStauts"
                  :optionData="tableOption">
+      <template slot-scope="props"
+                slot="status">
+        <span class="circular"
+              :style="{background:props.row.status === 'up' ?'#409eff':'#909399'}"></span>
+        {{props.column.selectOPtion[props.row.status]}}
+      </template>
     </CustomTable>
   </div>
 </template>
@@ -31,7 +37,7 @@ export default {
           { lable: "价格", value: "salePrice", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "缩略图", value: "thumbnail", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "商品类型", value: "categoryId", type: "select", search: "categoryId", tooltip: true, tipAlign: "right", url: "categoryList", keyurl: "data", selectDataType: 4, colKey: "id", colName: "categoryName" },
-          { lable: "商品状态", value: "status", type: "select", search: "status", tooltip: true, tipAlign: "right", selectOPtion: { up: "上架", down: "下架" } },
+          { lable: "商品状态", value: "status", type: "select", search: "status", tooltip: true, tipAlign: "right", selectOPtion: { up: "上架", down: "下架" }, scoped: true },
           { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right" }
         ],
         toolEvent: [
@@ -50,9 +56,6 @@ export default {
     CustomTable
   },
   methods: {
-    info ({ row: { id } }) {
-      console.log(id);
-    },
     createdGoods () {
       this.$router.push({ name: 'addGoods' });
     },
@@ -63,12 +66,16 @@ export default {
       let ids = this.filterItems(selection, 'down');
       if (ids.length) {
         this.changeGoodsStatus(ids, 'up');
+      } else {
+        this.$message.warning("没有可执行的数据");
       }
     },
     downGoods (selection) {
       let ids = this.filterItems(selection, 'up');
       if (ids.length) {
         this.changeGoodsStatus(ids, 'down');
+      } else {
+        this.$message.warning("没有可执行的数据");
       }
     },
     async changeGoodsStatus (ids, status) {
@@ -79,8 +86,8 @@ export default {
     async changeStauts ({ row: { goodsId, status } }) {
       await this.changeGoodsStatus([goodsId], status === 'up' ? 'down' : 'up');
     },
-    edit (params) {
-      console.log(params)
+    edit ({ row: { goodsId } }) {
+      this.$router.push({ path: "addGoods", query: { goodsId } })
     }
   },
   mounted () {

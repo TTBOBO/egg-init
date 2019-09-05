@@ -77,17 +77,6 @@ export default [
         component: resolve => {
           require(['@/view/user/user'], resolve)
         }
-      },
-      {
-        path: 'address',
-        name: 'address',
-        meta: {
-          icon: 'el-icon-eleme',
-          title: '会员地址'
-        },
-        component: resolve => {
-          require(['@/view/home/home'], resolve)
-        }
       }
     ]
   },
@@ -120,7 +109,7 @@ export default [
         meta: {
           icon: 'el-icon-eleme',
           title: '商品类型',
-          hideInMenu: true
+          hideInMenu: false
         },
         component: resolve => {
           require(['@/view/goods/goodsCategory'], resolve)
@@ -132,7 +121,7 @@ export default [
         meta: {
           icon: 'el-icon-eleme',
           title: '添加商品',
-          hideInMenu: false
+          hideInMenu: true
         },
         component: resolve => {
           require(['@/view/goods/addGoods'], resolve)
@@ -145,7 +134,7 @@ export default [
     name: 'order',
     redirect: '/order/orderlist',
     meta: {
-      title: '首页',
+      title: '订单',
       //   href: 'https://lison16.github.io/iview-admin-doc/#/',
       icon: 'el-icon-eleme'
     },
@@ -160,6 +149,17 @@ export default [
         },
         component: resolve => {
           require(['@/view/order/order'], resolve)
+        }
+      },
+      {
+        path: 'evaluate',
+        name: 'evaluate',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '用户评价'
+        },
+        component: resolve => {
+          require(['@/view/order/evaluate'], resolve)
         }
       }
     ]

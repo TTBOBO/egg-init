@@ -22,7 +22,7 @@ class Customer extends Service {
   }
 
   async createUser() {
-    const { User, UserInfo, Task } = this.app.model;
+    const { User } = this.app.model;
     const uuidv1 = require('uuid/v1');
     const createTime = new Date();
     let data = await User.findOrCreate({

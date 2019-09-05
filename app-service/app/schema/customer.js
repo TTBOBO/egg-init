@@ -1,6 +1,6 @@
 'use strict';
 module.exports = app => {
-  const { STRING, DATE, INTEGER } = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
   return {
     schema: {
       id: {
@@ -8,10 +8,6 @@ module.exports = app => {
         primaryKey: true,
         allowNull: false,
         autoIncrement: true
-      },
-      createdTime: {
-        type: DATE,
-        allowNull: false
       },
       nickName: STRING(76),
       authorPic: STRING(76),

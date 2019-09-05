@@ -50,6 +50,7 @@ class BaseModel {
     return await this.create(data, { ...option });
   }
   async deleteOne({ where = {}, limit, transaction }) {
+    console.log(limit);
     let option = {
       where
     };

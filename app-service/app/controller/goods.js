@@ -12,7 +12,7 @@ class Goods extends baseController {
     ctx.validate({
       name: { type: 'string' },
       status: { type: 'string' },
-      salePrice: { type: 'number' },
+      salePrice: { type: 'string' },
       categoryId: { type: 'number' },
       goodsInfo: { type: 'string?' }
     });
@@ -20,6 +20,21 @@ class Goods extends baseController {
       result: await this.ctx.service.goods.addGoods({
         ...ctx.request.body
       })
+    });
+  }
+
+  async updateGoods() {
+    const { ctx } = this;
+    ctx.validate({
+      name: { type: 'string' },
+      status: { type: 'string' },
+      salePrice: { type: 'string' },
+      categoryId: { type: 'number' },
+      goodsInfo: { type: 'string?' },
+      goodsId: { type: 'string' }
+    });
+    this.success({
+      result: await this.ctx.service.goods.updateGoods(ctx.request.body)
     });
   }
 

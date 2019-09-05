@@ -25,12 +25,6 @@ module.exports = app => {
         comment: '最后修改人的id',
         defaultValue: ''
       },
-      createdTime: {
-        type: DATE,
-        allowNull: false,
-        defaultValue: new Date(),
-        comment: '创建时间'
-      },
       creatorName: {
         type: STRING(76),
         allowNull: false,

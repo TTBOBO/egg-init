@@ -5,7 +5,9 @@ var Cos = require('cos-nodejs-sdk-v5');
 class CosController {
   constructor(config) {
     this.config = config;
+    // Bucket, Region, baseUrl
     const { Bucket, Region, baseUrl, ...CosInitConfig } = this.config;
+    console.log(Bucket, Region, baseUrl);
     this.cos = new Cos({ ...CosInitConfig });
   }
   async sliceUploadFile(params = {}) {

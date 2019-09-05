@@ -13,6 +13,7 @@
             <el-input v-if="item.type == '' || item.type == 'input'"
                       :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
                       v-model="item.value"
+                      clearable
                       :placeholder="item.pla || '请输入'+item.lable"></el-input>
             <el-date-picker v-else-if="item.type == 'time'"
                             :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
@@ -25,6 +26,7 @@
             <el-select v-else-if="item.type == 'select' || item.type == 'switch' "
                        filterable
                        v-model="item.value"
+                       clearable
                        :placeholder="item.pla || '请选择'+item.lable">
               <el-option v-for="_item in item.selectOPtion"
                          :key="_item.value"

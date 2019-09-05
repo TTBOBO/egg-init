@@ -9,7 +9,8 @@ class Goods extends Service {
     salePrice,
     categoryId,
     sort_type,
-    sort_by
+    sort_by,
+    goodsId
   }) {
     const { app } = this;
     // const {
@@ -19,7 +20,8 @@ class Goods extends Service {
       name,
       status,
       salePrice,
-      categoryId
+      categoryId,
+      goodsId
     };
     return await app.model.Goods.grid({
       pagination: { page, size },
@@ -35,6 +37,13 @@ class Goods extends Service {
 
   async addGoods(body = {}) {
     return await this.app.model.Goods.createOne({ ...body });
+  }
+  async updateGoods(body = {}) {
+    let { goodsId, ...updateData } = body;
+    return await this.app.model.Goods.update(
+      { ...updateData },
+      { where: { goodsId } }
+    );
   }
 
   async changeGoodsStatus(body = {}) {
@@ -80,14 +89,10 @@ class Goods extends Service {
     return await this.app.model.Category.createOne({ ...body });
   }
   async deleteCategory(body = {}) {
-    let { ids } = body;
-    const sequelize = this.app.Sequelize;
-    const { Op } = sequelize;
+    let { id } = body;
     return await this.app.model.Category.deleteOne({
       where: {
-        id: {
-          [Op.or]: ids
-        }
+        id
       }
     });
   }

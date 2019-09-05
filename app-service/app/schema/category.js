@@ -1,6 +1,6 @@
 'use strict';
 module.exports = app => {
-  const { STRING, DATE, INTEGER } = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
   return {
     schema: {
       id: {
@@ -9,11 +9,11 @@ module.exports = app => {
         allowNull: false,
         autoIncrement: true
       },
-      createdTime: {
-        type: DATE,
-        allowNull: false,
-        defaultValue: new Date()
-      },
+      // createdTime: {
+      //   type: DATE,
+      //   allowNull: false,
+      //   defaultValue: new Date()
+      // },
       categoryName: {
         type: STRING(76),
         allowNull: false
