@@ -10,6 +10,7 @@ module.exports = app => {
     //   foreignKey: 'uuid',
     //   targetKey: 'id'
     // });
+    // Customer.hasOne(app.model.Comment);
   };
   return Customer;
 };

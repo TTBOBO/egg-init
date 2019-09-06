@@ -52,7 +52,7 @@
     <slot></slot>
   </el-table-column>
 
-  <el-table-column :type="item.type"
+  <el-table-column :type="item.expand ? 'expand' : 'index'"
                    :fixed="item.fixed|| false"
                    :min-width="item.MinWidth"
                    :prop="item.value"

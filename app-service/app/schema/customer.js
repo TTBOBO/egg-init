@@ -3,7 +3,7 @@ module.exports = app => {
   const { STRING, INTEGER } = app.Sequelize;
   return {
     schema: {
-      id: {
+      uuid: {
         type: INTEGER.UNSIGNED,
         primaryKey: true,
         allowNull: false,

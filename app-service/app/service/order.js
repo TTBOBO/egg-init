@@ -64,6 +64,30 @@ class Order extends Service {
       ]
     });
   }
+
+  async CommerList({ page, size, uuid, sort_type, sort_by }) {
+    const { app } = this;
+    let where = {
+      uuid
+    };
+    return await app.model.Comment.grid({
+      pagination: { page, size },
+      where,
+      sort: [ sort_by, sort_type ],
+      include: [
+        {
+          model: this.app.model.Customer
+        },
+        {
+          model: this.app.model.Order
+        }
+      ]
+    });
+  }
+
+  async addComment(body = {}) {
+    return await this.app.model.Comment.createOne({ ...body });
+  }
 }
 
 module.exports = Order;

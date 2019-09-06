@@ -13,5 +13,26 @@ class Order extends baseController {
       result
     });
   }
+
+  async CommerList() {
+    let result = await this.service.order.CommerList(this.ctx.query);
+    this.success({
+      result
+    });
+  }
+
+  async addComment() {
+    const { ctx } = this;
+    ctx.validate({
+      orderId: { type: 'string' },
+      uuid: { type: 'number' },
+      score: { type: 'number' },
+      comment: { type: 'string?' }
+    });
+    let result = await this.service.order.addComment(ctx.request.body);
+    this.success({
+      result
+    });
+  }
 }
 module.exports = Order;

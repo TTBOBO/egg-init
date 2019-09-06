@@ -710,8 +710,6 @@ export default {
   margin: 10px 0;
   text-align: center;
 }
-.search-form {
-}
 .checkbox-group .el-checkbox-group div {
   display: flex;
   flex-wrap: wrap;

@@ -10,7 +10,7 @@ module.exports = app => {
     Order.belongsTo(app.model.Address);
     Order.belongsTo(app.model.Customer, {
       foreignKey: 'uuid',
-      targetKey: 'id'
+      targetKey: 'uuid'
     });
   };
   return Order;

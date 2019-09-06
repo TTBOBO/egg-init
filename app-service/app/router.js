@@ -6,11 +6,11 @@
 
 module.exports = app => {
   const { router, controller } = app;
-  // app.beforeStart(async () => {
-  //   await app.model.sync({
-  //     alter: true
-  //   });
-  // });
+  app.beforeStart(async () => {
+    await app.model.sync({
+      alter: true
+    });
+  });
   router.get('/', controller.home.index);
   router.post('/user/login', controller.user.common.login);
   router.post('/user/register', controller.user.common.register);
@@ -38,5 +38,7 @@ module.exports = app => {
   router.post('/category/addCategory', controller.goods.addCategory);
   router.post('/category/deleteCategory', controller.goods.deleteCategory);
   router.post('/category/updateCateGory', controller.goods.updateCateGory);
+  router.post('/order/addComment', controller.order.addComment);
+  router.get('/oreder/CommerList', controller.order.CommerList);
   router.get('/getSTS', controller.home.getSTS);
 };
