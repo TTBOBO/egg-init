@@ -6,11 +6,11 @@
 
 module.exports = app => {
   const { router, controller } = app;
-  app.beforeStart(async () => {
-    await app.model.sync({
-      alter: true
-    });
-  });
+  // app.beforeStart(async () => {
+  //   await app.model.sync({
+  //     alter: true
+  //   });
+  // });
   router.get('/', controller.home.index);
   router.post('/user/login', controller.user.common.login);
   router.post('/user/register', controller.user.common.register);
@@ -30,6 +30,7 @@ module.exports = app => {
   router.get('/os/get_network_io', controller.os.getNetworkIo);
   router.get('/exec', controller.home.exec);
   router.get('/order/orderList', controller.order.orderList);
+  router.post('/order/diverGoods', controller.order.diverGoods);
   router.get('/goods/goodsList', controller.goods.goodsList);
   router.post('/goods/addGoods', controller.goods.addGoods);
   router.post('/goods/updateGoods', controller.goods.updateGoods);
@@ -39,6 +40,8 @@ module.exports = app => {
   router.post('/category/deleteCategory', controller.goods.deleteCategory);
   router.post('/category/updateCateGory', controller.goods.updateCateGory);
   router.post('/order/addComment', controller.order.addComment);
-  router.get('/oreder/CommerList', controller.order.CommerList);
+  router.get('/order/CommerList', controller.order.CommerList);
+  router.post('/order/addRemark', controller.order.addRemark);
   router.get('/getSTS', controller.home.getSTS);
+  router.get('/message/getMessageList', controller.message.getMessageList);
 };

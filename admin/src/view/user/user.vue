@@ -40,7 +40,7 @@ export default {
           size: 10,  //每页多少条
         },
         columns: [
-          { lable: "用户id", value: "id", type: "", search: "", tooltip: true, tipAlign: "right", },
+          { lable: "用户id", value: "uuid", type: "", search: "", tooltip: true, tipAlign: "right", },
           { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right", sort: 'custom', sortOrder: 'desc' },
           { lable: "用户名", value: "nickName", type: "", search: "nickName", tooltip: true, tipAlign: "right" },
           { lable: "用户头像", value: "authorPic", type: "", search: "", tooltip: true, tipAlign: "right" },
@@ -79,8 +79,8 @@ export default {
     CustomTable
   },
   methods: {
-    info ({ row: { id } }) {
-      this.addressOption.search.id = id;
+    info ({ row: { uuid } }) {
+      this.addressOption.search.id = uuid;
       this.showAddress = true;
     }
   },

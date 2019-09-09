@@ -16,6 +16,8 @@ const REQUEST = {
   getSTS: '/getSTS',
   changeGoodsStatus: '/goods/changeGoodsStatus',
   addComment: '/order/addComment', //添加评论
-  CommerList: '/oreder/CommerList'
+  CommerList: '/order/CommerList',
+  addRemark: '/order/addRemark',
+  diverGoods: '/order/diverGoods'
 }
 export default REQUEST

@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <CustomTable ref="customTable"
+                 @diverGoods="diverGoods"
                  :optionData="tableOption">
       <template slot-scope="props"
                 slot="status">
@@ -35,11 +36,11 @@ export default {
           { lable: "支付金额", value: "paymentAmount", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "运费", value: "freightAmount", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "总支付金额", value: "totalAmount", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "创建时间", value: "createdTime", type: "time", search: "createdTime", tooltip: true, tipAlign: "right", sort: 'custom', sortOrder: 'desc' },
+          { lable: "创建时间", value: "createdTime", type: "time", search: "createdTime", tooltip: true, width: '150px', tipAlign: "right", sort: 'custom', sortOrder: 'desc' },
           { lable: "购买用户", value: "uuid", type: "", search: "uuid", tooltip: true, tipAlign: "right", evelKey: "customer.nickName" },
           { lable: "备注", value: "remark", type: "", search: "", tooltip: true, tipAlign: "right" },
         ],
-        toolEvent: [],
+        toolEvent: [{ type: "primary", emit: "diverGoods", title: "发货", judgement_con: 'status != "audited"' }],
         topBtnGroup: [
 
         ]
@@ -50,8 +51,10 @@ export default {
     CustomTable
   },
   methods: {
-    info ({ row: { id } }) {
-      console.log(id)
+    async diverGoods ({ row: { orderId } }) {
+      let { result: [len] } = await this.$ajaxPost('diverGoods', { orderId: orderId });
+      len ? this.$message.success("发货成功") : this.$message.error("发货失败");
+      this.$refs.customTable.curReload();
     }
   },
   mounted () {

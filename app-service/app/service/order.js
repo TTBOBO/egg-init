@@ -65,6 +65,14 @@ class Order extends Service {
     });
   }
 
+  async diverGoods(body = {}) {
+    let { orderId } = body;
+    return await this.app.model.Order.update(
+      { status: 'dispatching' },
+      { where: { orderId } }
+    );
+  }
+
   async CommerList({ page, size, uuid, sort_type, sort_by }) {
     const { app } = this;
     let where = {
@@ -83,6 +91,14 @@ class Order extends Service {
         }
       ]
     });
+  }
+
+  async addRemark(body = {}) {
+    let { commentId, ...updateData } = body;
+    return await this.app.model.Comment.update(
+      { ...updateData },
+      { where: { commentId } }
+    );
   }
 
   async addComment(body = {}) {

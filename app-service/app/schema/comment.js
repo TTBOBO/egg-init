@@ -16,6 +16,10 @@ module.exports = app => {
       comment: {
         type: TEXT,
         comment: '评语'
+      },
+      remark: {
+        type: TEXT,
+        comment: '回复'
       }
     },
     options: {

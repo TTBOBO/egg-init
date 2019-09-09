@@ -290,7 +290,8 @@ export default {
     },
     getBtnStatus (scope, item) {
       let data = scope.row;
-      return item.judgement_con ? eval(data + '.' + item.judgement_con) : false;
+      this.end(data);
+      return item.judgement_con ? eval('data.' + item.judgement_con) : false;
     },
     end () { },
     // hideDialog () {
