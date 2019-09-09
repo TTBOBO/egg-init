@@ -16,14 +16,22 @@
                size="24"></i>
             <Breadcrumb style="min-width:300px;height:17px;"></Breadcrumb>
           </div>
-          <el-dropdown @command="dropClick">
-            <img src="../../assets/logo.png"
-                 class="auth-pic" />
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="userinfo">个人中心</el-dropdown-item>
-              <el-dropdown-item command="loginOut">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <div class="user-con-right">
+            <el-badge :value="number"
+                      @click.native="showDrewer = true">
+              <i class="el-icon-message-solid"></i>
+            </el-badge>
+
+            <el-dropdown @command="dropClick">
+              <img src="../../assets/logo.png"
+                   class="auth-pic" />
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="userinfo">个人中心</el-dropdown-item>
+                <el-dropdown-item command="loginOut">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+
         </div>
       </el-header>
       <el-main>
@@ -35,6 +43,13 @@
           </transition>
         </div>
       </el-main>
+      <el-drawer title="我的消息"
+                 :visible.sync="showDrewer"
+                 direction="rtl"
+                 size="300px">
+        <Message v-if="showDrewer"
+                 @number="(num) => number = num"></Message>
+      </el-drawer>
     </el-container>
   </el-container>
 </template>
@@ -42,12 +57,15 @@
 <script>
 import sliderMenu from './components/sliderMenu'
 import Breadcrumb from '@/components/Breadcrumb'
+import Message from './components/message'
 import { mapMutations } from 'vuex'
 export default {
   data () {
     return {
+      showDrewer: false,
       collapsed: false,
-      transitionName: "slide-left"
+      transitionName: "slide-left",
+      number: 0
     }
   },
   computed: {
@@ -63,7 +81,8 @@ export default {
   },
   components: {
     sliderMenu,
-    Breadcrumb
+    Breadcrumb,
+    Message
   },
   methods: {
     ...mapMutations(['LOGINOUT', 'SETUSERINFO']),
@@ -86,10 +105,14 @@ export default {
         default:
           break;
       }
-    }
+    },
+    async getMessageList () {
+      let { result: { data } } = await this.$ajaxGet('getMessageList', { page: this.page });
+      this.number = data.filter(item => item.status === '1').length;
+    },
   },
-  created () {
-    // console.log(util);
+  async created () {
+    await this.getMessageList();
     const userInfo = util.getLocalStorage('userInfo');
     userInfo ? this.SETUSERINFO(JSON.parse(userInfo)) : this.goLogin();
   },
@@ -97,6 +120,9 @@ export default {
 </script>
 
 <style lang='less'>
+.el-drawer__container {
+  overflow: hidden;
+}
 .container {
   .el-aside {
     display: flex;
@@ -125,6 +151,12 @@ export default {
       i {
         margin-right: 30px;
       }
+    }
+    .user-con-right {
+      display: flex;
+      align-items: center;
+      width: 130px;
+      justify-content: space-around;
     }
     .auth-pic {
       width: 45px;
@@ -186,5 +218,9 @@ export default {
       box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.25);
     }
   }
+}
+.el-drawer__body {
+  display: flex;
+  overflow: hidden;
 }
 </style>
