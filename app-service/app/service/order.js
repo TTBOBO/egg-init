@@ -31,7 +31,7 @@ class Order extends Service {
     page,
     size,
     uuid,
-    billNumber,
+    orderId,
     status,
     shopName,
     sort_type,
@@ -44,7 +44,7 @@ class Order extends Service {
     } = app;
     let where = {
       uuid,
-      billNumber,
+      orderId,
       status,
       shopName
     };

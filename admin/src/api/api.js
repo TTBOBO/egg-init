@@ -18,6 +18,8 @@ const REQUEST = {
   addComment: '/order/addComment', //添加评论
   CommerList: '/order/CommerList',
   addRemark: '/order/addRemark',
-  diverGoods: '/order/diverGoods'
+  diverGoods: '/order/diverGoods',
+  getMessageList: '/message/getMessageList',
+  changeMessageStatus: '/message/changeMessageStatus'
 }
 export default REQUEST

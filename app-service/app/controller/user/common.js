@@ -17,7 +17,7 @@ class Common extends baseController {
     if (userInfo) {
       ctx.setToken(userInfo);
       this.success({
-        data: { userInfo, token: this.ctx.getCookie() }
+        result: { userInfo, token: this.ctx.getCookie() }
       });
     } else {
       this.fail('用户或密码不正确');
@@ -34,7 +34,7 @@ class Common extends baseController {
     let regStaus = await ctx.service.admin.getUserInfo(userName);
     if (!regStaus) {
       this.success({
-        data: await ctx.service.admin.register(userName, password)
+        result: await ctx.service.admin.register(userName, password)
       });
     } else {
       this.fail('用户已注册');
@@ -43,7 +43,7 @@ class Common extends baseController {
 
   async loginOut() {
     this.ctx.removecookies();
-    this.success({ data: '退出成功' });
+    this.success({ result: '退出成功' });
   }
   async getCodeImg() {
     await this.getCode();

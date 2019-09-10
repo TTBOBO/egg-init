@@ -44,4 +44,8 @@ module.exports = app => {
   router.post('/order/addRemark', controller.order.addRemark);
   router.get('/getSTS', controller.home.getSTS);
   router.get('/message/getMessageList', controller.message.getMessageList);
+  router.post(
+    '/message/changeMessageStatus',
+    controller.message.changeMessageStatus
+  );
 };
