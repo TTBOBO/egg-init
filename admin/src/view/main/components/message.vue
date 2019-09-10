@@ -11,26 +11,22 @@
              :key="index"
              :data-delay="(index % 20)*100"
              class="message-item">
-          <div class="header">
-            <span class="title">商品</span>
-            <span class="cre-time">2019-09-09 17:17:20</span>
+          <div class="message-header">
+            <span class="message-title">{{item.goodsId ? '商品' : '订单'}}</span>
+            <span class="cre-time">{{item.createdTime}}</span>
           </div>
-          <div class="content">
+          <div class="message-content">
             {{getStr(item)}}
           </div>
-          <div class="bottom">
-            <template v-if="item.type == 'goods'">
-              <el-button size="mini"
-                         v-if="item.Good.status === 'dowm'"
-                         type="primary">上架</el-button>
-              <el-button size="mini"
-                         v-else
-                         type="danger">下架</el-button>
-            </template>
-            <template v-else>
-              <el-button size="mini"
-                         type="primary">处理订单</el-button>
-            </template>
+          <div class="message-bottom">
+            <el-button v-if="item.type == 'goods'"
+                       @click="setGoodsStatus(item,index)"
+                       size="mini"
+                       :type="item.Good.status === 'down' ? 'primary' : 'danger'">同意{{item.Good.status === 'down' ? '上' : '下'}}架</el-button>
+            <el-button v-else
+                       @click="putOrder(item,index)"
+                       size="mini"
+                       type="primary">处理订单</el-button>
           </div>
         </div>
       </transition-group>
@@ -55,6 +51,21 @@ export default {
     }
   },
   methods: {
+    async setGoodsStatus ({ Good: { goodsId, status }, mid }, index) {
+      let { code } = await this.$ajaxPost('changeMessageStatus', { goodsId, status, mid });
+      if (code === 0) {
+        this.messageData.splice(index, 1);
+        this.$message.success("操作成功");
+        this.$emit('setMessageList');
+      } else {
+        this.$message.error("操作失败");
+      }
+    },
+    async putOrder ({ orderId, mid }, index) {
+      await this.$ajaxPost('changeMessageStatus', { mid });
+      this.messageData.splice(index, 1);
+      this.$router.push({ path: '/order/orderlist', query: { orderId } })
+    },
     async getMessageList () {
       let { result: { data, data_total_num } } = await this.$ajaxGet('getMessageList', { page: this.page });
       this.messageData = data;
@@ -66,11 +77,11 @@ export default {
       if (type == 'goods') {
         var { goodsId, name, status } = Good;
       } else {
-        var { orderId, status } = order;
+        var option = { initial: "待处理", audited: "已接单", dispatching: "配送中", completed: "已完成", canceled: "已取消" };
+        var { orderId } = order;
       }
-      console.log(type)
       // console.log(item, goodsId)
-      return type == 'order' ? `您有新的订单（${orderId}）状态为${status}需要处理` : `商品名称（${name}）、商品号（${goodsId}）申请${status === 'up' ? '下' : '上'}架`
+      return type == 'order' ? `您有新的订单（${orderId}）状态为“${option[order.status]}”需要处理订单` : `商品名称（${name}）、商品号（${goodsId}）申请${status === 'up' ? '下' : '上'}架`
     },
     async pageChange (page) {
       this.page = page;
@@ -124,21 +135,21 @@ export default {
     margin: 10px 0;
     display: flex;
     flex-flow: column;
-    .header {
+    .message-header {
       display: flex;
       justify-content: space-between;
       height: 30px;
       padding: 0 5px;
       font-size: 12px;
       align-items: center;
-      .title {
+      .message-title {
         color: #333;
       }
       .cre-time {
         color: #ccc;
       }
     }
-    .content {
+    .message-content {
       flex: 1;
       min-height: 60px;
       border: 1px none #ccc;
@@ -147,7 +158,7 @@ export default {
       font-size: 14px;
       color: #4e4e4e;
     }
-    .bottom {
+    .message-bottom {
       height: 40px;
       padding: 0 5px;
       display: flex;

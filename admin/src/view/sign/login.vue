@@ -1,6 +1,9 @@
 <template>
   <div class="container">
     <div class="main">
+      <div id="start1"></div>
+      <div id="start2"></div>
+      <div id="start3"></div>
       <transition enter-active-class="fadeInRight"
                   leave-active-class="zoomOutRight">
         <div v-show="show"
@@ -99,7 +102,7 @@ export default {
       this.loading = true;
       let status = await this.$refs.ruleForm.validate();
       if (status) {
-        const { code, data: { userInfo, token } } = await this.$ajaxPost('login', { ...this.loginForm, password: md5(this.loginForm.password) });
+        const { code, result: { userInfo, token } } = await this.$ajaxPost('login', { ...this.loginForm, password: md5(this.loginForm.password) });
         if (code !== -1) {
           this.$message.success("登录成功");
           util.setLocalStorage('userInfo', JSON.stringify(userInfo));
@@ -128,7 +131,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
 .title {
   width: 100%;
   height: 35px;
@@ -163,6 +166,41 @@ export default {
     rgba(255, 48, 84, 0.55) 63%,
     rgba(255, 48, 84, 0.75) 99%
   );
+  @windowWidth: 2000;
+  .mixin(@n) when(@n > 0) {
+    box-shadow+: ~`Math.round(Math.random() * @{windowWidth}) + "px" + " " +
+      Math.round(Math.random() * @{windowWidth}) + "px #FFF" `;
+    .mixin((@n - 1));
+  }
+  #start1 {
+    .mixin(700);
+    width: 1px;
+    height: 1px;
+    animation: animStar 50s linear infinite;
+    animation-delay: -10s;
+  }
+  #start2 {
+    .mixin(200);
+    width: 2px;
+    height: 2px;
+    animation: animStar 100s linear infinite;
+    animation-delay: -8s;
+  }
+  #start3 {
+    .mixin(100);
+    width: 3px;
+    height: 3px;
+    animation: animStar 150s linear infinite;
+    animation-delay: -5s;
+  }
+  @keyframes animStar {
+    from {
+      transform: translateY(0px);
+    }
+    to {
+      transform: translateY(-2000px);
+    }
+  }
 }
 .bg {
   position: absolute;

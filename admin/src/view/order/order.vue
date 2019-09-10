@@ -29,7 +29,7 @@ export default {
           size: 10,  //每页多少条
         },
         columns: [
-          { lable: "订单编号", value: "billNumber", type: "", search: "billNumber", tooltip: true, tipAlign: "right" },
+          { lable: "订单编号", value: "orderId", type: "", search: "orderId", tooltip: true, tipAlign: "right" },
           { lable: "商品名称", value: "shopName", type: "", search: "shopName", tooltip: true, tipAlign: "right" },
           { lable: "订单状态", value: "status", type: "select", search: "status", tooltip: true, tipAlign: "right", scoped: true, selectOPtion: { initial: "待处理", audited: "已接单", dispatching: "配送中", completed: "已完成", canceled: "已取消" } },
           { lable: "折扣价格", value: "reductionAmount", type: "", search: "", tooltip: true, tipAlign: "right" },
@@ -61,7 +61,10 @@ export default {
 
   },
   created () {
-
+    const { orderId } = this.$route.query;
+    if (orderId) {
+      this.tableOption.columns[0].searchVal = orderId;
+    }
   }
 }
 </script>

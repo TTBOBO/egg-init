@@ -7,5 +7,20 @@ class Message extends BaseController {
       result
     });
   }
+  async changeMessageStatus() {
+    const { ctx } = this;
+    ctx.validate({
+      mid: { type: 'string' },
+      type: { type: 'string?' },
+      goodsId: { type: 'string?' },
+      goodsStatus: { type: 'string?' }
+    });
+    let result = await this.ctx.service.message.changeMessageStatus(
+      ctx.request.body
+    );
+    this.success({
+      result
+    });
+  }
 }
 module.exports = Message;

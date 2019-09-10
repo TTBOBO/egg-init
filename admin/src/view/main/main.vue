@@ -19,7 +19,8 @@
           <div class="user-con-right">
             <el-badge :value="number"
                       @click.native="showDrewer = true">
-              <i class="el-icon-message-solid"></i>
+              <i class="el-icon-message-solid"
+                 :class="run ? 'animated rubberBand run' : ''"></i>
             </el-badge>
 
             <el-dropdown @command="dropClick">
@@ -48,7 +49,7 @@
                  direction="rtl"
                  size="300px">
         <Message v-if="showDrewer"
-                 @number="(num) => number = num"></Message>
+                 @setMessageList="getMessageList"></Message>
       </el-drawer>
     </el-container>
   </el-container>
@@ -65,7 +66,8 @@ export default {
       showDrewer: false,
       collapsed: false,
       transitionName: "slide-left",
-      number: 0
+      number: 0,
+      run: false
     }
   },
   computed: {
@@ -109,6 +111,11 @@ export default {
     async getMessageList () {
       let { result: { data } } = await this.$ajaxGet('getMessageList', { page: this.page });
       this.number = data.filter(item => item.status === '1').length;
+      if (this.number) {
+        this.timer = setInterval(() => this.run = !this.run, 1000)
+      } else {
+        clearInterval(this.timer);
+      }
     },
   },
   async created () {
@@ -157,6 +164,9 @@ export default {
       align-items: center;
       width: 130px;
       justify-content: space-around;
+      .run {
+        // animation: animated 0.3s linear infinite;
+      }
     }
     .auth-pic {
       width: 45px;

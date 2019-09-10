@@ -5,7 +5,7 @@ class Message extends Service {
   async getMessageList({
     page = 1,
     size = 10,
-    status,
+    status = 1,
     sort_type,
     sort_by
     // createdTime
@@ -25,7 +25,7 @@ class Message extends Service {
     // }
     return await app.model.Message.grid({
       pagination: { page, size },
-      // where,
+      where: { status },
       sort: [ sort_by, sort_type ],
       include: [
         {
@@ -36,6 +36,26 @@ class Message extends Service {
         }
       ]
     });
+  }
+
+  async changeMessageStatus(body = {}) {
+    var res;
+    const { mid, goodsId, goodsStatus } = body;
+    const transaction = await this.app.getTransaction();
+    let data = await this.app.model.Message.update(
+      { status: '2' },
+      { where: { mid }, transaction }
+    );
+    if (goodsId) {
+      res = await this.app.model.Goods.update(
+        {
+          status: goodsStatus === 'down' ? 'up' : 'down'
+        },
+        { where: { goodsId }, transaction }
+      );
+    }
+
+    return data[0] && res[0];
   }
 }
 

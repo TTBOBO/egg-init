@@ -19,6 +19,7 @@ const REQUEST = {
   CommerList: '/order/CommerList',
   addRemark: '/order/addRemark',
   diverGoods: '/order/diverGoods',
-  getMessageList: '/message/getMessageList'
+  getMessageList: '/message/getMessageList',
+  changeMessageStatus: '/message/changeMessageStatus'
 }
 export default REQUEST

@@ -351,6 +351,9 @@ export default {
             pla: item.pla, // placeholder值
             seaW: item.seaW, //搜索宽度
           };
+          if (item.searchVal) {
+            this.search[item.search] = item.searchVal;
+          }
           if (item.url) {
             let res = await this[item.mock ? '$ajaxMock' : '$ajaxGet'](item.url, {}, item.urlType || 1);
             //当selectDataType为1时，  selectOPtion为obj类型使用第一种方式处理数据 反之是数组类型  用第二种方式处理
