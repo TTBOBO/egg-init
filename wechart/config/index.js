@@ -1,6 +1,6 @@
 const config = {
-  projectName: 'wechart',
-  date: '2019-9-10',
+  projectName: 'wechart1',
+  date: '2019-9-11',
   designWidth: 750,
   deviceRatio: {
     '640': 2.34 / 2,

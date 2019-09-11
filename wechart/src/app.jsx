@@ -6,7 +6,7 @@ import CreatApp from './dva'
 import models from './dva/models'
 import { ajaxGet, ajaxPost } from './service/fly'
 
-import './app.less'
+import './app.scss'
 
 const dvaApp = new CreatApp({
   initialState: {},

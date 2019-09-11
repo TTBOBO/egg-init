@@ -1,7 +1,8 @@
 import Taro, { Component, useState, useEffect } from '@tarojs/taro'
 import { View, Text, Button } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import './index.less'
+import './index.scss'
+import '../../assets/css/base.scss'
 
 @connect(user => ({ ...user }))
 class Index extends Component {
@@ -30,7 +31,7 @@ class Index extends Component {
     })
     return (
       <View>
-        Count: {count}
+        <Text className='test'>Count: {count}</Text>
         <Button onClick={() => setCount(initialCount)}>Reset</Button>
         <Button onClick={() => setCount(prevCount => prevCount + 1)}>+</Button>
         <Button onClick={() => setCount(prevCount => prevCount - 1)}>-</Button>
