@@ -54,5 +54,38 @@ class Common extends baseController {
       result
     });
   }
+
+  async wechartLogin() {
+    const { ctx, app, config } = this;
+    ctx.validate({
+      code: { type: 'string' },
+      nickName: { type: 'string' },
+      province: { type: 'string' },
+      gender: { type: 'number' },
+      avatarUrl: { type: 'string' }
+    });
+
+    const { appid, secret } = config.wxConfig;
+    const resultData = await app.curl(
+      'https://api.weixin.qq.com/sns/jscode2session',
+      {
+        method: 'GET',
+        dataType: 'json',
+        data: {
+          appid,
+          secret,
+          js_code: ctx.request.body.code,
+          grant_type: 'authorization_code'
+        }
+      }
+    );
+    let result = await ctx.service.customer.wechartLogin(
+      resultData.data,
+      ctx.request.body
+    );
+    this.success({
+      result
+    });
+  }
 }
 module.exports = Common;

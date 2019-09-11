@@ -10,7 +10,8 @@
     "react/sort-comp": "off",
     "import/prefer-default-export": [0],
     "css-lcurlyexpected": "off",
-    "css-ruleorselectorexpected": "off"
+    "css-ruleorselectorexpected": "off",
+    "import/no-commonjs": "off"
   },
   "parser": "babel-eslint"
 }

@@ -7,7 +7,7 @@ const api = constants.api
 const fly = new Fly()
 fly.config.baseURL = constants.BASEURL
 fly.config.headers = {
-  'Content-Type': 'text/html; charset=utf-8'
+  'Content-Type': 'application/json; charset=utf-8'
 }
 
 fly.interceptors.request.use(async request => {

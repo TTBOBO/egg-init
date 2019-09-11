@@ -5,7 +5,6 @@ import Index from './pages/index'
 import CreatApp from './dva'
 import models from './dva/models'
 import { ajaxGet, ajaxPost } from './service/fly'
-
 import './app.scss'
 
 const dvaApp = new CreatApp({
@@ -24,12 +23,43 @@ Taro.$ajaxPost = ajaxPost
 
 class App extends Component {
   config = {
-    pages: ['pages/index/index'],
+    pages: ['pages/my/index', 'pages/index/index'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: 'WeChat',
       navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#bfbfbf',
+      selectedColor: '#4842d4',
+      backgroundColor: '#fff',
+      list: [
+        {
+          pagePath: 'pages/index/index',
+          text: '首页',
+          iconPath: 'assets/img/index.png',
+          selectedIconPath: 'assets/img/index_s.png'
+        },
+        {
+          pagePath: 'pages/index/index',
+          text: '分类',
+          iconPath: 'assets/img/type.png',
+          selectedIconPath: 'assets/img/type_s.png'
+        },
+        {
+          pagePath: 'pages/index/index',
+          text: '购物车',
+          iconPath: 'assets/img/cart.png',
+          selectedIconPath: 'assets/img/cart_s.png'
+        },
+        {
+          pagePath: 'pages/my/index',
+          text: '我的',
+          iconPath: 'assets/img/my.png',
+          selectedIconPath: 'assets/img/my_s.png'
+        }
+      ]
     }
   }
 

@@ -81,6 +81,10 @@ module.exports = appInfo => {
       Region: 'ap-shenzhen-fsi',
       baseUrl: 'https://tab-1251403076.cos.ap-shenzhen-fsi.myqcloud.com'
     },
+    wxConfig: {
+      appid: 'wx0e83a3ae059a43c1',
+      secret: '06de045d79bfa38c7cb8e7bf59fb31bd'
+    },
     uplaodBasePath: 'app/public/upload/'
   });
   // use for cookie sign key, should change to your own and keep security

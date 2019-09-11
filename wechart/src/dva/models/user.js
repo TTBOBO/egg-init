@@ -7,5 +7,12 @@ export default modelExtend(base, {
     userInfo: {},
     loginStatus: false
   },
-  effect: {}
+  effects: {
+    *userInfo({ payload }, { put }) {
+      yield put({
+        type: 'save',
+        payload: { userInfo: payload, loginStatus: true }
+      })
+    }
+  }
 })

@@ -1,9 +1,10 @@
 import Taro, { Component, useState, useEffect } from '@tarojs/taro'
 import { View, Text, Button } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import './index.scss'
-import '../../assets/css/base.scss'
+import { AtButton } from 'taro-ui'
+// import styles from './index.scss'
 
+// console.log(styles)
 @connect(user => ({ ...user }))
 class Index extends Component {
   config = {
@@ -31,10 +32,12 @@ class Index extends Component {
     })
     return (
       <View>
-        <Text className='test'>Count: {count}</Text>
-        <Button onClick={() => setCount(initialCount)}>Reset</Button>
+        {/* styles.content2 */}
+        <Text className=''>Count: {count}</Text>
+        <Button onClick={() => setCount(initialCount)}>Reset1</Button>
         <Button onClick={() => setCount(prevCount => prevCount + 1)}>+</Button>
         <Button onClick={() => setCount(prevCount => prevCount - 1)}>-</Button>
+        <AtButton>点击</AtButton>
       </View>
     )
   }

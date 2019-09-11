@@ -48,4 +48,6 @@ module.exports = app => {
     '/message/changeMessageStatus',
     controller.message.changeMessageStatus
   );
+
+  router.post('/wechart/wechartLogin', controller.user.common.wechartLogin);
 };

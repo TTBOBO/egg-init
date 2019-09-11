@@ -41,5 +41,32 @@ class Customer extends Service {
     });
     return data;
   }
+  async wechartLogin(data, { nickName, province, gender, avatarUrl }) {
+    console.log(data);
+    const { ctx, app } = this;
+    let token = ctx.createdToken({ data, hour: 60 });
+    let userinfo = await app.model.Customer.getOne({
+      where: {
+        openid: data.openid
+      }
+    });
+    if (userinfo) {
+      return {
+        token,
+        userinfo
+      };
+    }
+    let userData = await app.model.Customer.createOne({
+      nickName,
+      province,
+      gender,
+      avatarUrl,
+      openid: data.openid
+    });
+    return {
+      userinfo: userData,
+      token
+    };
+  }
 }
 module.exports = Customer;

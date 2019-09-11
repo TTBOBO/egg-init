@@ -1,0 +1,61 @@
+@import '../../assets//css/base.scss';
+
+.my-container {
+  .header {
+    height: 200px;
+    padding: 20px;
+    background: $base-color;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+    justify-content: flex-start;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      height: 50px;
+      border-radius: 50% / 100% 100% 0 0;
+      transform: rotate(180deg);
+      background: $base-color;
+      z-index: 0;
+    }
+
+
+    .auth-pic {
+      width: 80px;
+      height: 80px;
+      border: 1px solid red;
+      border-radius: 50%;
+      object-fit: cover;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .nick-name {
+      font-size: 28px;
+      color: #fff;
+      margin-left: 20px;
+    }
+  }
+
+  .model-header {
+    text-align: center;
+    font-weight: 700;
+    margin: 10px 0;
+  }
+
+  .model-title {
+    line-height: 40px;
+  }
+
+  .model-tip {
+    font-size: 20px;
+    color: #444;
+    padding-left: 10px;
+    line-height: 40px;
+  }
+}
