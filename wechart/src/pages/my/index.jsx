@@ -1,7 +1,13 @@
 import Taro, { Component } from '@tarojs/taro'
 import { connect } from '@tarojs/redux'
 import { View, Text, Image, Button } from '@tarojs/components'
-import { AtModal, AtModalContent, AtModalAction } from 'taro-ui'
+import {
+  AtModal,
+  AtModalContent,
+  AtModalAction,
+  AtListItem,
+  AtList
+} from 'taro-ui'
 import './index.scss'
 
 @connect(user => ({ ...user }))
@@ -10,6 +16,46 @@ class Index extends Component {
   config = {
     navigationBarTitleText: '我的'
   }
+  orderList = [
+    {
+      iconUrl: '',
+      title: '待付款',
+      path: ''
+    },
+    {
+      iconUrl: '',
+      title: '待发货',
+      path: ''
+    },
+    {
+      iconUrl: '',
+      title: '待收货',
+      path: ''
+    },
+    {
+      iconUrl: '',
+      title: '评价',
+      path: ''
+    }
+  ]
+
+  toolList = [
+    {
+      iconUrl: '',
+      title: '我的地址',
+      path: ''
+    },
+    {
+      iconUrl: '',
+      title: '我的优惠券',
+      path: ''
+    },
+    {
+      iconUrl: '',
+      title: '设置',
+      path: ''
+    }
+  ]
 
   componentDidMount() {
     console.log(this.props.user)
@@ -32,7 +78,6 @@ class Index extends Component {
       Taro.setStorageSync('token', token)
       this.props.dispatch({ type: 'user/userInfo', payload: userinfo })
       this.setState({ status: false })
-      console.log(this.props)
     } else {
       await Taro.showModal({
         title: '授权登录失败',
@@ -86,6 +131,38 @@ class Index extends Component {
           {loginStatus && (
             <Text className='nick-name'>{userInfo.nickName}</Text>
           )}
+        </View>
+        <View className='order-container'>
+          <AtListItem
+            title='全部订单'
+            extraText='查看全部订单'
+            arrow='right'
+            hasBorder={false}
+          />
+          <View className='order-list'>
+            {this.orderList.map((item, index) => {
+              return (
+                <View key={index} className='order-item'>
+                  <Image className='icon' src='../../assets/img/my.png' />
+                  <Text className='title'>待收货</Text>
+                </View>
+              )
+            })}
+          </View>
+        </View>
+        <View className='tool-list'>
+          <AtList hasBorder={false}>
+            {this.toolList.map((item, index) => {
+              return (
+                <AtListItem
+                  key={index}
+                  title={item.title}
+                  hasBorder
+                  arrow='right'
+                />
+              )
+            })}
+          </AtList>
         </View>
         {this.showModal()}
       </View>

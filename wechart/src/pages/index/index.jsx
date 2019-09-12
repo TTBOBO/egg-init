@@ -1,7 +1,6 @@
-import Taro, { Component, useState, useEffect } from '@tarojs/taro'
-import { View, Text, Button } from '@tarojs/components'
+import Taro, { Component, useState } from '@tarojs/taro'
+import { View, Swiper, SwiperItem, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { AtButton } from 'taro-ui'
 // import styles from './index.scss'
 
 // console.log(styles)
@@ -10,6 +9,17 @@ class Index extends Component {
   config = {
     navigationBarTitleText: '首页'
   }
+  bannerList = [
+    {
+      imgUrl: ''
+    },
+    {
+      imgUrl: ''
+    },
+    {
+      imgUrl: ''
+    }
+  ]
 
   componentWillMount() {}
 
@@ -22,31 +32,39 @@ class Index extends Component {
   componentDidShow() {}
 
   componentDidHide() {}
-  setNum() {
-    console.log(1)
-  }
-  Counter({ initialCount }) {
-    const [count, setCount] = useState(initialCount)
-    useEffect(() => {
-      console.log(count)
-    })
-    return (
-      <View>
-        {/* styles.content2 */}
-        <Text className=''>Count: {count}</Text>
-        <Button onClick={() => setCount(initialCount)}>Reset1</Button>
-        <Button onClick={() => setCount(prevCount => prevCount + 1)}>+</Button>
-        <Button onClick={() => setCount(prevCount => prevCount - 1)}>-</Button>
-        <AtButton>点击</AtButton>
-      </View>
-    )
-  }
 
   render() {
+    const [currentIndex, useCurrent] = useState(0)
     return (
-      <View className='index'>
-        {this.Counter({ initialCount: 0 })}
-        <Text>Hello world!</Text>
+      <View className='index-container'>
+        <View className='wapper'>
+          <Swiper
+            className='swiper'
+            circular
+            autoplay
+            previousMargin='20px'
+            nextMargin='20px'
+            indicatorDots
+            indicatorColor='#e8e8e8'
+            indicatorActiveColor='#888'
+            onChange={({ detail: { current } }) => {
+              useCurrent(current)
+            }}
+          >
+            {this.bannerList.map((item, index) => {
+              return (
+                <SwiperItem className='swiper-item' key={index}>
+                  <Image
+                    src='http://localhost:7002/public/img/1568256903.jpg'
+                    className={`swiper-item-container ${
+                      currentIndex === index ? 'active' : ''
+                    }`}
+                  />
+                </SwiperItem>
+              )
+            })}
+          </Swiper>
+        </View>
       </View>
     )
   }

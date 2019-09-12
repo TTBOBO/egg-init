@@ -1,1 +1,11 @@
 @import "~taro-ui/dist/style/index.scss";
+
+.item-extra__icon-arrow {
+  font-size: 36px !important;
+}
+
+.at-list__item {
+  &::after {
+    left: 0 !important;
+  }
+}
