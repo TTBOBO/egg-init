@@ -10,7 +10,10 @@ module.exports = app => {
         autoIncrement: true
       },
       nickName: STRING(76),
-      authorPic: STRING(76),
+      province: STRING(20),
+      gender: INTEGER.UNSIGNED,
+      avatarUrl: STRING(200),
+      openid: STRING(76),
       phone: STRING(20)
     },
     option: {

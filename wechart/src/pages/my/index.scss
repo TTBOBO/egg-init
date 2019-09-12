@@ -1,0 +1,132 @@
+@import '../../assets//css/base.scss';
+
+.my-container {
+  .header {
+    height: 200px;
+    padding: 20px;
+    background: $base-color;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 50px;
+    justify-content: flex-start;
+
+    &::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      height: 50px;
+      border-radius: 50% / 100% 100% 0 0;
+      transform: rotate(180deg);
+      background: $base-color;
+      z-index: 0;
+    }
+
+
+    .auth-pic {
+      width: 70px;
+      height: 70px;
+      border: 1px solid #fff;
+      padding: 10px;
+      border-radius: 50%;
+      object-fit: cover;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .nick-name {
+      font-size: 28px;
+      color: #fff;
+      margin-left: 20px;
+    }
+  }
+
+  .model-header {
+    text-align: center;
+    font-weight: 700;
+    margin: 10px 0;
+  }
+
+  .model-title {
+    line-height: 40px;
+  }
+
+  .model-tip {
+    font-size: 20px;
+    color: #444;
+    padding-left: 10px;
+    line-height: 40px;
+  }
+
+  .order-container {
+    margin: 70px 0 0 0;
+
+    .at-icon {
+      font-size: 36px !important;
+    }
+
+    .item-extra__info {
+      font-size: 24px;
+    }
+
+    .order-list {
+      height: 100px;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      flex-flow: row;
+
+      position: relative;
+      padding: 20px 0;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 3px;
+        background: #e8e8e8;
+        transform: scaleY(.5);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: #e8e8e8;
+        transform: scaleY(.5);
+      }
+
+      .order-item {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        flex-flow: column;
+        justify-content: space-between;
+
+        .icon {
+          width: 60px;
+          height: 60px;
+          object-fit: cover;
+        }
+
+        .title {
+          font-size: 24px;
+          color: #333;
+        }
+      }
+    }
+
+
+  }
+
+  .tool-list {
+    padding-top: 20px;
+    background: #e8e8e8;
+  }
+
+}

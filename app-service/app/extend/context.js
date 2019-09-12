@@ -9,6 +9,12 @@ module.exports = {
   removecookies() {
     this.cookies.set('token', null);
   },
+  createdToken({ data, hour = 12 }) {
+    const { app } = this;
+    return app.jwt.sign(data, app.config.jwt.secret, {
+      expiresIn: 60 * 60 * hour
+    });
+  },
   setToken(data = {}) {
     const { app } = this;
     let { uuid, name, userName, userType } = data;

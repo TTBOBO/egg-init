@@ -1,0 +1,34 @@
+@import '../../assets/css/base.scss';
+
+.index-container {
+  .wapper {
+    width: 100%;
+    height: 300px;
+
+    .swiper {
+      width: 100%;
+      height: 100%;
+
+      .swiper-item {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .swiper-item-container {
+          width: 95%;
+          height: 250px;
+          transition: .5s ease-in-out;
+          object-fit: cover;
+        }
+
+        .active {
+          height: 300px;
+        }
+      }
+
+
+    }
+  }
+
+}
