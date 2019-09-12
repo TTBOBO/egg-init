@@ -6,10 +6,10 @@ module.exports = app => {
   let Category = model.define('category', schema);
   Category = concatModel(Category);
   Category.associate = () => {
-    // GoodsCategory.hasMany(app.model.Goods, {
-    //   foreignKey: 'categoryId',
-    //   targetKey: 'categoryId'
-    // });
+    Category.hasMany(app.model.Goods, {
+      // foreignKey: 'categoryId',
+      // targetKey: 'categoryId'
+    });
   };
   return Category;
 };

@@ -52,7 +52,8 @@ class Goods extends baseController {
   }
 
   async categoryList() {
-    let result = await this.service.goods.categoryList(this.ctx.query);
+    const query = this.ctx.query;
+    let result = await this.service.goods.categoryList(query, query.hasGoods);
     this.success({
       result
     });

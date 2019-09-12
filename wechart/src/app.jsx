@@ -23,7 +23,7 @@ Taro.$ajaxPost = ajaxPost
 @connect(user => ({ ...user }))
 class App extends Component {
   config = {
-    pages: ['pages/index/index', 'pages/my/index'],
+    pages: ['pages/index/index', 'pages/my/index', 'pages/category/index'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -42,7 +42,7 @@ class App extends Component {
           selectedIconPath: 'assets/img/index_s.png'
         },
         {
-          pagePath: 'pages/index/index',
+          pagePath: 'pages/category/index',
           text: '分类',
           iconPath: 'assets/img/type.png',
           selectedIconPath: 'assets/img/type_s.png'

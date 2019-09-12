@@ -55,7 +55,7 @@ class Index extends Component {
               return (
                 <SwiperItem className='swiper-item' key={index}>
                   <Image
-                    src='http://localhost:7002/public/img/1568256903.jpg'
+                    src='http://localhost:7002/public/img/banner.png'
                     className={`swiper-item-container ${
                       currentIndex === index ? 'active' : ''
                     }`}

@@ -1,0 +1,25 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    box-sizing: border-box;
+    overflow: hidden;
+    .content{
+      flex-grow: 1;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    .submit{
+      width: 100%;
+      height: 223px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .at-button{
+        width:690px !important;
+        height:88px!important;
+        background:rgba(153,51,51,1)!important;
+        border-radius:8px!important;
+      }
+    }
+  }

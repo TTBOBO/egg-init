@@ -66,12 +66,13 @@ class Goods extends Service {
     );
   }
 
-  async categoryList({ categoryName }) {
+  async categoryList({ categoryName }, hasGoods = false) {
     const { app } = this;
     const {
       Sequelize: { Op }
     } = app;
     let where = {};
+    let include = [];
     if (categoryName) {
       where = {
         categoryName: {
@@ -79,8 +80,14 @@ class Goods extends Service {
         }
       };
     }
+    if (hasGoods) {
+      include.push({
+        model: this.app.model.Goods
+      });
+    }
     return await this.app.model.Category.grid({
       where,
+      include,
       pagination: { page: 1, size: 1000 }
     });
   }
