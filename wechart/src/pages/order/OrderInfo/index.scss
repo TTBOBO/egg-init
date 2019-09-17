@@ -1,0 +1,138 @@
+@import '../../../assets/css/base.scss';
+
+.order-info-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+
+  .order-state {
+    height: 152px;
+    padding-top: 48px;
+    padding-left: 57px;
+    font-size: 36px;
+    color: $white;
+    font-weight: 600;
+    background: #282828;
+  }
+
+  .order-goods-con {
+    background: $base-bgcolor;
+
+    .good-list {
+      background: $white;
+
+      .good-item {
+        display: flex;
+        justify-content: space-around;
+        border-bottom: 1px solid #E6E6E6;
+        margin: 0 30px;
+        padding: 35px 0;
+
+        .good-pic {
+          width: 180px;
+          height: 180px;
+          object-fit: cover;
+          margin-right: 38px;
+        }
+
+        .good-right {
+          flex: 1;
+          display: flex;
+          justify-content: space-around;
+
+          .left {
+            .good-name {
+              color: #000;
+              font-size: 28px;
+              margin-bottom: 20px;
+              line-height: 28px;
+            }
+
+            .good-des {
+              font-size: 24px;
+              color: #606060;
+              line-height: 24px;
+              margin-bottom: 71px;
+            }
+
+            .good-pri-con {
+              .good-pri {
+                color: #000;
+                font-size: 28px;
+                line-height: 28px;
+                margin-right: 19px;
+              }
+
+              .vip {
+                color: #d1ac45;
+              }
+
+              .good-old-pri {
+                font-size: 24px;
+                color: #606060;
+                line-height: 24px;
+              }
+            }
+          }
+
+          .right {
+            text-align: right;
+
+            .buy-num {
+              color: #000;
+              font-size: 28px;
+              margin-bottom: 20px;
+              line-height: 28px;
+            }
+
+            .buy-status {
+              font-size: 24px;
+              color: #993333;
+              line-height: 24px;
+              height: 24px;
+              margin-bottom: 71px;
+            }
+
+            .sh-btn {
+              width: 150px;
+              height: 60px;
+              border: 2px solid #000;
+              border-radius: 6px;
+              text-align: center;
+              color: #000;
+              line-height: 60px;
+              font-size: 24px;
+            }
+          }
+        }
+      }
+    }
+
+    .pay-info {
+      padding: 20px 30px;
+      background: $white;
+
+      .pay-time {
+        font-size: 26px;
+        font-weight: 400;
+        color: 000;
+        margin-bottom: 15;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .bz {
+      padding: 28px 30px;
+      font-size: 26px;
+      font-weight: 400;
+      color: #000;
+      line-height: 40px;
+    }
+  }
+}

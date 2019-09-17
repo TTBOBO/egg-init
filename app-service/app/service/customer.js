@@ -44,13 +44,20 @@ class Customer extends Service {
   async wechartLogin(data, { nickName, province, gender, avatarUrl }) {
     console.log(data);
     const { ctx, app } = this;
-    let token = ctx.createdToken({ data, hour: 60 });
+
     let userinfo = await app.model.Customer.getOne({
       where: {
         openid: data.openid
       }
     });
     if (userinfo) {
+      console.log(userinfo);
+      let { uuid, nickName, phone, avatarUrl, openid } = userinfo;
+      let token = ctx.createdToken({
+        data: { uuid, nickName, phone, avatarUrl, openid },
+        hour: 224
+      });
+      this.ctx.setCookie('uuid', userinfo.uuid);
       return {
         token,
         userinfo
@@ -63,6 +70,7 @@ class Customer extends Service {
       avatarUrl,
       openid: data.openid
     });
+    let token = ctx.createdToken({ data: userData, hour: 224 });
     return {
       userinfo: userData,
       token

@@ -11,6 +11,7 @@ fly.config.headers = {
 }
 
 fly.interceptors.request.use(async request => {
+  request.headers.token = Taro.getStorageSync('token')
   return request
 })
 

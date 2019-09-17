@@ -25,6 +25,16 @@ class Address extends baseController {
       result: await this.ctx.service.address.updateAddress(ctx.request.body)
     });
   }
+  async setDefaltStatus() {
+    const { ctx } = this;
+    ctx.validate({
+      uuid: { type: 'number' },
+      id: { type: 'number' }
+    });
+    this.success({
+      result: await this.ctx.service.address.setDefaltStatus(ctx.request.body)
+    });
+  }
   async deleteAddress() {
     const { ctx } = this;
     this.success({
@@ -36,13 +46,14 @@ class Address extends baseController {
     ctx.validate({
       phone: { type: 'string' },
       linkMan: { type: 'string' },
-      isDefault: { type: 'number' },
+      isDefault: { type: 'string' },
       address: { type: 'string' }
     });
+
     this.success({
       result: await this.ctx.service.address.addAddress({
         ...ctx.request.body,
-        creatorId: this.ctx.getCookie('uuid')
+        uuid: await this.ctx.getTokenKey('uuid')
       })
     });
   }

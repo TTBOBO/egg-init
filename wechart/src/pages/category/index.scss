@@ -31,28 +31,6 @@
     position: relative;
     height: calc(100% - 98px);
 
-    // position: absolute;
-    // top: 98px;
-    // left: 0;
-    // bottom: 0;
-    // right: 0;
-    .at-tabs__body {
-      // display: flex;
-      // flex-flow: row;
-      // flex-wrap: nowrap;
-      // width: auto;
-      // justify-content: flex-start;
-    }
-
-    at-tabs-pane {
-      // position: absolute;
-      // top: 0;
-      // float: left;
-      // width: 100%;
-      // flex: 1;
-      // height: 100%;
-    }
-
     .item-con {
       display: flex;
       flex-flow: row;
@@ -97,45 +75,42 @@
       .swiper {
         width: 100%;
         height: 100%;
+        display: flex;
 
-        .home-con {
-          padding: 40px 30px 0 30px;
+        .scrollview {
+          display: flex;
+          height: 100%;
 
-          // display: flex;
-          // flex-flow: row;
-          // flex-wrap: wrap;
-          .type-name {
-            width: 270px;
-            margin: 0 auto;
-          }
-
-          .home-con-type {
+          .scrollview-container {
             display: flex;
             flex-flow: row;
             flex-wrap: wrap;
+            background: #fafafa;
+            height: 100%;
             justify-content: space-between;
 
-            .item-con {
-              margin-bottom: 40px;
-              height: 145px;
-              width: 160px;
+            .goods-item {
+              width: 150px;
+              height: 220px;
+              padding: 10px;
+              margin: 10px;
+              text-align: center;
               display: flex;
+              justify-content: space-around;
               flex-flow: column;
-              flex-wrap: wrap;
+              background: #fff;
+              border-radius: 2px;
 
               image {
-                width: 160px;
-                height: 107px;
-                object-fit: cover;
+                width: 100%;
+                height: 150px;
+                border-radius: 5px;
+                overflow: hidden;
               }
 
-              view {
+              text {
                 font-size: 24px;
-                font-family: PingFangSC-Regular;
-                font-weight: 400;
-                color: rgba(0, 0, 0, 1);
-                line-height: 25px;
-                text-align: center;
+                color: #333;
               }
             }
           }

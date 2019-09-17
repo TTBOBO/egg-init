@@ -22,6 +22,7 @@ module.exports = app => {
   router.post('/user/updateAddress', controller.user.address.updateAddress);
   router.post('/user/deleteAddress', controller.user.address.deleteAddress);
   router.post('/user/addAddress', controller.user.address.addAddress);
+  router.post('/user/setDefaltStatus', controller.user.address.setDefaltStatus);
   router.get('/user/login_out', controller.user.common.loginOut);
   router.get('/order/order_week_data', controller.order.weekCount);
   router.get('/user/get_code_img', controller.user.common.getCodeImg);

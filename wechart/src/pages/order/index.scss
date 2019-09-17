@@ -1,0 +1,26 @@
+@import '../../assets/css/base.scss';
+
+.order-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  right: 0;
+  height: 100%;
+
+  .tabs {
+    height: 100%;
+
+    .scroll-con {
+      height: 100%;
+    }
+
+    .tab-order-list {
+      background: #ddd;
+    }
+  }
+}
+
+.tab-order-list {
+  background: #ddd;
+}

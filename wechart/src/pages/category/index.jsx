@@ -5,12 +5,11 @@ import {
   SwiperItem,
   ScrollView,
   Input,
-  Image
+  Image,
+  Text
 } from '@tarojs/components'
-import { AtDivider } from 'taro-ui'
 import './index.scss'
 
-const bannerUrl = 'http://localhost:7002/public/img/banner.png'
 export default class Index extends Component {
   config = {
     navigationBarTitleText: '分类'
@@ -32,10 +31,8 @@ export default class Index extends Component {
       let {
         result: { data }
       } = await this.getCategory()
-      console.log(data)
       useCategory(data)
     }, [])
-    console.log(category)
     return (
       <View className='mall-container'>
         <View className='search-bar'>
@@ -85,23 +82,13 @@ export default class Index extends Component {
                         {typeItem.Goods ? (
                           typeItem.Goods.map((listItem, listIndex) => {
                             return (
-                              <View className='home-con' key={listIndex}>
-                                <View className='type-name'>
-                                  <AtDivider
-                                    content={listItem.typename}
-                                    fontColor='#000'
-                                    lineColor='#777'
-                                  />
-                                </View>
-                                <View className='home-con-type'>
-                                  {listItem.data.map((item, index) => {
-                                    return (
-                                      <View key={index} className='item-con'>
-                                        <Image src={bannerUrl} />
-                                        <View>民用家具</View>
-                                      </View>
-                                    )
-                                  })}
+                              <View
+                                key={listIndex}
+                                className='scrollview-container'
+                              >
+                                <View className='goods-item'>
+                                  <Image src='http://localhost:7002/public/img/banner.png' />
+                                  <Text>{listItem.name}</Text>
                                 </View>
                               </View>
                             )

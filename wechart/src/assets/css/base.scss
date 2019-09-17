@@ -10,11 +10,10 @@ $border-color:#D8D8D8;
 $b-r:10px;
 $btn-bgcolor:#993333;
 $white:#fff;
-$base-url:"http://localhost:8083/img";
+$base-url:"http://localhost:7002/public/img";
 $base-bgcolor:#E6E6E6;
 $margin-con-color:#F4F4F4;
 // $baseUrl:"http://192.168.31.78";
-$baseUrl:"http://10.6.52.35";
 
 .margin-con {
   height: 20px;
@@ -43,4 +42,19 @@ $baseUrl:"http://10.6.52.35";
 .scrollview {
   width: 100%;
   height: 100%;
+}
+
+.select-icon {
+  width: 66px;
+  height: 66px;
+  margin: 0 13px;
+  background-size: cover;
+}
+
+.select {
+  background-image: url($base-url+'/select.png');
+}
+
+.select-no {
+  background-image: url($base-url+'/select_no.png');
 }

@@ -9,10 +9,6 @@ module.exports = app => {
         allowNull: false,
         autoIncrement: true
       },
-      creatorId: {
-        type: STRING(38),
-        allowNull: false
-      },
       phone: {
         type: STRING(20),
         allowNull: false

@@ -1,4 +1,5 @@
 @import "~taro-ui/dist/style/index.scss";
+@import './assets/css/base.scss';
 
 .item-extra__icon-arrow {
   font-size: 36px !important;
@@ -12,4 +13,15 @@
 
 page {
   height: 100%;
+}
+
+.submit-btn {
+  width: 250px !important;
+  border: none !important;
+  background: linear-gradient(45deg, $base-color 90%, #fff);
+}
+
+.at-input {
+  margin-left: 0;
+  padding: 16px;
 }

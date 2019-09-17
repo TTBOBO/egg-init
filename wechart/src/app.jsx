@@ -23,7 +23,14 @@ Taro.$ajaxPost = ajaxPost
 @connect(user => ({ ...user }))
 class App extends Component {
   config = {
-    pages: ['pages/index/index', 'pages/my/index', 'pages/category/index'],
+    pages: [
+      'pages/index/index',
+      'pages/my/index',
+      'pages/category/index',
+      'pages/my/address/index',
+      'pages/my/addAddress/index',
+      'pages/order/index'
+    ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -64,10 +71,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatch({
-      type: 'user/userInfo',
-      payload: Taro.getStorageSync('userInfo')
-    })
+    let userInfo = Taro.getStorageSync('userInfo')
+    if (userInfo) {
+      this.props.dispatch({
+        type: 'user/userInfo',
+        payload: userInfo
+      })
+    }
   }
 
   // 在 App 类中的 render() 函数没有实际作用

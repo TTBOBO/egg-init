@@ -15,6 +15,15 @@ module.exports = {
       expiresIn: 60 * 60 * hour
     });
   },
+  setCookie(key, data) {
+    const cookiesConfig = {
+      maxAge: 1000 * 3600 * 24 * 7,
+      httpOnly: false,
+      overwrite: true,
+      signed: false
+    };
+    this.cookies.set(key, data, cookiesConfig);
+  },
   setToken(data = {}) {
     const { app } = this;
     let { uuid, name, userName, userType } = data;
@@ -39,9 +48,13 @@ module.exports = {
     this.cookies.set('token', token, cookiesConfig);
     this.cookies.set('code', null);
   },
-  async verifyToken() {
+  async getTokenKey(key) {
+    let { verify, message } = await this.verifyToken(this.request.header.token);
+    return verify ? message[key] : '';
+  },
+  async verifyToken(tokenStr) {
     const { app } = this;
-    const token = this.getCookie();
+    const token = tokenStr || this.getCookie();
     return await new Promise(resolve => {
       app.jwt.verify(token, app.config.jwt.secret, function(err, decoded) {
         if (err) {

@@ -20,22 +20,22 @@ class Index extends Component {
     {
       iconUrl: '',
       title: '待付款',
-      path: ''
+      path: '/pages/order/index?type=1'
     },
     {
       iconUrl: '',
       title: '待发货',
-      path: ''
+      path: '/pages/order/index?type=2'
     },
     {
       iconUrl: '',
       title: '待收货',
-      path: ''
+      path: '/pages/order/index?type=3'
     },
     {
       iconUrl: '',
       title: '评价',
-      path: ''
+      path: '/pages/order/index?type=4'
     }
   ]
 
@@ -43,7 +43,8 @@ class Index extends Component {
     {
       iconUrl: '',
       title: '我的地址',
-      path: ''
+      path: '',
+      url: '/pages/my/address/index'
     },
     {
       iconUrl: '',
@@ -111,6 +112,13 @@ class Index extends Component {
     )
   }
 
+  handleClick(item) {
+    this.props.dispatch({
+      type: 'router/navigateTo',
+      payload: { url: item.url }
+    })
+  }
+
   render() {
     const {
       user: { loginStatus, userInfo }
@@ -159,6 +167,7 @@ class Index extends Component {
                   title={item.title}
                   hasBorder
                   arrow='right'
+                  onClick={() => this.handleClick(item)}
                 />
               )
             })}
