@@ -37,7 +37,7 @@ export default {
           { lable: "运费", value: "freightAmount", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "总支付金额", value: "totalAmount", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "创建时间", value: "createdTime", type: "time", search: "createdTime", tooltip: true, width: '150px', tipAlign: "right", sort: 'custom', sortOrder: 'desc' },
-          { lable: "购买用户", value: "uuid", type: "", search: "uuid", tooltip: true, tipAlign: "right", evelKey: "customer.nickName" },
+          { lable: "购买用户", value: "uuid", type: "select", search: "uuid", tooltip: true, tipAlign: "right", evelKey: "customer.nickName", url: "user_list", keyurl: "data", selectDataType: 4, colKey: "uuid", colName: "nickName" },
           { lable: "备注", value: "remark", type: "", search: "", tooltip: true, tipAlign: "right" },
         ],
         toolEvent: [{ type: "primary", emit: "diverGoods", title: "发货", judgement_con: 'status != "audited"' }],

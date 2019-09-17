@@ -1,4 +1,4 @@
-import Taro, { Component } from '@tarojs/taro'
+import Taro, { Component, useState, useEffect } from '@tarojs/taro'
 import { Tabs, Scroll, Modal } from '~/components'
 import { View } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
@@ -8,60 +8,35 @@ import './index.scss'
 @connect(modal => ({ ...modal }))
 export default class Index extends Component {
   config = {
-    navigationBarTitleText: '我的订单',
-    navigationBarBackgroundColor: '#000',
-    navigationBarTextStyle: 'white'
+    navigationBarTitleText: '我的订单'
   }
-
-  state = {
-    config: [
-      {
-        title: '全部订单',
-        list: [
-          { status: 1 },
-          { status: 2 },
-          { status: 3 },
-          { status: 4 },
-          { status: 5 }
-        ]
-      },
-      { title: '待付款', list: [] },
-      { title: '已付款', list: [] },
-      { title: '待发货', list: [] },
-      { title: '待收货', list: [] },
-      { title: '待评价', list: [] }
-    ],
-    current: 0,
-    cancelModal: false,
-    fhModal: false,
-    shModal: false
-  }
-  Refs = {}
-  componentWillMount() {
-    this.setState({
-      current: parseInt(this.$router.params.type) || 0
-    })
-  }
-  handleClick(e) {
-    this.setState({
-      current: e
-    })
+  configList = [
+    {
+      title: '全部订单',
+      status: 'all',
+      list: []
+    },
+    { title: '待付款', list: [], status: 'initial' },
+    { title: '待发货', list: [], status: 'audited' },
+    { title: '待收货', list: [], status: 'dispatching' },
+    { title: '待评价', list: [], status: 'completed' }
+  ]
+  status = {
+    0: '',
+    1: 'initial',
+    2: 'audited',
+    3: 'dispatching',
+    4: 'completed'
   }
   onScrollToLower(e) {
     console.log(e)
   }
-  componentDidMount() {
-    // this.props.dispatch({type:'modal/open',payload:'modal1'})
-  }
-  handleOk() {
-    // this.props.dispatch({type:'modal/close',payload:'modal1'})
-  }
-  handleBtn(item, type) {
+  handleBtn({ setTipModal, setFhModal, setShModal }, item, type) {
     // cancle wl del  buyagain  pay  sh  fh  pl
     switch (type) {
       case 'cancle':
         console.log('取消订单')
-        this.setState({ cancelModal: true })
+        setTipModal(true)
         break
       case 'wl':
         console.log('查看物流')
@@ -76,10 +51,11 @@ export default class Index extends Component {
         console.log('支付')
         break
       case 'sh':
+        setShModal(true)
         console.log('确认收货')
         break
       case 'fh':
-        this.setState({ fhModal: true })
+        setFhModal(true)
         console.log('提醒发货')
         break
       case 'pj':
@@ -90,25 +66,59 @@ export default class Index extends Component {
         break
     }
   }
-  handleFh() {
-    this.setState({ fhModal: false })
+  handleFh(setTipModal) {
+    setTipModal(false)
     Taro.showToast({
       title: '提醒发货成功',
       icon: 'success',
       duration: 2000
     })
   }
+
   render() {
+    const [configList, setConfigList] = useState(this.configList)
+    const [current, setCurrent] = useState(() => {
+      return parseInt(this.$router.params.status) || 0
+    })
+    useEffect(async () => {
+      await getOrderList()
+    }, [current])
+
+    const [tipModal, setTipModal] = useState(false)
+    const [fhModal, setFhModal] = useState(false)
+    const [shModal, setShModal] = useState(false)
+
+    const getOrderList = async (status = true) => {
+      const { uuid } = Taro.getStorageSync('userInfo')
+      let {
+        result: { data }
+      } = await Taro.$ajaxGet('orderList', {
+        uuid,
+        status: this.status[current]
+      })
+      status
+        ? (configList[current].list = data)
+        : configList[current].list.push(...data)
+      setConfigList(configList)
+    }
     return (
       <View>
-        <Tabs currentIndex={this.state.current} config={this.state.config}>
-          {this.state.config.map((_item, index) => {
+        <Tabs
+          currentIndex={current}
+          config={configList}
+          onTabsChange={e => setCurrent(e)}
+        >
+          {configList.map((_item, index) => {
             return (
-              <Scroll index={index} key={index} current={this.state.current}>
+              <Scroll index={index} key={index} current={index}>
                 <View className='tab-order-list'>
                   <OrderItem
                     item={_item}
-                    onHandleBtn={this.handleBtn.bind(this)}
+                    onHandleBtn={this.handleBtn.bind(this, {
+                      setTipModal,
+                      setFhModal,
+                      setShModal
+                    })}
                   />
                 </View>
               </Scroll>
@@ -117,33 +127,25 @@ export default class Index extends Component {
         </Tabs>
         <Modal
           title=''
-          isOpened={this.state.cancelModal}
-          onHandleOk={() => {
-            this.setState({ cancelModal: false })
-          }}
-          onHandleCancel={() => {
-            this.setState({ cancelModal: false })
-          }}
+          isOpened={tipModal}
+          onHandleOk={() => setTipModal(false)}
+          onHandleCancel={() => setTipModal(false)}
         >
           确认取消订单吗？
         </Modal>
         <Modal
           title=''
-          isOpened={this.state.fhModal}
+          isOpened={fhModal}
           hcancelBtn
-          onHandleOk={() => this.handleFh()}
+          onHandleOk={() => this.handleFh(setFhModal)}
         >
           正常发货时间为1-5个工作日， 请耐心等待～
         </Modal>
         <Modal
           title=''
-          isOpened={this.state.shModal}
-          onHandleOk={() => {
-            this.setState({ cancelModal: false })
-          }}
-          onHandleCancel={() => {
-            this.setState({ cancelModal: false })
-          }}
+          isOpened={shModal}
+          onHandleOk={() => setShModal(false)}
+          onHandleCancel={() => setShModal(false)}
         >
           确认收货吗？
         </Modal>

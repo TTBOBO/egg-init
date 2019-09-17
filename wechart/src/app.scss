@@ -25,3 +25,20 @@ page {
   margin-left: 0;
   padding: 16px;
 }
+
+.at-tabs__item--active {
+  color: $base-color;
+
+  .at-tabs__item-underline {
+    background-color: $base-color;
+  }
+}
+
+.at-tabs__body {
+  height: calc(100% - 86px) !important;
+  position: relative;
+}
+
+.at-tabs-pane {
+  height: 100% !important;
+}

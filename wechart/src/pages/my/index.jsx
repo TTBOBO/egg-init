@@ -20,22 +20,22 @@ class Index extends Component {
     {
       iconUrl: '',
       title: '待付款',
-      path: '/pages/order/index?type=1'
+      path: '/pages/order/index?status=1'
     },
     {
       iconUrl: '',
       title: '待发货',
-      path: '/pages/order/index?type=2'
+      path: '/pages/order/index?status=2'
     },
     {
       iconUrl: '',
       title: '待收货',
-      path: '/pages/order/index?type=3'
+      path: '/pages/order/index?status=3'
     },
     {
       iconUrl: '',
       title: '评价',
-      path: '/pages/order/index?type=4'
+      path: '/pages/order/index?status=4'
     }
   ]
 
@@ -43,24 +43,17 @@ class Index extends Component {
     {
       iconUrl: '',
       title: '我的地址',
-      path: '',
-      url: '/pages/my/address/index'
+      path: '/pages/my/address/index'
     },
     {
       iconUrl: '',
-      title: '我的优惠券',
-      path: ''
+      title: '我的优惠券'
     },
     {
       iconUrl: '',
-      title: '设置',
-      path: ''
+      title: '设置'
     }
   ]
-
-  componentDidMount() {
-    console.log(this.props.user)
-  }
 
   async getUser({ detail }) {
     const { userInfo } = detail
@@ -115,7 +108,7 @@ class Index extends Component {
   handleClick(item) {
     this.props.dispatch({
       type: 'router/navigateTo',
-      payload: { url: item.url }
+      payload: { url: item.path }
     })
   }
 
@@ -146,11 +139,18 @@ class Index extends Component {
             extraText='查看全部订单'
             arrow='right'
             hasBorder={false}
+            onClick={() =>
+              this.handleClick({ path: '/pages/order/index?status=0' })
+            }
           />
           <View className='order-list'>
             {this.orderList.map((item, index) => {
               return (
-                <View key={index} className='order-item'>
+                <View
+                  key={index}
+                  className='order-item'
+                  onClick={() => this.handleClick(item)}
+                >
                   <Image className='icon' src='../../assets/img/my.png' />
                   <Text className='title'>待收货</Text>
                 </View>
