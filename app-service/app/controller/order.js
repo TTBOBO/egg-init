@@ -13,6 +13,23 @@ class Order extends baseController {
       result
     });
   }
+  async changeOrderStatus() {
+    const { ctx } = this;
+    ctx.validate({
+      status: { type: 'string' },
+      orderId: { type: 'string' }
+    });
+    let result = await this.service.order.changeOrderStatus(ctx.request.body);
+    this.success({
+      result
+    });
+  }
+  async orderInfo() {
+    let result = await this.service.order.orderInfo(this.ctx.query);
+    this.success({
+      result
+    });
+  }
   async diverGoods() {
     const { ctx } = this;
     ctx.validate({

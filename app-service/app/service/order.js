@@ -65,6 +65,20 @@ class Order extends Service {
     });
   }
 
+  async changeOrderStatus(body = {}) {
+    let { status, orderId } = body;
+    return await this.app.model.Order.update(
+      { status },
+      { where: { orderId } }
+    );
+  }
+
+  async orderInfo({ orderId }) {
+    return await this.app.model.Order.findOne({
+      where: { orderId }
+    });
+  }
+
   async diverGoods(body = {}) {
     let { orderId } = body;
     return await this.app.model.Order.update(

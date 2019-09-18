@@ -8,17 +8,7 @@
   right: 0;
   height: 100%;
 
-  // .tabs {
-  //   height: 100%;
-
-  .scroll-con {
-    // height: 100%;
-
-  }
-
   .tab-order-list {
-
-    // background: #ddd;
     .tab-order-item {
       margin-bottom: 20px;
       background: $white;
@@ -47,7 +37,6 @@
         margin: 0 auto;
         display: flex;
         flex-flow: row;
-        // padding: 0 31px;
         padding-top: 19px;
         border-bottom: 2px solid $base-bgcolor;
         padding-bottom: 10px;
@@ -136,17 +125,12 @@
 
   }
 
-  // }
-
 }
 
 .scroll-con {
   height: 100%;
 }
 
-// .tab-order-list{
-//     background: #ddd;
-// }
 .question-container {
   .tab-order-list {
     background: transparent !important;

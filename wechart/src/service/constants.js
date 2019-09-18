@@ -7,5 +7,6 @@ export const api = {
   deleteAddress: '/user/deleteAddress',
   addAddress: '/user/addAddress',
   setDefaltStatus: '/user/setDefaltStatus',
-  orderList: '/order/orderList'
+  orderList: '/order/orderList',
+  changeOrderStatus: '/order/changeOrderStatus'
 }

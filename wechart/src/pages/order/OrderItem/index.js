@@ -8,7 +8,8 @@ export default class Index extends Component {
       initial: '待付款',
       audited: '待发货',
       dispatching: '待收货',
-      completed: '待评价'
+      completed: '待评价',
+      canceled: '已取消'
     }
   }
   defaultProps = {}
@@ -22,7 +23,7 @@ export default class Index extends Component {
   render() {
     return (
       <View>
-        {this.props.item.list.length > 0 ? (
+        {this.props.item.list.length ? (
           <View>
             {this.props.item.list.map((_item, index) => {
               return (

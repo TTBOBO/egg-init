@@ -31,6 +31,7 @@ module.exports = app => {
   router.get('/os/get_network_io', controller.os.getNetworkIo);
   router.get('/exec', controller.home.exec);
   router.get('/order/orderList', controller.order.orderList);
+  router.post('/order/changeOrderStatus', controller.order.changeOrderStatus);
   router.post('/order/diverGoods', controller.order.diverGoods);
   router.get('/goods/goodsList', controller.goods.goodsList);
   router.post('/goods/addGoods', controller.goods.addGoods);
