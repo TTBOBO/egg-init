@@ -58,8 +58,13 @@ export default {
       categoryOption: {
         formList: [
           { field: "categoryName", title: "商品类型名称", value: '', validate: "required", type: "input" },
+          { field: "parentId", title: "上级分类", value: "", validate: "required", type: "select", option: { 0: "无上级分类" }, selectDataType: 4, optionUrl: 'categoryList', colKey: 'id', colName: 'categoryName' },
+          { field: "productCount", title: "商品类型描述", value: '', validate: "", type: "input", inputType: "number" },
+          { field: "productUnit", title: "商品单位", value: '', type: "input" },
+          // { field: "showStatus", title: "显示状态", value: "", validate: "required", type: "switch", activeT: "不显示", activeV: "1", inactiveT: "显示", inactiveV: "0" },
+          { field: "showStatus", title: "显示状态", value: "0", validate: "required", type: "radio", option: { 0: "不显示", 1: "显示" } },
+          { field: "keywords", title: "关键字", value: '', type: "input" },
           { field: "categoryDes", title: "商品类型描述", value: '', validate: "", type: "input" },
-          { field: "parentId", title: "上级分类", value: "", validate: "required", type: "select", option: { 0: "无上级分类" } },
         ],
         validata: {},
         LabelWidth: '130px',
@@ -97,7 +102,8 @@ export default {
       if (!this.addEditStatus) {
         postData.id = this.editid;
       }
-
+      // console.log(postData)
+      // return false;
       let data = await this.$ajaxPost(this.addEditStatus ? 'addCategory' : 'updateCateGory', postData);
       if (data.code === 0) {
         this.$message.success(`${this.addEditStatus ? '添加' : '编辑'}成功`);
@@ -113,6 +119,11 @@ export default {
   },
   created () {
 
+  },
+  watch: {
+    categoryData (newV) {
+      console.log(newV);
+    }
   }
 }
 </script>
