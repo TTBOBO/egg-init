@@ -303,7 +303,7 @@ export default {
           //防止重新修改option参数  getSelectOpt
           if ((item.type == "select" || item.type == "radio" || item.type == "checkbox" || item.type ==
             "radio") && !item.optionUrl) {
-            item.option = this.getSelectOpt(item.option);
+            item.option = util.getSelectOpt(item.option, 1);
           }
         })
         this.paramsData = JSON.parse(JSON.stringify(this.paramsData));

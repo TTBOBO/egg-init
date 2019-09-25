@@ -42,7 +42,10 @@ export default {
         },
         columns: [
           { lable: "类型编号", value: "id", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "商品类型名称", value: "categoryName", type: "", search: "categoryName", tooltip: true, tipAlign: "right" },
+          { lable: "商品类型名称", value: "categoryName", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "级别", value: "level", type: "select", search: "", tooltip: true, tipAlign: "right", selectOPtion: { 0: "一级", 1: "二级" } },
+          { lable: "商品数量", value: "productCount", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "商品单位", value: "productUnit", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "商品类型描述", value: "categoryDes", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "最后修改时间", value: "lastModifierTime", tooltip: true, tipAlign: "right" }
@@ -56,6 +59,7 @@ export default {
         formList: [
           { field: "categoryName", title: "商品类型名称", value: '', validate: "required", type: "input" },
           { field: "categoryDes", title: "商品类型描述", value: '', validate: "", type: "input" },
+          { field: "parentId", title: "上级分类", value: "", validate: "required", type: "select", option: { 0: "无上级分类" } },
         ],
         validata: {},
         LabelWidth: '130px',

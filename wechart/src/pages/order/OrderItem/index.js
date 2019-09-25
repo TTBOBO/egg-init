@@ -25,9 +25,9 @@ export default class Index extends Component {
       <View>
         {this.props.item.list.length ? (
           <View>
-            {this.props.item.list.map((_item, index) => {
+            {this.props.item.list.map(_item => {
               return (
-                <View className='tab-order-item' key={index}>
+                <View className='tab-order-item' key={_item.orderId}>
                   <View className='header'>
                     <Text className='time'>{_item.createdTime}</Text>
                     <Text className='pay-status'>

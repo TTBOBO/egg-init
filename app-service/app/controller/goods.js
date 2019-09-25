@@ -62,7 +62,13 @@ class Goods extends baseController {
     const { ctx } = this;
     ctx.validate({
       categoryName: { type: 'string' },
-      categoryDes: { type: 'string?' }
+      categoryDes: { type: 'string?' },
+      parentId: { type: 'string?' },
+      level: { type: 'number' },
+      productCount: { type: 'number' },
+      productUnit: { type: 'string' },
+      showStatus: { type: 'number' },
+      keywords: { type: { type: 'string?' } }
     });
     this.success({
       result: await this.ctx.service.goods.addCategory({

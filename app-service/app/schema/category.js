@@ -9,6 +9,36 @@ module.exports = app => {
         allowNull: false,
         autoIncrement: true
       },
+      parentId: {
+        type: INTEGER.UNSIGNED,
+        comment: '上级分类编号'
+      },
+      level: {
+        type: INTEGER,
+        defaultValue: 0,
+        comment: '分类级别：0->1级；1->2级'
+      },
+      productCount: {
+        type: INTEGER,
+        comment: '分类级别：0->1级；1->2级'
+      },
+      productUnit: {
+        type: STRING(64),
+        comment: '商品单位'
+      },
+      showStatus: {
+        type: INTEGER,
+        defaultValue: 0,
+        comment: '显示状态：0->不显示；1->显示'
+      },
+      icon: {
+        type: STRING(225),
+        comment: '图标'
+      },
+      keywords: {
+        type: STRING(225),
+        comment: '关键字'
+      },
       // createdTime: {
       //   type: DATE,
       //   allowNull: false,

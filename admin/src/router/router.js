@@ -116,6 +116,18 @@ export default [
         }
       },
       {
+        path: 'goodsSku',
+        name: 'goodsSku',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '商品SKU管理',
+          hideInMenu: false
+        },
+        component: resolve => {
+          require(['@/view/goods/goodsSku'], resolve)
+        }
+      },
+      {
         path: 'addGoods',
         name: 'addGoods',
         meta: {
