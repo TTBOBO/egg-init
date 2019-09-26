@@ -13,6 +13,10 @@ const REQUEST = {
   goodsList: '/goods/goodsList',
   addGoods: '/goods/addGoods',
   updateGoods: '/goods/updateGoods',
+  goodsAttributeCategoryList: '/category/goodsAttributeCategoryList',
+  addUpdateGoodsAttribute: '/category/addUpdateGoodsAttribute',
+  GoodsAttributeList: '/category/GoodsAttributeList',
+  GoodsAttributeInfo: '/category/GoodsAttributeInfo',
   getSTS: '/getSTS',
   changeGoodsStatus: '/goods/changeGoodsStatus',
   addComment: '/order/addComment', //添加评论
@@ -21,5 +25,5 @@ const REQUEST = {
   diverGoods: '/order/diverGoods',
   getMessageList: '/message/getMessageList',
   changeMessageStatus: '/message/changeMessageStatus'
-}
-export default REQUEST
+};
+export default REQUEST;

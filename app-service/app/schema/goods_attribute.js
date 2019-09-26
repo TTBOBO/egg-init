@@ -49,14 +49,6 @@ module.exports = app => {
       type: {
         type: INTEGER,
         comment: '属性的类型；0->规格；1->参数'
-      },
-      attributeCount: {
-        type: INTEGER,
-        comment: '属性数量'
-      },
-      paramCount: {
-        type: INTEGER,
-        comment: '参数数量'
       }
     },
     options: {

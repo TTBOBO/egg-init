@@ -1,4 +1,4 @@
-import Main from '@/view/main/main'
+import Main from '@/view/main/main';
 export default [
   {
     path: '/login',
@@ -27,7 +27,7 @@ export default [
       title: '首页'
     },
     component: resolve => {
-      require(['@/view/home/home1'], resolve)
+      require(['@/view/home/home1'], resolve);
     }
   },
   {
@@ -51,7 +51,7 @@ export default [
           title: '首页'
         },
         component: resolve => {
-          require(['@/view/home/home'], resolve)
+          require(['@/view/home/home'], resolve);
         }
       }
     ]
@@ -75,7 +75,7 @@ export default [
           title: '系统会员'
         },
         component: resolve => {
-          require(['@/view/user/user'], resolve)
+          require(['@/view/user/user'], resolve);
         }
       }
     ]
@@ -100,7 +100,7 @@ export default [
           title: '商品管理'
         },
         component: resolve => {
-          require(['@/view/goods/goodsList'], resolve)
+          require(['@/view/goods/goodsList'], resolve);
         }
       },
       {
@@ -108,13 +108,50 @@ export default [
         name: 'goodsCategory',
         meta: {
           icon: 'el-icon-eleme',
+          title: '商品分类',
+          hideInMenu: false
+        },
+        component: resolve => {
+          require(['@/view/goods/goodsCategory'], resolve);
+        }
+      },
+      {
+        path: 'goodsAttributeCategory',
+        name: 'goodsAttributeCategory',
+        meta: {
+          icon: 'el-icon-eleme',
           title: '商品类型',
           hideInMenu: false
         },
         component: resolve => {
-          require(['@/view/goods/goodsCategory'], resolve)
+          require(['@/view/goods/goodsAttributeCategory'], resolve);
         }
       },
+      {
+        path: 'goodsAttribute',
+        name: 'goodsAttribute',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '属性列表',
+          hideInMenu: true
+        },
+        component: resolve => {
+          require(['@/view/goods/goodsAttribute'], resolve);
+        }
+      },
+      {
+        path: 'addGoodsAttribute',
+        name: 'addGoodsAttribute',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '添加属性',
+          hideInMenu: true
+        },
+        component: resolve => {
+          require(['@/view/goods/addGoodsAttribute'], resolve);
+        }
+      },
+
       {
         path: 'goodsSku',
         name: 'goodsSku',
@@ -124,7 +161,7 @@ export default [
           hideInMenu: false
         },
         component: resolve => {
-          require(['@/view/goods/goodsSku'], resolve)
+          require(['@/view/goods/goodsSku'], resolve);
         }
       },
       {
@@ -136,7 +173,7 @@ export default [
           hideInMenu: true
         },
         component: resolve => {
-          require(['@/view/goods/addGoods'], resolve)
+          require(['@/view/goods/addGoods'], resolve);
         }
       }
     ]
@@ -160,7 +197,7 @@ export default [
           title: '订单管理'
         },
         component: resolve => {
-          require(['@/view/order/order'], resolve)
+          require(['@/view/order/order'], resolve);
         }
       },
       {
@@ -171,7 +208,7 @@ export default [
           title: '用户评价'
         },
         component: resolve => {
-          require(['@/view/order/evaluate'], resolve)
+          require(['@/view/order/evaluate'], resolve);
         }
       }
     ]
@@ -185,4 +222,4 @@ export default [
     },
     component: () => import('@/view/error-page/404.vue')
   }
-]
+];

@@ -1,3 +1,4 @@
+
 <template>
   <div class="container">
     <CustomTable ref="customTable"
@@ -8,28 +9,15 @@
       <template slot="setting"
                 slot-scope="scope">
         <el-button size='mini'
-                   @click="seeNext(scope.row.parentId != '0')">查看{{scope.row.parentId != '0' ? '上' : '下'}}一级</el-button>
+                   @click="getAttribute(scope)">属性列表</el-button>
+        <el-button size='mini'
+                   @click="getParams(scope)">参数列表</el-button>
       </template>
     </CustomTable>
-    <el-dialog :title="addEditStatus ? '添加' : '编辑' +'商品类型'"
-               :visible.sync="showDialog"
-               width="600px">
-      <CustomForm :optionData="categoryOption"
-                  ref="Form"
-                  v-if="showDialog"
-                  v-model="categoryData"></CustomForm>
-      <span slot="footer"
-            class="dialog-footer">
-        <el-button @click="showDialog = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="hideDialog">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
 import CustomTable from '@/components/CustomTable';
-import CustomForm from '@/components/CustomForm';
 export default {
   data () {
     return {
@@ -38,24 +26,19 @@ export default {
       showDialog: false,
       statusType: { initial: "", audited: "success", dispatching: "warning", completed: "primary", canceled: "danger" },
       tableOption: {
-        baseUrl: "categoryList",
+        baseUrl: "goodsAttributeCategoryList",
         toolEventWidth: "200px",
         initheight: true,
         search: {
           page: 1,  //页数
           size: 10,  //每页多少条
-          level: 0
         },
         columns: [
-          { lable: "编号", value: "id", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "分类名称", value: "categoryName", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "级别", value: "level", type: "select", search: "", tooltip: true, tipAlign: "right", selectOPtion: { 0: "一级", 1: "二级" } },
-          { lable: "商品数量", value: "productCount", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "商品单位", value: "productUnit", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "商品类型描述", value: "categoryDes", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right" },
-          { lable: "最后修改时间", value: "lastModifierTime", tooltip: true, tipAlign: "right" },
-          { lable: "设置", value: "setting", scoped: true }
+          { lable: "类型编号", value: "goods_attribute_category_id", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "类型名称", value: "name", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "属性数量", value: "attributeCount", type: "select", search: "", tooltip: true, tipAlign: "right", selectOPtion: { 0: "一级", 1: "二级" } },
+          { lable: "参数数量", value: "paramCount", type: "", search: "", tooltip: true, tipAlign: "right" },
+          { lable: "设置", value: "setting", scoped: true, width: 250 }
         ],
         toolEvent: [{ type: "primary", emit: "edit", title: "编辑" }, { type: "danger", emit: "del", title: "删除" }],
         topBtnGroup: [
@@ -79,8 +62,7 @@ export default {
     }
   },
   components: {
-    CustomTable,
-    CustomForm
+    CustomTable
   },
   methods: {
     async edit ({ row }) {
@@ -91,10 +73,23 @@ export default {
         this.categoryData = row;
       })
     },
-    async seeNext (status) {
-      console.log(11)
-      this.tableOption.search.level = status ? 0 : 1;
-      this.$refs.customTable.reload();
+    async getAttribute (row) {
+      this.$router.push({
+        path: 'goodsAttribute',
+        query: {
+          id: row.row.goods_attribute_category_id,
+          type: "attributeCount"
+        }
+      })
+    },
+    async getParams (row) {
+      this.$router.push({
+        path: 'goodsAttribute',
+        query: {
+          id: row.row.goods_attribute_category_id,
+          type: "paramCount"
+        }
+      })
     },
     async add () {
       this.addEditStatus = true;

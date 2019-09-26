@@ -27,8 +27,8 @@ module.exports = app => {
         comment: '商品单位'
       },
       showStatus: {
-        type: INTEGER,
-        defaultValue: 0,
+        type: STRING(1),
+        defaultValue: '1',
         comment: '显示状态：0->不显示；1->显示'
       },
       icon: {

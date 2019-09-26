@@ -66,20 +66,9 @@ class Goods extends Service {
     );
   }
 
-  async categoryList({ categoryName }, hasGoods = false) {
-    const { app } = this;
-    const {
-      Sequelize: { Op }
-    } = app;
-    let where = {};
+  async categoryList({ level = 0 }, hasGoods = false) {
+    let where = { level };
     let include = [];
-    if (categoryName) {
-      where = {
-        categoryName: {
-          [Op.like]: `%${categoryName}%`
-        }
-      };
-    }
     if (hasGoods) {
       include.push({
         model: this.app.model.Goods
@@ -109,6 +98,66 @@ class Goods extends Service {
       { ...updateData },
       { where: { id } }
     );
+  }
+
+  async goodsAttributeCategoryList({ page, size }) {
+    return await this.app.model.GoodsAttributeCategory.grid({
+      pagination: { page, size }
+    });
+  }
+
+  async inOrdeCrement({
+    goods_attribute_category_id,
+    status,
+    key,
+    transaction
+  }) {
+    const GoodsAttributeCategory = this.app.model.GoodsAttributeCategory;
+    return await GoodsAttributeCategory[status ? 'increment' : 'decrement'](
+      key,
+      {
+        transaction,
+        where: { goods_attribute_category_id }
+      }
+    );
+  }
+
+  async addUpdateGoodsAttribute({ goods_attribute_id, key, ...aData }) {
+    const transaction = await this.app.getTransaction();
+    let data = !goods_attribute_id
+      ? await this.app.model.GoodsAttribute.createOne(
+        { ...aData },
+        { transaction }
+      )
+      : await this.app.model.GoodsAttribute.update(
+        { ...aData },
+        { where: { goods_attribute_id }, transaction }
+      );
+    if (data && !goods_attribute_id) {
+      await this.inOrdeCrement({
+        goods_attribute_category_id: aData.goods_attribute_category_id,
+        status: true,
+        key,
+        transaction
+      });
+    }
+    return data;
+  }
+
+  async GoodsAttributeInfo({ goods_attribute_id }) {
+    return await this.app.model.GoodsAttribute.findByPk(goods_attribute_id);
+  }
+
+  async GoodsAttributeList({ page, size, goods_attribute_category_id }) {
+    return await this.app.model.GoodsAttribute.grid({
+      include: [
+        {
+          model: this.app.model.GoodsAttributeCategory
+        }
+      ],
+      where: { goods_attribute_category_id },
+      pagination: { page, size }
+    });
   }
 }
 
