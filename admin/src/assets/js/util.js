@@ -10,34 +10,34 @@ let util = {
      */
     async createScript(url) {
       await new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.src = url + '?_=' + new Date().getTime()
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url + '?_=' + new Date().getTime();
         script.onload = () => {
-          resolve()
-        }
+          resolve();
+        };
         script.onerror = e => {
-          reject(e)
-        }
-        document.body.appendChild(script)
-      })
+          reject(e);
+        };
+        document.body.appendChild(script);
+      });
     },
     /**
      * HTML 实体字符转义
      */
     htmlEncode(str) {
-      let s = ''
+      let s = '';
       if (str.length === 0) {
-        return ''
+        return '';
       }
-      s = str.replace(/&/g, '&amp;')
-      s = str.replace(/>/g, '&gt;')
-      s = str.replace(/</g, '&lt;')
-      s = str.replace(/\s/g, '&nbsp;')
+      s = str.replace(/&/g, '&amp;');
+      s = str.replace(/>/g, '&gt;');
+      s = str.replace(/</g, '&lt;');
+      s = str.replace(/\s/g, '&nbsp;');
       // s = str.replace(/\'/g, '&#39;')
       // s = str.replace(/\"/g, '&quot;')
-      s = str.replace(/\n/g, '<br>')
-      return s
+      s = str.replace(/\n/g, '<br>');
+      return s;
     },
     /**
      * 如何优雅的实现金钱格式化
@@ -45,7 +45,7 @@ let util = {
      * @return {[type]}       [description]
      */
     formatMoney(str = '1234567890') {
-      return str.replace(/\B(?=(\d{3})+(?!\d))/g, ',') // 1,234,567,890
+      return str.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // 1,234,567,890
 
       // return str.split('').reverse().reduce((prev, next, index) => {
       // return ((index % 3) ? next : (next + ',')) + prev
@@ -69,25 +69,25 @@ let util = {
       sign1 = '-',
       sign2 = ':'
     ) {
-      let date = new Date()
-      let year = date.getFullYear()
-      let month = (date.getMonth() + 1).toString().padStart(2, '0')
+      let date = new Date();
+      let year = date.getFullYear();
+      let month = (date.getMonth() + 1).toString().padStart(2, '0');
       let day = date
         .getDate()
         .toString()
-        .padStart(2, '0')
+        .padStart(2, '0');
       let hour = date
         .getHours()
         .toString()
-        .padStart(2, '0')
+        .padStart(2, '0');
       let minutes = date
         .getMinutes()
         .toString()
-        .padStart(2, '0')
+        .padStart(2, '0');
       let seconds = date
         .getSeconds()
         .toString()
-        .padStart(2, '0')
+        .padStart(2, '0');
       let weekArr = [
         '星期一',
         '星期二',
@@ -96,14 +96,14 @@ let util = {
         '星期五',
         '星期六',
         '星期天'
-      ]
-      let week = weekArr[date.getDay()]
+      ];
+      let week = weekArr[date.getDay()];
 
-      let time1 = hasDay ? `${year}${sign1}${month}${sign1}${day}` : ''
-      let time2 = hasHour ? `${hour}${sign2}${minutes}${sign2}${seconds}` : ''
-      let time3 = hasWeek ? `${week}` : ''
+      let time1 = hasDay ? `${year}${sign1}${month}${sign1}${day}` : '';
+      let time2 = hasHour ? `${hour}${sign2}${minutes}${sign2}${seconds}` : '';
+      let time3 = hasWeek ? `${week}` : '';
 
-      return `${time1} ${time2} ${time3}`.replace(/(^\s*)|(\s*$)/g, '')
+      return `${time1} ${time2} ${time3}`.replace(/(^\s*)|(\s*$)/g, '');
     },
 
     /**
@@ -114,13 +114,13 @@ let util = {
      * @return {[type]}           [description]
      */
     format(timestamp, sign = ':') {
-      timestamp = Math.floor(timestamp)
+      timestamp = Math.floor(timestamp);
 
       let minute = Math.floor(timestamp / 60)
         .toString()
-        .padStart(2, '0')
-      let second = (timestamp % 60).toString().padStart(2, '0')
-      return `${minute}${sign}${second}`
+        .padStart(2, '0');
+      let second = (timestamp % 60).toString().padStart(2, '0');
+      return `${minute}${sign}${second}`;
     },
 
     /**
@@ -130,23 +130,23 @@ let util = {
      * @return {[type]}         [description]
      */
     countDown(endTime) {
-      let start = new Date()
-      let end = new Date(endTime)
-      let dif = end.getTime() - start.getTime()
+      let start = new Date();
+      let end = new Date(endTime);
+      let dif = end.getTime() - start.getTime();
 
-      let d = 0
-      let h = 0
-      let m = 0
-      let s = 0
+      let d = 0;
+      let h = 0;
+      let m = 0;
+      let s = 0;
 
       if (dif >= 0) {
-        d = Math.floor(dif / 1000 / 3600 / 24)
-        h = Math.floor((dif / 1000 / 60 / 60) % 24)
-        m = Math.floor((dif / 1000 / 60) % 60)
-        s = Math.floor((dif / 1000) % 60)
+        d = Math.floor(dif / 1000 / 3600 / 24);
+        h = Math.floor((dif / 1000 / 60 / 60) % 24);
+        m = Math.floor((dif / 1000 / 60) % 60);
+        s = Math.floor((dif / 1000) % 60);
       }
 
-      return `仅剩${d}天${h}小时${m}分钟${s}秒`
+      return `仅剩${d}天${h}小时${m}分钟${s}秒`;
     },
     /**
      *
@@ -156,21 +156,21 @@ let util = {
      */
     fixNumber: function(num, preNum) {
       if (num <= 0) {
-        return preNum
+        return preNum;
       }
-      return Math.ceil(num / preNum) * preNum
+      return Math.ceil(num / preNum) * preNum;
     },
     /**
      * 转换为日期对象
      */
     toDate: function(str) {
       if (typeof str === 'number') {
-        return new Date(str)
+        return new Date(str);
       } else if (typeof str === 'string') {
-        var date = new Date(str.replace(/-/g, '/'))
-        return date
+        var date = new Date(str.replace(/-/g, '/'));
+        return date;
       } else {
-        return str
+        return str;
       }
     },
     /**
@@ -178,21 +178,21 @@ let util = {
      */
     getNowTime: function(timeStr, statu = false, str = '-') {
       if (!timeStr) {
-        return '' //请传入时间
+        return ''; //请传入时间
       }
       // var time = new Date(time * 1000);
-      var time = new Date(timeStr)
+      var time = new Date(timeStr);
       let month =
         time.getMonth() + 1 < 10
           ? '0' + (time.getMonth() + 1)
-          : time.getMonth() + 1
-      let data = time.getDate() < 10 ? '0' + time.getDate() : time.getDate()
+          : time.getMonth() + 1;
+      let data = time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
       let getMilliseconds =
-        time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds()
+        time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds();
       let getMinutes =
-        time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()
+        time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes();
       let getHours =
-        time.getHours() < 10 ? '0' + time.getHours() : time.getHours()
+        time.getHours() < 10 ? '0' + time.getHours() : time.getHours();
       if (statu) {
         time =
           time.getFullYear() +
@@ -205,7 +205,7 @@ let util = {
           '' +
           getMinutes +
           '' +
-          getMilliseconds
+          getMilliseconds;
         // time = (time.getFullYear() + "-" + month + "-" + data + " " + getHours + ":" + getMinutes + ":" + getMilliseconds);
       } else {
         time =
@@ -219,30 +219,30 @@ let util = {
           ':' +
           getMinutes +
           ':' +
-          getMilliseconds
+          getMilliseconds;
       }
-      return time
+      return time;
     },
     getStartTime: function() {
-      let start = new Date()
-      start.setHours(0)
-      start.setMinutes(0)
-      start.setSeconds(0)
-      start.setMilliseconds(0)
-      return Date.parse(start) / 1000
+      let start = new Date();
+      start.setHours(0);
+      start.setMinutes(0);
+      start.setSeconds(0);
+      start.setMilliseconds(0);
+      return Date.parse(start) / 1000;
     },
     /**
      * 根据时间转时间戳
      */
     getTime: function(time, statu) {
       if (statu) {
-        return parseInt(time / 1000)
+        return parseInt(time / 1000);
       } else {
         time = time
           .split('-')
           .reverse()
-          .join('-')
-        return parseInt(new Date(time) / 1000)
+          .join('-');
+        return parseInt(new Date(time) / 1000);
       }
     },
     /**
@@ -250,25 +250,25 @@ let util = {
      * @returns {String}日期格式化
      */
     toDateString: function(date) {
-      var it = this
-      var hdate = it.formatDate(it.toDate(date), 'M月d日')
+      var it = this;
+      var hdate = it.formatDate(it.toDate(date), 'M月d日');
       var btDate =
         Number(it.formatDate(it.toDate(date), 'yyyyMMdd')) -
-        Number(it.formatDate(new Date(), 'yyyyMMdd'))
+        Number(it.formatDate(new Date(), 'yyyyMMdd'));
       if (btDate === 0) {
-        hdate = '今天 ' + hdate
+        hdate = '今天 ' + hdate;
       } else if (btDate === 1) {
-        hdate = '明天 ' + hdate
+        hdate = '明天 ' + hdate;
       } else if (btDate === 2) {
-        hdate = '后天 ' + hdate
+        hdate = '后天 ' + hdate;
       } else if (btDate === -1) {
-        hdate = '昨天 ' + hdate
+        hdate = '昨天 ' + hdate;
       } else if (btDate === -2) {
-        hdate = '前天 ' + hdate
+        hdate = '前天 ' + hdate;
       } else {
-        hdate = it.formatDate(it.toDate(date), 'EE M月d日')
+        hdate = it.formatDate(it.toDate(date), 'EE M月d日');
       }
-      return hdate
+      return hdate;
     },
     /**
      * 根据毫秒计算年月日时分秒毫秒
@@ -276,107 +276,107 @@ let util = {
      * @returns {String|Number}
      */
     timeLeft: function(time1, fixedTime, formtStr) {
-      var it = this
+      var it = this;
       if (!formtStr) {
-        formtStr = 'hh:mm:ss.S'
+        formtStr = 'hh:mm:ss.S';
       }
       if (Number(time1) <= 0) {
-        return -1
+        return -1;
       }
-      var time = Number(time1) - new Date().getTime() + fixedTime
+      var time = Number(time1) - new Date().getTime() + fixedTime;
       if (time > 0) {
-        time = time - 1000 * 60 * 60 * 8
-        var dateTime = new Date(time)
-        var d = Math.floor(time / (24 * 60 * 60 * 1000))
-        var timeStr = it.formatDate(dateTime, formtStr)
+        time = time - 1000 * 60 * 60 * 8;
+        var dateTime = new Date(time);
+        var d = Math.floor(time / (24 * 60 * 60 * 1000));
+        var timeStr = it.formatDate(dateTime, formtStr);
         if (d > 0) {
-          timeStr = d + '天' + timeStr
+          timeStr = d + '天' + timeStr;
         }
-        return timeStr
+        return timeStr;
       } else {
-        return 0
+        return 0;
       }
     }
   },
   version: function() {
-    var userAgent = navigator.userAgent //取得浏览器的userAgent字符串
+    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
     var isIE =
-      userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1
-    console.log(isIE)
+      userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1;
+    console.log(isIE);
   },
   setCookie: function(name, value, day) {
-    var Days = day ? day : 30 //默认30天
-    var exp = new Date()
-    exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000)
+    var Days = day ? day : 30; //默认30天
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
     document.cookie =
-      name + '=' + escape(value) + ';path=/;expires=' + exp.toGMTString()
+      name + '=' + escape(value) + ';path=/;expires=' + exp.toGMTString();
   },
   getCookie: function(name) {
-    var arrstr = document.cookie.split('; ')
+    var arrstr = document.cookie.split('; ');
     for (var i = 0; i < arrstr.length; i++) {
-      var temp = arrstr[i].split('=')
-      if (temp[0] == name) return unescape(temp[1])
+      var temp = arrstr[i].split('=');
+      if (temp[0] == name) return unescape(temp[1]);
     }
   },
   delCookie: function(name) {
-    var it = this
-    var date = new Date()
-    date.setTime(date.getTime() - 10000)
-    var cval = it.getCookie(name)
+    var it = this;
+    var date = new Date();
+    date.setTime(date.getTime() - 10000);
+    var cval = it.getCookie(name);
     if (cval != null)
-      document.cookie = name + '=' + cval + '; expires=' + date.toGMTString()
+      document.cookie = name + '=' + cval + '; expires=' + date.toGMTString();
   },
   setLocalStorage: function(name, value) {
-    localStorage.setItem(name, value)
+    localStorage.setItem(name, value);
   },
   setLocalStorage_mul: function(option) {
     for (var i in option) {
-      localStorage.setItem(i, option[i])
+      localStorage.setItem(i, option[i]);
     }
   },
   getLocalStorage: function(name) {
-    return localStorage.getItem(name)
+    return localStorage.getItem(name);
   },
   delLocalStorage: function(name) {
-    localStorage.removeItem(name)
+    localStorage.removeItem(name);
   },
   clearLocalStorage: function() {
-    localStorage.clear()
+    localStorage.clear();
   },
   setSessionStorage: function(name, vlaue) {
-    localStorage.setItem(name, vlaue)
+    localStorage.setItem(name, vlaue);
     // sessionStorage.setItem(name, vlaue);
   },
   getSessionStorage: function(name) {
     // console.log(localStorage.getItem(name))
-    return localStorage.getItem(name)
+    return localStorage.getItem(name);
     // return sessionStorage.getItem(name);
   },
   clearSessionStorage: function() {
-    localStorage.clear()
+    localStorage.clear();
   },
   delSessionStorage: function(name) {
-    sessionStorage.removeItem(name)
+    sessionStorage.removeItem(name);
   },
   //清楚obj属性值   登录注册 操作后需清空
   clearObj: function(obj) {
-    let _obj = JSON.parse(JSON.stringify(obj))
+    let _obj = JSON.parse(JSON.stringify(obj));
     for (var i in _obj) {
-      _obj[i] = ''
+      _obj[i] = '';
     }
-    return _obj
+    return _obj;
   },
   //传入节点   复制
   copy(el) {
-    var range = document.createRange()
-    var end = el.childNodes.length
-    range.setStart(el, 0)
-    range.setEnd(el, end)
-    var selection = window.getSelection()
-    selection.removeAllRanges()
-    selection.addRange(range)
-    document.execCommand('copy', false, null)
-    selection.removeRange(range)
+    var range = document.createRange();
+    var end = el.childNodes.length;
+    range.setStart(el, 0);
+    range.setEnd(el, end);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand('copy', false, null);
+    selection.removeRange(range);
   },
   /**
    *
@@ -388,13 +388,13 @@ let util = {
       Promise.all(Arr).then(res => {
         res.filter(item => item).length != res.length
           ? reject('部分必填项没有输入！')
-          : resolve(true)
-      })
-    })
+          : resolve(true);
+      });
+    });
   },
   initValidate(option) {
-    var obj = {}
-    var validateNum = ''
+    var obj = {};
+    var validateNum = '';
     var verifyArr = {
       password: [/^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'], //密码
       tel: [
@@ -413,9 +413,9 @@ let util = {
       // idCard: [/\d+\.\d+\.\d+\.\d+ /, "请填写正确的ip"], //ip地址
       mzero: [/^[1-9]\d*(\.\d+)?$/, '请输入大于零的数'], //大于零包含小数
       yzCode: [/^\d{6}$/, '请输入6位数字验证码'] ///挺大的
-    }
+    };
     if (!option.valideDate) {
-      return false
+      return false;
     }
     option.valideDate.forEach(item => {
       // 例如  validate 传入 自定义 [/^[A-Za-z]+$/, "请填写英文"]   或者传入  verifyArr里面的某个属性时
@@ -423,19 +423,19 @@ let util = {
         let varify =
           typeof item.validate == 'object'
             ? item.validate
-            : verifyArr[item.validate]
+            : verifyArr[item.validate];
         validateNum = (rule, value, callback) => {
           !varify[0].test(value)
             ? callback(new Error(item.msg ? item.msg : varify[1]))
-            : callback() //返回验证错误信息
-        }
+            : callback(); //返回验证错误信息
+        };
         obj[item.field] = [
           {
             required: true,
             validator: validateNum,
             trigger: item.blur || 'blur' //默认设置 blur
           }
-        ]
+        ];
       } else if (item.validate == 'required' || item.validate == 'json') {
         if (
           !item.multiple &&
@@ -447,8 +447,8 @@ let util = {
           validateNum = (rule, value, callback) => {
             value === undefined || value === null || value === ''
               ? callback(new Error('不能为空!'))
-              : callback()
-          }
+              : callback();
+          };
           obj[item.field] = [
             {
               required: true,
@@ -462,17 +462,17 @@ let util = {
                   ? 'change'
                   : 'blur'
             }
-          ]
+          ];
         } else if (item.validate == 'json') {
           validateNum = (rule, value, callback) => {
             try {
               typeof JSON.parse(value) === 'object'
                 ? callback()
-                : callback(new Error('请输入json字符串数据!'))
+                : callback(new Error('请输入json字符串数据!'));
             } catch (err) {
-              callback(new Error('请输入json字符串数据!'))
+              callback(new Error('请输入json字符串数据!'));
             }
-          }
+          };
           obj[item.field] = [
             {
               required: true,
@@ -483,7 +483,7 @@ let util = {
                   ? 'change'
                   : 'blur'
             }
-          ]
+          ];
         } else if (
           item.type == 'upload' ||
           (item.type == 'select' && item.multiple) ||
@@ -491,8 +491,8 @@ let util = {
         ) {
           //单选下拉是字符串
           validateNum = (rule, value, callback) => {
-            value.length ? callback() : callback(new Error('不能为空!'))
-          }
+            value.length ? callback() : callback(new Error('不能为空!'));
+          };
 
           obj[item.field] = [
             {
@@ -504,7 +504,7 @@ let util = {
                   ? 'change'
                   : 'blur'
             }
-          ]
+          ];
         }
       } else {
         if (item.validate) {
@@ -518,143 +518,146 @@ let util = {
                   ? 'change'
                   : 'blur'
             }
-          ]
+          ];
         }
       }
       //加入自定义组件
       if (option.CustomValidata[item.field]) {
         if (!obj[item.field]) {
-          obj[item.field] = []
-          obj[item.field].push(option.CustomValidata[item.field])
+          obj[item.field] = [];
+          obj[item.field].push(option.CustomValidata[item.field]);
         } else {
-          obj[item.field].push(option.CustomValidata[item.field])
+          obj[item.field].push(option.CustomValidata[item.field]);
         }
       }
-    })
-    return obj
+    });
+    return obj;
   },
   //status 1 option:{0:"测试",1:"测试1"}   转化成  [{value:0,label:'测试'},{value:1,label:'测试1'}]
   //status 2 ["bolansu","hytondeng"]  转化成  [{value:'bolansu',label:'bolansu'},{value:"hytondeng",label:'hytondeng'}]
   //status 3 {Abnormal: {label: "异常", value: "Abnormal"},Deleting: {label: "删除中", value: "Deleting"}} 转化成  [{value:'Abnormal',label:'异常'},{value:"Deleting",label:'删除中'}]
   //status 4 [{name:"张三",id:1}] 转化成 [{label:"张三",value:1}]
-  getSelectOpt(data = [], status, params = {}) {
-    let optArr = []
-    const { colKey, colName } = params
+  getSelectOpt(data = [], status, params = {}, type) {
+    let optArr = [];
+    let val = null;
+    const { colKey, colName } = params;
     for (var i in data) {
+      val = status == 2 ? data[i] : status == 4 ? data[i][colKey] : i;
+      val = type === 'number' ? Number(val) : val;
       optArr.push({
-        value: status == 2 ? data[i] : status == 4 ? data[i][colKey] : i,
+        value: val,
         label:
           status == 1 || status == 2
             ? data[i]
             : status == 4
             ? data[i][colName]
             : data[i].label
-      })
+      });
     }
     optArr.forEach((item, index) => {
       if (item.label == '全部') {
-        optArr.splice(index, 1)
-        optArr.unshift(item)
-        return false
+        optArr.splice(index, 1);
+        optArr.unshift(item);
+        return false;
       }
-    })
-    return optArr
+    });
+    return optArr;
   },
   getSelectReverse(data = []) {
-    let obj = {}
+    let obj = {};
     data.forEach(item => {
-      obj[item.value] = item.label
-    })
-    return obj
+      obj[item.value] = item.label;
+    });
+    return obj;
   },
   get_node_env() {
-    return process.env.NODE_ENV !== 'development'
+    return process.env.NODE_ENV !== 'development';
   },
   copyObj(params) {
     if (!params || typeof params !== 'object') {
-      throw new Error('err arguments')
+      throw new Error('err arguments');
     }
-    const arget = Array.isArray(params) ? [] : {}
+    const arget = Array.isArray(params) ? [] : {};
     for (var i in params) {
       if (params.hasOwnProperty(i)) {
         if (params[i] && typeof params[i] === 'object') {
-          arget[i] = util.copyObj(params[i])
+          arget[i] = util.copyObj(params[i]);
         } else {
-          arget[i] = params[i]
+          arget[i] = params[i];
         }
       }
     }
-    return arget
+    return arget;
   },
   throttle(func, wait, mustRun) {
     var timeout,
-      startTime = new Date()
+      startTime = new Date();
     return function() {
       var context = this,
         args = arguments,
-        curTime = new Date()
+        curTime = new Date();
 
-      clearTimeout(timeout)
+      clearTimeout(timeout);
       // 如果达到了规定的触发时间间隔，触发 handler
       if (curTime - startTime >= mustRun) {
-        func.apply(context, args)
-        startTime = curTime
+        func.apply(context, args);
+        startTime = curTime;
         // 没达到触发间隔，重新设定定时器
       } else {
-        timeout = setTimeout(func, wait)
+        timeout = setTimeout(func, wait);
       }
-    }
+    };
   },
   debounce(method, delay) {
-    var timer = null
+    var timer = null;
     return function() {
       var context = this,
-        args = arguments
-      clearTimeout(timer)
+        args = arguments;
+      clearTimeout(timer);
       timer = setTimeout(function() {
-        method.apply(context, args)
-      }, delay)
-    }
+        method.apply(context, args);
+      }, delay);
+    };
   },
   getStartIndex(parentData, code) {
     let obj = {},
-      str = ''
+      str = '';
     parentData.reduce(
       (cur, res, index) => {
         if (index == 0) {
-          str = res[code]
-          return cur
+          str = res[code];
+          return cur;
         } else {
           if (res[code] != str) {
             if (index == parentData.length - 1) {
-              obj[index] = [index, index]
+              obj[index] = [index, index];
             }
-            obj[cur[0]] = [cur[0], index - 1]
-            str = res[code]
-            return [index]
+            obj[cur[0]] = [cur[0], index - 1];
+            str = res[code];
+            return [index];
           } else {
             if (index == parentData.length - 1) {
-              obj[cur[0]] = [cur[0], index]
+              obj[cur[0]] = [cur[0], index];
             }
-            return cur
+            return cur;
           }
         }
       },
       [0]
-    )
-    return obj
+    );
+    return obj;
   },
   async createJs(regexp, jsUrl) {
-    let script = [...document.getElementsByTagName('script')]
+    let script = [...document.getElementsByTagName('script')];
     let creat_status = script.some(item => {
-      return item.src.indexOf(regexp) != -1
-    })
+      return item.src.indexOf(regexp) != -1;
+    });
     if (!creat_status) {
-      await util.str.createScript(jsUrl)
+      await util.str.createScript(jsUrl);
     }
   }
-}
+};
 
-export default util
+export default util;
 
-export const successCode = 200
+export const successCode = 200;

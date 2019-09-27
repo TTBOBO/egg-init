@@ -30,7 +30,7 @@ export default {
   data () {
     return {
       loading: false,
-      addGoodsData: null,
+      addGoodsData: {},
       addGoodsOption: {
         formList: [
           { field: "name", title: "商品名称", value: '', validate: "", type: "input" },

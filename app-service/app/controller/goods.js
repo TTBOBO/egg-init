@@ -67,8 +67,8 @@ class Goods extends baseController {
       level: { type: 'number' },
       productCount: { type: 'number' },
       productUnit: { type: 'string' },
-      showStatus: { type: 'number' },
-      keywords: { type: { type: 'string?' } }
+      showStatus: { type: 'string' },
+      keywords: { type: 'string?' }
     });
     this.success({
       result: await this.ctx.service.goods.addCategory({
@@ -92,6 +92,101 @@ class Goods extends baseController {
     });
     this.success({
       result: await this.ctx.service.goods.updateCateGory(ctx.request.body)
+    });
+  }
+  async goodsAttributeCategoryList() {
+    const query = this.ctx.query;
+    let result = await this.service.goods.goodsAttributeCategoryList(query);
+    this.success({
+      result
+    });
+  }
+
+  async addGoodsAttributeCategory() {
+    const { ctx } = this;
+    ctx.validate({
+      name: { type: 'string' }
+    });
+    this.success({
+      result: await this.ctx.service.goods.addGoodsAttributeCategory(
+        ctx.request.body
+      )
+    });
+  }
+
+  async updateGoodsAttributeCategory() {
+    const { ctx } = this;
+    ctx.validate({
+      goods_attribute_category_id: { type: 'number' },
+      name: { type: 'string' }
+    });
+    this.success({
+      result: await this.ctx.service.goods.updateGoodsAttributeCategory(
+        ctx.request.body
+      )
+    });
+  }
+
+  async deleteGoodsAttributeCategory() {
+    const { ctx } = this;
+    this.success({
+      result: await this.ctx.service.goods.deleteGoodsAttributeCategory(
+        ctx.request.body
+      )
+    });
+  }
+
+  async GoodsAttributeList() {
+    const query = this.ctx.query;
+    let result = await this.service.goods.GoodsAttributeList(query);
+    this.success({
+      result
+    });
+  }
+  async GoodsAttributeInfo() {
+    const query = this.ctx.query;
+    let result = await this.service.goods.GoodsAttributeInfo(query);
+    this.success({
+      result
+    });
+  }
+
+  async addUpdateGoodsAttribute() {
+    const { ctx } = this;
+    ctx.validate({
+      goods_attribute_id: { type: 'number?' },
+      name: { type: 'string' },
+      goods_attribute_category_id: { type: 'number' },
+      select_type: { type: 'number' },
+      input_type: { type: 'number' },
+      sort: { type: 'number' },
+      filter_type: { type: 'number' },
+      search_type: { type: 'number' },
+      related_status: { type: 'number' },
+      hand_add_status: { type: 'number' },
+      type: { type: 'number' }
+    });
+    this.success({
+      result: await this.ctx.service.goods.addUpdateGoodsAttribute({
+        ...ctx.request.body
+      })
+    });
+  }
+
+  async deleteGoodsAttribute() {
+    const { ctx } = this;
+    ctx.validate(
+      {
+        goods_attribute_id: { type: 'string' },
+        type: { type: 'string' },
+        goods_attribute_category_id: { type: 'string' }
+      },
+      ctx.request.query
+    );
+    this.success({
+      result: await this.ctx.service.goods.deleteGoodsAttribute({
+        ...ctx.request.query
+      })
     });
   }
 }

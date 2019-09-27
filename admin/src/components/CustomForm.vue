@@ -3,14 +3,14 @@
     <el-form ref="form"
              v-if="showForm"
              :model="paramsData"
-             :inline="optionData['inline'] || false"
+             :inline="formOption['inline'] || false"
              :rules="validata"
-             :label-width="optionData.LabelWidth || '120px'"
-             :inline-message="optionData['inline-message']"
+             :label-width="formOption.LabelWidth || '120px'"
+             :inline-message="formOption['inline-message']"
              :status-icon="true"
-             :border="optionData.border || true"
+             :border="formOption.border || true"
              @submit.native.prevent>
-      <el-form-item v-for="(item,index) in optionData.formList"
+      <el-form-item v-for="(item,index) in formOption.formList"
                     v-show="!item.hidden"
                     :label="item.title+'：'"
                     :prop="item.field"
@@ -32,12 +32,12 @@
         <!-- && !item.format -->
         <template v-if="(!item.type && !item.scoped) || (item.type == 'input' || item.type == 'textarea' && !item.scoped)">
           <div style="display: flex;">
-            <el-input v-if="item.inputType"
+            <el-input v-if="item.valueType"
                       :min="0"
                       style="width:100%"
-                      :type="item.inputType || 'text'"
+                      :type="item.valueType || 'text'"
                       v-model.number="paramsData[item.field]"
-                      :clearable="item.inputType ? false : true"
+                      :clearable="item.valueType ? false : true"
                       :disabled="item.disabled"
                       :placeholder="'请输入'+(item.pla || item.title)"></el-input>
             <el-input v-else
@@ -45,7 +45,7 @@
                       :type="(item.type == 'input' || item.type == 'input') ? 'text' : item.type"
                       :autosize="item.autosize"
                       v-model="paramsData[item.field]"
-                      :clearable="item.inputType ? false : true"
+                      :clearable="item.valueType ? false : true"
                       :disabled="item.disabled"
                       :placeholder="'请输入'+(item.pla || item.title)"></el-input>
             <span style="margin-left:20px;"
@@ -82,7 +82,6 @@
         <template v-else-if="item.type == 'radio'">
           <el-radio-group v-model="paramsData[item.field]">
             <el-radio v-for="(cheOpt,_index) in item.option"
-                      :name="paramsData[item.field]"
                       :label="cheOpt.value"
                       :key='_index'>{{cheOpt.label}}</el-radio>
           </el-radio-group>
@@ -162,7 +161,9 @@ export default {
   },
   data () {
     return {
+      formOption: {},
       paramsData: {}, //存放form表单数据
+      initFormDefaultData: {},
       validata: {}, //存放校验数据
       deleteValidata: {}, //hidden存放的校验数据
       showForm: false,
@@ -183,7 +184,7 @@ export default {
     formDataInfo: {
       type: Object,
       default: function () {
-        return null;
+        return {};
       }
     },
     dataKey: {
@@ -251,7 +252,7 @@ export default {
     },
 
     setItemHidden (field, state) {
-      this.optionData.formList.forEach(item => {
+      this.formOption.formList.forEach(item => {
         if (field == item.field) {
           item.hidden = state ? true : false; //设置formitem 显示隐藏
           state ? delete this.paramsData[item.field] : this.paramsData[item.field] = (this.paramsData[item
@@ -270,76 +271,52 @@ export default {
       this.paramsData[this.selectItem] = JSON.stringify(params);
       this.showConf = false;
     },
-    initForm () {
-      if (this.optionData.formList.length == 0) return false;
-      this.optionData.formList.forEach(item => {
+    async initForm () {
+      let item = null;
+      let selArr = [];
+      if (!this.formOption.formList.length) return false;
+      for (var i = 0; i < this.formOption.formList.length; i++) {
+        selArr = [];
+        item = this.formOption.formList[i];
         if (item.optionUrl) {
-          item.option = [];
-          this.promises.push(this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3).then(res => {
-            res.result[item.urlkey || 'images'].forEach(_item => {
-              (item.colKey && item.colName) ? item.option.push({
-                value: _item[item.colKey],
-                label: _item[item.colName]
-              }) : item.option.push({
-                value: _item,
-                label: _item
-              });
-            });
-          }))
+
+          let { result: { data } } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
+          selArr = util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType);
         }
-      })
-      //编辑
-      Promise.all(this.promises).then(() => {
-        //添加
-        this.optionData.formList.forEach(item => {
-          // item.hidden = false;
-          if ((item.type == "select" && item.multiple) || item.type == 'datetimerange' || item.type ==
-            'upload' || item.type == "checkbox") {
-            this.paramsData[item.field] = item.value || []; // item.value = [];
-          } else {
-            this.paramsData[item.field] = item.value !== '' ? item.value : "";
-            // this.paramsData[item.field] = item.value != '' || typeof  item.value != 'boolean' ?  item.value : "";
-          }
-          //防止重新修改option参数  getSelectOpt
-          if ((item.type == "select" || item.type == "radio" || item.type == "checkbox" || item.type ==
-            "radio") && !item.optionUrl) {
-            item.option = util.getSelectOpt(item.option, 1);
-          }
-        })
-        this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
-        this.initvalidata();
-        // console.log(this.validata)
-        this.showForm = !this.showForm; //显示form
-        this.updateData();
-      })
+        if (item.option) {
+          selArr = [...util.getSelectOpt(item.option, 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
+        }
+        item.option = selArr
+        // let currentArr = ['datetimerange', 'upload', 'checkbox']
+        // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');
+      }
+      this.initvalidata();
+      this.showForm = !this.showForm;
+      this.updateData();
     },
     initvalidata () {
       this.validata = util.initValidate({
-        valideDate: this.optionData.formList,
-        CustomValidata: this.optionData.validata
+        valideDate: this.formOption.formList,
+        CustomValidata: this.formOption.validata
       });
     },
     //更新数据
     updateData () {
-      if (this.formDataInfo) {
-        this.$nextTick(() => {
-          let obj = {};
-          this.optionData.formList.forEach(item => {
-            obj[item.field] = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
-              "" && this.formDataInfo[item.field] != undefined ? this.formDataInfo[item.field] : (this
-                .formDataInfo[item.field])); // || item.value
-            // this.$set(this.paramsData,item.field, obj[item.field])
-            // this.setVal(item.field,obj[item.field])
-          })
-          this.paramsData = Object.assign(this.paramsData, obj);
+      this.$nextTick(() => {
+        let value = null;
+        this.formOption.formList.forEach(item => {
+          value = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
+            "" && this.formDataInfo[item.field] !== undefined ? this.formDataInfo[item.field] : item.value); // || item.value
+          this.$set(this.paramsData, item.field, value)
         })
-      }
+      })
+
     },
     setVal (field, val) {
       this.paramsData[field] = val;
     },
-    updateSelectOption (field, newV = '') {
-      this.optionData.formList.forEach((item, index) => {
+    async updateSelectOption (field, newV = '') {
+      this.formOption.formList.forEach((item, index) => {
         if (item.field == field && item.optionUrl) {
           this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3).then(res => {
             item.option = [];
@@ -352,25 +329,11 @@ export default {
                 label: _item
               });
             });
-            this.$set(this.optionData.formList, index, item);
+            this.$set(this.formOption.formList, index, item);
             this.$set(this.paramsData, field, newV); //设置新的值
           })
         }
       })
-    },
-    getSelectOpt (data) {
-      let optArr = [];
-      if (!Array.isArray(data)) {
-        for (var i in data) {
-          optArr.push({
-            value: i, // == 'true' ? true : (i == 'false' ? false : i)
-            label: data[i]
-          });
-        }
-        return optArr;
-      } else {
-        return data;
-      }
     },
     async validate () {
       return new Promise((resolve, reject) => {
@@ -383,7 +346,7 @@ export default {
     },
     resetFields () {
       this.$refs['form'].resetFields();
-      this.optionData.formList.forEach(item => {
+      this.formOption.formList.forEach(item => {
         this.paramsData[item.field] = item.value;
         // if ((item.type == "select" && item.multiple) || item.type == 'datetimerange' || item.type == 'upload' ||
         //   item.type == "checkbox") {
@@ -395,17 +358,19 @@ export default {
       this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
     }
   },
-  mounted () { },
-  created () {
-    this.id = this.$route.query.id; //保存id
-    this.initForm(); //初始化 form  数组格式
+  mounted () {
+
+  },
+  async created () {
+    this.formOption = JSON.parse(JSON.stringify(this.optionData));
+    this.initFormDefaultData = JSON.parse(JSON.stringify(this.optionData));
+    await this.initForm(); //初始化 form  数组格式
   },
   watch: {
     paramsData: {
       handler (newVal) {
         this.$emit('changeData', newVal, this.dataKey);
-        // console.log(newVal)
-        this.$emit('input', newVal)
+        this.$emit('input', newVal);
       },
       deep: true
     },
