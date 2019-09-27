@@ -42,10 +42,23 @@ module.exports = app => {
     '/category/goodsAttributeCategoryList',
     controller.goods.goodsAttributeCategoryList
   );
+  router.post(
+    '/category/addGoodsAttributeCategory',
+    controller.goods.addGoodsAttributeCategory
+  );
+  router.post(
+    '/category/updateGoodsAttributeCategory',
+    controller.goods.updateGoodsAttributeCategory
+  );
   router.get(
     '/category/GoodsAttributeList',
     controller.goods.GoodsAttributeList
   );
+  router.post(
+    '/category/deleteGoodsAttributeCategory',
+    controller.goods.deleteGoodsAttributeCategory
+  );
+
   router.post(
     '/category/addUpdateGoodsAttribute',
     controller.goods.addUpdateGoodsAttribute
@@ -53,6 +66,10 @@ module.exports = app => {
   router.get(
     '/category/GoodsAttributeInfo',
     controller.goods.GoodsAttributeInfo
+  );
+  router.delete(
+    '/categary/deleteGoodsAttribute',
+    controller.goods.deleteGoodsAttribute
   );
   router.post('/category/addCategory', controller.goods.addCategory);
   router.post('/category/deleteCategory', controller.goods.deleteCategory);

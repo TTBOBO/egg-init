@@ -14,9 +14,6 @@ import CustomTable from '@/components/CustomTable';
 export default {
   data () {
     return {
-      categoryData: null,
-      showDialog: false,
-      statusType: { initial: "", audited: "success", dispatching: "warning", completed: "primary", canceled: "danger" },
       tableOption: {
         baseUrl: "GoodsAttributeList",
         toolEventWidth: "200px",
@@ -37,7 +34,7 @@ export default {
         ],
         toolEvent: [{ type: "primary", emit: "edit", title: "编辑" }, { type: "danger", emit: "del", title: "删除" }],
         topBtnGroup: [
-          { name: "添加属性", bgcolor: "primary", emit: "add" },
+          { name: this.$route.query.type == 0 ? "添加属性" : "添加参数", bgcolor: "primary", emit: "add" },
         ]
       },
     }
@@ -58,22 +55,30 @@ export default {
     add () {
       this.$router.push({
         path: "addGoodsAttribute",
-        query: {
-          type: this.$route.query.type
-        }
+        query: {}
       })
     },
-    async del ({ row: { id } }) {
-      // await this.$ajaxPost('deleteCategory', { id });
-      // this.$message.success("删除成功");
-      // this.$refs.customTable.curReload();
+    async del ({ row: { goods_attribute_id, type, goods_attribute_category_id } }) {
+      let res = await this.$confirm('确认删除么？', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      if (res) {
+        await this.$ajaxDelete('deleteGoodsAttribute', { goods_attribute_id, type, goods_attribute_category_id });
+        this.$message.success("删除成功");
+        this.$refs.customTable.curReload();
+      }
+
     },
   },
   mounted () {
 
   },
   created () {
-
+    const { type, id } = this.$route.query
+    this.tableOption.search.type = type;
+    this.tableOption.search.goods_attribute_category_id = id;
   },
   watch: {}
 }

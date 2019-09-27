@@ -15,11 +15,13 @@ module.exports = app => {
       },
       attributeCount: {
         type: INTEGER,
-        comment: '属性数量'
+        comment: '属性数量',
+        defaultValue: 0
       },
       paramCount: {
         type: INTEGER,
-        comment: '参数数量'
+        comment: '参数数量',
+        defaultValue: 0
       }
     },
     options: {

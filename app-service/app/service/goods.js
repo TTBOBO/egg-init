@@ -106,15 +106,36 @@ class Goods extends Service {
     });
   }
 
+  async addGoodsAttributeCategory(body = {}) {
+    return await this.app.model.GoodsAttributeCategory.createOne({ ...body });
+  }
+
+  async updateGoodsAttributeCategory(body = {}) {
+    let { goods_attribute_category_id, name } = body;
+    return await this.app.model.GoodsAttributeCategory.update(
+      { name },
+      { where: { goods_attribute_category_id } }
+    );
+  }
+
+  async deleteGoodsAttributeCategory(body = {}) {
+    let { goods_attribute_category_id } = body;
+    return await this.app.model.GoodsAttributeCategory.deleteOne({
+      where: {
+        goods_attribute_category_id
+      }
+    });
+  }
+
   async inOrdeCrement({
     goods_attribute_category_id,
     status,
-    key,
+    type,
     transaction
   }) {
     const GoodsAttributeCategory = this.app.model.GoodsAttributeCategory;
     return await GoodsAttributeCategory[status ? 'increment' : 'decrement'](
-      key,
+      Number(type) === 0 ? 'attributeCount' : 'paramCount',
       {
         transaction,
         where: { goods_attribute_category_id }
@@ -122,7 +143,7 @@ class Goods extends Service {
     );
   }
 
-  async addUpdateGoodsAttribute({ goods_attribute_id, key, ...aData }) {
+  async addUpdateGoodsAttribute({ goods_attribute_id, ...aData }) {
     const transaction = await this.app.getTransaction();
     let data = !goods_attribute_id
       ? await this.app.model.GoodsAttribute.createOne(
@@ -137,7 +158,7 @@ class Goods extends Service {
       await this.inOrdeCrement({
         goods_attribute_category_id: aData.goods_attribute_category_id,
         status: true,
-        key,
+        type: aData.type,
         transaction
       });
     }
@@ -148,16 +169,39 @@ class Goods extends Service {
     return await this.app.model.GoodsAttribute.findByPk(goods_attribute_id);
   }
 
-  async GoodsAttributeList({ page, size, goods_attribute_category_id }) {
+  async GoodsAttributeList({ page, size, goods_attribute_category_id, type }) {
     return await this.app.model.GoodsAttribute.grid({
       include: [
         {
           model: this.app.model.GoodsAttributeCategory
         }
       ],
-      where: { goods_attribute_category_id },
+      where: { goods_attribute_category_id, type },
       pagination: { page, size }
     });
+  }
+
+  async deleteGoodsAttribute({
+    goods_attribute_id,
+    type,
+    goods_attribute_category_id
+  }) {
+    const transaction = await this.app.getTransaction();
+    let data = await this.app.model.GoodsAttribute.deleteOne({
+      where: {
+        goods_attribute_id
+      },
+      transaction
+    });
+    if (data) {
+      await this.inOrdeCrement({
+        goods_attribute_category_id,
+        status: false,
+        type,
+        transaction
+      });
+    }
+    return data;
   }
 }
 

@@ -14,9 +14,13 @@ const REQUEST = {
   addGoods: '/goods/addGoods',
   updateGoods: '/goods/updateGoods',
   goodsAttributeCategoryList: '/category/goodsAttributeCategoryList',
+  addGoodsAttributeCategory: '/category/addGoodsAttributeCategory',
+  updateGoodsAttributeCategory: '/category/updateGoodsAttributeCategory',
+  deleteGoodsAttributeCategory: '/category/deleteGoodsAttributeCategory',
   addUpdateGoodsAttribute: '/category/addUpdateGoodsAttribute',
   GoodsAttributeList: '/category/GoodsAttributeList',
   GoodsAttributeInfo: '/category/GoodsAttributeInfo',
+  deleteGoodsAttribute: '/categary/deleteGoodsAttribute',
   getSTS: '/getSTS',
   changeGoodsStatus: '/goods/changeGoodsStatus',
   addComment: '/order/addComment', //添加评论

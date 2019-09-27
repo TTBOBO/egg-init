@@ -44,8 +44,11 @@ export default {
   async mounted () {
     this.$nextTick(async () => {
       const { id } = this.$route.query;
-      let { result } = await this.$ajaxGet('GoodsAttributeInfo', { goods_attribute_id: id });
-      this.goodsAttributeData = result;
+      if (id) {
+        let { result } = await this.$ajaxGet('GoodsAttributeInfo', { goods_attribute_id: id });
+        this.goodsAttributeData = result;
+      }
+
     })
   },
   async created () {
@@ -54,18 +57,14 @@ export default {
   methods: {
     async submitForm () {
       let status = await this.$refs.Form.validate();
-      console.log(this.goodsAttributeData)
-      const { type, id } = this.$route.query;
-      console.log(type)
-      this.goodsAttributeData.key = type || 'attributeCount';
+      const { id } = this.$route.query;
       if (id) {
-        this.goodsAttributeData.goods_attribute_id = id;
+        this.goodsAttributeData.goods_attribute_id = Number(id);
       }
       if (!status) return;
       let { code, message } = await this.$ajaxPost('addUpdateGoodsAttribute', this.goodsAttributeData);
       if (code === 0) {
-
-        this.$message.success("添加成功");
+        this.$message.success(`${id ? '编辑' : '添加'}成功`);
         this.$router.back();
       } else {
         this.$message.error(message);
@@ -76,9 +75,9 @@ export default {
     }
   },
   watch: {
-    goodsAttributeData (newV) {
-      console.log(newV);
-    }
+    // goodsAttributeData (newV) {
+    //   // console.log(newV);
+    // }
   }
 
 }

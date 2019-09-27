@@ -34,7 +34,7 @@ export default {
   data () {
     return {
       addEditStatus: false,
-      categoryData: null,
+      categoryData: {},
       showDialog: false,
       statusType: { initial: "", audited: "success", dispatching: "warning", completed: "primary", canceled: "danger" },
       tableOption: {
@@ -55,7 +55,7 @@ export default {
           { lable: "商品类型描述", value: "categoryDes", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "创建时间", value: "createdTime", type: "", search: "", tooltip: true, tipAlign: "right" },
           { lable: "最后修改时间", value: "lastModifierTime", tooltip: true, tipAlign: "right" },
-          { lable: "设置", value: "setting", scoped: true }
+          { lable: "设置", value: "setting", scoped: true, width: 150 }
         ],
         toolEvent: [{ type: "primary", emit: "edit", title: "编辑" }, { type: "danger", emit: "del", title: "删除" }],
         topBtnGroup: [
@@ -65,7 +65,7 @@ export default {
       categoryOption: {
         formList: [
           { field: "categoryName", title: "商品类型名称", value: '', validate: "required", type: "input" },
-          { field: "parentId", title: "上级分类", value: "", validate: "required", type: "select", option: { 0: "无上级分类" }, selectDataType: 4, optionUrl: 'categoryList', colKey: 'id', colName: 'categoryName' },
+          { field: "parentId", title: "上级分类", value: "", validate: "required", type: "select", option: { 0: "无上级分类" }, selectDataType: 4, optionUrl: 'categoryList', colKey: 'id', colName: 'categoryName', valueType: "number" },
           { field: "productCount", title: "商品数量", value: '', validate: "", type: "input", valueType: "number" },
           { field: "productUnit", title: "商品单位", value: '', type: "input" },
           // { field: "showStatus", title: "显示状态", value: "", validate: "required", type: "switch", activeT: "不显示", activeV: "1", inactiveT: "显示", inactiveV: "0" },
@@ -86,10 +86,8 @@ export default {
     async edit ({ row }) {
       this.addEditStatus = false;
       this.editid = row.id;
+      this.categoryData = row;
       this.changeDialogStatus();
-      this.$nextTick(() => {
-        this.categoryData = row;
-      })
     },
     async seeNext (status) {
       console.log(11)
@@ -117,8 +115,6 @@ export default {
         postData.id = this.editid;
       }
       postData.level = postData.parentId !== '0' ? 1 : 0;
-      // console.log(postData)
-      // return false;
       let data = await this.$ajaxPost(this.addEditStatus ? 'addCategory' : 'updateCateGory', postData);
       if (data.code === 0) {
         this.$message.success(`${this.addEditStatus ? '添加' : '编辑'}成功`);

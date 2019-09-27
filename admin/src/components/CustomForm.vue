@@ -163,6 +163,7 @@ export default {
     return {
       formOption: {},
       paramsData: {}, //存放form表单数据
+      initFormDefaultData: {},
       validata: {}, //存放校验数据
       deleteValidata: {}, //hidden存放的校验数据
       showForm: false,
@@ -183,7 +184,7 @@ export default {
     formDataInfo: {
       type: Object,
       default: function () {
-        return null;
+        return {};
       }
     },
     dataKey: {
@@ -270,85 +271,28 @@ export default {
       this.paramsData[this.selectItem] = JSON.stringify(params);
       this.showConf = false;
     },
-    initForm () {
-      if (this.formOption.formList.length == 0) return false;
-      this.formOption.formList.forEach(item => {
+    async initForm () {
+      let item = null;
+      let selArr = [];
+      if (!this.formOption.formList.length) return false;
+      for (var i = 0; i < this.formOption.formList.length; i++) {
+        selArr = [];
+        item = this.formOption.formList[i];
         if (item.optionUrl) {
-          item.option = [];
-          this.promises.push(this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3).then(res => {
-            res.result.data.forEach(_item => {
-              (item.colKey && item.colName) ? item.option.push({
-                value: _item[item.colKey],
-                label: _item[item.colName]
-              }) : item.option.push({
-                value: _item,
-                label: _item
-              });
-            });
-          }))
+
+          let { result: { data } } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
+          selArr = util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType);
         }
-      })
-      //编辑
-      Promise.all(this.promises).then(() => {
-        //添加
-        this.formOption.formList.forEach(item => {
-          // item.hidden = false;
-          if ((item.type == 'select' && item.multiple) || item.type == 'datetimerange' || item.type ==
-            'upload' || item.type == 'checkbox') {
-            this.paramsData[item.field] = item.value || []; // item.value = [];
-          } else {
-            this.paramsData[item.field] = item.value !== '' ? item.value : '';
-            // this.paramsData[item.field] = item.value != '' || typeof  item.value != 'boolean' ?  item.value : "";
-          }
-          //防止重新修改option参数  getSelectOpt
-          if ((item.type == 'select' || item.type == 'radio' || item.type == 'checkbox' || item.type ==
-            'radio') && !item.optionUrl) {
-            item.option = this.getSelectOpt(item.option, item.valueType);
-          }
-        })
-        this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
-        this.initvalidata();
-        // console.log(this.validata)
-        this.showForm = !this.showForm; //显示form
-        this.updateData();
-      })
-    },
-    // async initForm () {
-    //   let item = null;
-    //   let selArr = [];
-    //   if (!this.formOption.formList.length) return false;
-    //   for (var i = 0; i < this.formOption.formList.length; i++) {
-    //     selArr = [];
-    //     item = this.formOption.formList[i];
-    //     if (item.optionUrl) {
-    //       let { result: { data } } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
-    //       selArr = util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName });
-    //     }
-    //     if (item.option) {
-    //       selArr = [...util.getSelectOpt(item.option, 1), ...selArr]; //默认的数据放前面，接口数据放后面
-    //     }
-    //     item.option = selArr
-    //     // let currentArr = ['datetimerange', 'upload', 'checkbox']
-    //     // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');
-    //   }
-    //   this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
-    //   this.initvalidata();
-    //   this.showForm = !this.showForm;
-    //   this.updateData();
-    // },
-    getSelectOpt (data, type) {
-      let optArr = [];
-      if (!Array.isArray(data)) {
-        for (var i in data) {
-          optArr.push({
-            value: type === 'number' ? Number(i) : i, // == 'true' ? true : (i == 'false' ? false : i)
-            label: data[i]
-          });
+        if (item.option) {
+          selArr = [...util.getSelectOpt(item.option, 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
         }
-        return optArr;
-      } else {
-        return data;
+        item.option = selArr
+        // let currentArr = ['datetimerange', 'upload', 'checkbox']
+        // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');
       }
+      this.initvalidata();
+      this.showForm = !this.showForm;
+      this.updateData();
     },
     initvalidata () {
       this.validata = util.initValidate({
@@ -358,19 +302,15 @@ export default {
     },
     //更新数据
     updateData () {
-      if (this.formDataInfo) {
-        this.$nextTick(() => {
-          let obj = {};
-          this.formOption.formList.forEach(item => {
-            obj[item.field] = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
-              "" && this.formDataInfo[item.field] != undefined ? this.formDataInfo[item.field] : (this
-                .formDataInfo[item.field])); // || item.value
-            // this.$set(this.paramsData,item.field, obj[item.field])
-            // this.setVal(item.field,obj[item.field])
-          })
-          this.paramsData = Object.assign(this.paramsData, obj);
+      this.$nextTick(() => {
+        let value = null;
+        this.formOption.formList.forEach(item => {
+          value = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
+            "" && this.formDataInfo[item.field] !== undefined ? this.formDataInfo[item.field] : item.value); // || item.value
+          this.$set(this.paramsData, item.field, value)
         })
-      }
+      })
+
     },
     setVal (field, val) {
       this.paramsData[field] = val;
@@ -423,7 +363,7 @@ export default {
   },
   async created () {
     this.formOption = JSON.parse(JSON.stringify(this.optionData));
-    this.id = this.$route.query.id; //保存id
+    this.initFormDefaultData = JSON.parse(JSON.stringify(this.optionData));
     await this.initForm(); //初始化 form  数组格式
   },
   watch: {
