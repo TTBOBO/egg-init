@@ -15,7 +15,7 @@
                     :label="item.title+'：'"
                     :prop="item.field"
                     :key='index'
-                    :style="{width:item.width}">
+                    :style="{width:'100%'}">
         <span slot="label">
           <span class="mb"
                 v-show="item.slotMark"> ~ </span>
@@ -34,14 +34,14 @@
           <div style="display: flex;">
             <el-input v-if="item.valueType"
                       :min="0"
-                      style="width:100%"
+                      :style="{width:item.width || '100%'}"
                       :type="item.valueType || 'text'"
                       v-model.number="paramsData[item.field]"
                       :clearable="item.valueType ? false : true"
                       :disabled="item.disabled"
                       :placeholder="'请输入'+(item.pla || item.title)"></el-input>
             <el-input v-else
-                      style="width:100%"
+                      :style="{width:item.width || '100%'}"
                       :type="(item.type == 'input' || item.type == 'input') ? 'text' : item.type"
                       :autosize="item.autosize"
                       v-model="paramsData[item.field]"
@@ -52,6 +52,7 @@
                   v-if="item.append">{{item.append}}</span>
           </div>
         </template>
+
         <template v-else-if="item.type == 'select'  && !item.scoped">
           <el-select v-model="paramsData[item.field]"
                      filterable
@@ -106,7 +107,7 @@
                           :picker-options="item.pickerOpt"> </el-date-picker>
         </template>
         <template v-else-if="item.type == 'datetimerange'">
-          <el-date-picker style="width:100%"
+          <el-date-picker :style="{width:item.width || '100%'}"
                           :format="item.format || ''"
                           v-model="paramsData['a']['b']['c']"
                           :disabled="item.disabled"
@@ -130,7 +131,7 @@
         </template>
         <template v-else-if="item.type == 'customSelect'">
           <div @click="showDio(item)">
-            <el-input style="width:100%"
+            <el-input :style="{width:item.width || '100%'}"
                       v-model="paramsData[item.field]"
                       readonly
                       :placeholder="'点击添加'+(item.pla || item.title)"></el-input>
@@ -138,7 +139,7 @@
         </template>
         <template v-else-if="item.type == 'lable'">
           <div v-html="paramsData[item.field]"
-               style="width:100%"></div>
+               :style="{width:item.width || '100%'}"></div>
         </template>
         <expand-dom v-if="item.otherScoped"
                     :data="paramsData"
@@ -224,8 +225,8 @@ export default {
     }
   },
   methods: {
-    change (val) {
-      console.log(val);
+    change () {
+      // console.log(val);
     },
     getEval () {
 
@@ -242,13 +243,13 @@ export default {
 
     },
     selectChange (item) {
+      this.$set(this.paramsData, item.field, this.paramsData[item.field])
       if (item.emitCb) {
         this.$emit(item.field, {
           value: this.paramsData[item.field],
           field: item.field
         });
       }
-
     },
 
     setItemHidden (field, state) {
@@ -279,20 +280,21 @@ export default {
         selArr = [];
         item = this.formOption.formList[i];
         if (item.optionUrl) {
-
-          let { result: { data } } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
-          selArr = util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType);
+          let { result: { data } } = await this.$ajaxGet(item.optionUrl, item.selectPar);
+          selArr = (item.valueType || item.colKey) ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType) : data;
         }
         if (item.option) {
-          selArr = [...util.getSelectOpt(item.option, 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
+          selArr = [...util.getSelectOpt(item.option, item.selectDataType || 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
+          console.log(selArr)
         }
-        item.option = selArr
+
+        item.option = selArr;
         // let currentArr = ['datetimerange', 'upload', 'checkbox']
         // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');
       }
       this.initvalidata();
-      this.showForm = !this.showForm;
       this.updateData();
+      this.$nextTick(() => this.showForm = !this.showForm)
     },
     initvalidata () {
       this.validata = util.initValidate({
@@ -302,25 +304,23 @@ export default {
     },
     //更新数据
     updateData () {
-      this.$nextTick(() => {
-        let value = null;
-        this.formOption.formList.forEach(item => {
-          value = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
-            "" && this.formDataInfo[item.field] !== undefined ? this.formDataInfo[item.field] : item.value); // || item.value
-          this.$set(this.paramsData, item.field, value)
-        })
-      })
+      let value = null;
+      this.formOption.formList.forEach(item => {
 
+        value = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
+          "" && this.formDataInfo[item.field] !== undefined ? this.formDataInfo[item.field] : item.value); // || item.value
+        this.$set(this.paramsData, item.field, value)
+      })
     },
     setVal (field, val) {
       this.paramsData[field] = val;
     },
     async updateSelectOption (field, newV = '') {
-      this.formOption.formList.forEach((item, index) => {
+      this.optionData.formList.forEach((item, index) => {
         if (item.field == field && item.optionUrl) {
-          this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3).then(res => {
+          this.$ajaxGet(item.optionUrl, item.selectPar).then(res => {
             item.option = [];
-            res.result[item.urlkey || 'images'].forEach(_item => {
+            res.result[item.urlkey].forEach(_item => {
               (item.colKey && item.colName) ? item.option.push({
                 value: _item[item.colKey],
                 label: _item[item.colName]

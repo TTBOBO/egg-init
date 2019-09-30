@@ -21,6 +21,7 @@ const REQUEST = {
   GoodsAttributeList: '/category/GoodsAttributeList',
   GoodsAttributeInfo: '/category/GoodsAttributeInfo',
   deleteGoodsAttribute: '/categary/deleteGoodsAttribute',
+  getCategoryTree:'/categary/getCategoryTree',
   getSTS: '/getSTS',
   changeGoodsStatus: '/goods/changeGoodsStatus',
   addComment: '/order/addComment', //添加评论

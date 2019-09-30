@@ -10,6 +10,7 @@ module.exports = app => {
       // foreignKey: 'categoryId',
       // targetKey: 'categoryId'
     });
+    // Category.hasMany(Category, { as: 'parent', foreignKey: 'parentId' });
   };
   return Category;
 };

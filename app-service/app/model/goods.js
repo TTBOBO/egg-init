@@ -6,7 +6,11 @@ module.exports = app => {
   let Goods = model.define('Goods', schema);
   Goods = concatModel(Goods);
   Goods.associate = () => {
-    Goods.belongsTo(app.model.Category);
+    Goods.belongsTo(model.Category);
+    Goods.belongsTo(model.models.goodsAttributeCategory, {
+      foreignKey: 'goods_attribute_category_id',
+      targetKey: 'goods_attribute_category_id'
+    });
   };
   return Goods;
 };

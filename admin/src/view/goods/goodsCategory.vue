@@ -44,7 +44,8 @@ export default {
         search: {
           page: 1,  //页数
           size: 10,  //每页多少条
-          level: 0
+          level: 0,
+          hasChild: true
         },
         columns: [
           { lable: "编号", value: "id", type: "", search: "", tooltip: true, tipAlign: "right" },
@@ -126,8 +127,8 @@ export default {
 
     }
   },
-  mounted () {
-
+  async mounted () {
+    await this.$ajaxGet('getCategoryTree', { level: 0 })
   },
   created () {
 

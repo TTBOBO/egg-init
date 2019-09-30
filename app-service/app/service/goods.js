@@ -52,7 +52,7 @@ class Goods extends Service {
     const {
       Sequelize: { Op }
     } = app;
-    return await this.app.model.Goods.update(
+    return await app.model.Goods.update(
       {
         status
       },
@@ -74,11 +74,53 @@ class Goods extends Service {
         model: this.app.model.Goods
       });
     }
+    // if (hasChild) {
+    //   include.push({
+    //     model: this.app.model.Category,
+    //     as: 'parent'
+    //   });
+    // }
+
     return await this.app.model.Category.grid({
       where,
       include,
       pagination: { page: 1, size: 1000 }
     });
+  }
+
+  async getCategoryTree({ level = 0 }) {
+    const { app } = this;
+    let rootNeeds = await app.model.Category.grid({
+      where: {
+        level
+      },
+      type: 'findAll'
+    });
+    rootNeeds = await this.getChildNeeds(rootNeeds);
+    return rootNeeds;
+  }
+  async getChildNeeds(rootNeeds) {
+    rootNeeds = JSON.parse(JSON.stringify(rootNeeds));
+    const { app } = this;
+    let expendPromise = [];
+    rootNeeds.forEach(item => {
+      expendPromise.push(
+        app.model.Category.grid({
+          where: {
+            parentId: item.id
+          },
+          type: 'findAll'
+        })
+      );
+    });
+    let child = await Promise.all(expendPromise);
+    for (let [ idx, item ] of child.entries()) {
+      if (item.length > 0) {
+        item = await this.getChildNeeds(item);
+      }
+      rootNeeds[idx].child = item;
+    }
+    return rootNeeds;
   }
 
   async addCategory(body = {}) {

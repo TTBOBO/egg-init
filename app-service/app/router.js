@@ -38,6 +38,7 @@ module.exports = app => {
   router.post('/goods/updateGoods', controller.goods.updateGoods);
   router.post('/goods/changeGoodsStatus', controller.goods.changeGoodsStatus);
   router.get('/goods/categoryList', controller.goods.categoryList);
+  router.get('/categary/getCategoryTree', controller.goods.getCategoryTree);
   router.get(
     '/category/goodsAttributeCategoryList',
     controller.goods.goodsAttributeCategoryList

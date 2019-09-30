@@ -58,6 +58,21 @@ class Goods extends baseController {
       result
     });
   }
+
+  async getCategoryTree() {
+    const query = this.ctx.query;
+    let data = await this.service.goods.getCategoryTree(query);
+    this.success({
+      result: {
+        data: await this.ctx.getTreeData({
+          data,
+          label: 'categoryName',
+          value: 'id'
+        })
+      }
+    });
+  }
+
   async addCategory() {
     const { ctx } = this;
     ctx.validate({
