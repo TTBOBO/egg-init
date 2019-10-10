@@ -7,7 +7,8 @@ module.exports = app => {
     TEXT,
     DECIMAL,
     INTEGER,
-    BIGINT
+    BIGINT,
+    DATE
   } = app.Sequelize;
   return {
     schema: {
@@ -48,10 +49,7 @@ module.exports = app => {
         type: INTEGER.UNSIGNED,
         comment: '销量'
       },
-      promotionPrice: {
-        type: INTEGER.UNSIGNED,
-        comment: '促销价格'
-      },
+
       subTitle: {
         type: STRING(38),
         comment: '副标题'
@@ -95,6 +93,22 @@ module.exports = app => {
       detailMobileHtml: {
         type: TEXT,
         comment: '移动端网页详情'
+      },
+      promotionStartTime: {
+        type: DATE,
+        comment: '促销开始时间'
+      },
+      promotionEndTime: {
+        type: DATE,
+        comment: '促销结束时间'
+      },
+      promotionPrice: {
+        type: INTEGER.UNSIGNED,
+        comment: '促销价格'
+      },
+      promotionType: {
+        type: INTEGER,
+        comment: '促销类型：0->没有促销使用原价;1->使用促销价；2->使用会员价；3->使用阶梯价格；4->使用满减价格；5->限时购'
       }
     },
     option: {

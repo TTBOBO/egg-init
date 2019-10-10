@@ -7,6 +7,7 @@ const REQUEST = {
   address_list: '/user/get_user_addressList',
   orderList: '/order/orderList',
   categoryList: '/goods/categoryList',
+  updateGoodsInfo: '/goods/updateGoodsInfo',
   addCategory: '/category/addCategory',
   deleteCategory: '/category/deleteCategory',
   updateCateGory: '/category/updateCateGory',
@@ -21,8 +22,9 @@ const REQUEST = {
   GoodsAttributeList: '/category/GoodsAttributeList',
   GoodsAttributeInfo: '/category/GoodsAttributeInfo',
   deleteGoodsAttribute: '/categary/deleteGoodsAttribute',
-  getCategoryTree:'/categary/getCategoryTree',
+  getCategoryTree: '/categary/getCategoryTree',
   getSTS: '/getSTS',
+  upload: '/upload',
   changeGoodsStatus: '/goods/changeGoodsStatus',
   addComment: '/order/addComment', //添加评论
   CommerList: '/order/CommerList',

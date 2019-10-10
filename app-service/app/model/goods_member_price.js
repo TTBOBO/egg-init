@@ -1,12 +1,22 @@
 'use strict';
 const concatModel = require('../core/concatModel');
 module.exports = app => {
-  const { model } = app;
-  const { schema } = require('../schema/goods_member_price.js')(app);
-  let goodsMemberPrice = model.define('goodsMemberPrice', schema);
-  goodsMemberPrice = concatModel(goodsMemberPrice);
-  goodsMemberPrice.associate = () => {
-    goodsMemberPrice.belongsTo(app.model.models.Goods);
+  const {
+    model
+  } = app;
+  const {
+    schema
+  } = require('../schema/goods_member_price.js')(app);
+  let GoodsMemberPrice = model.define('goodsMemberPrice', schema, {
+    tableName: 'goods_member_price',
+    freezeTableName: true
+  });
+  GoodsMemberPrice = concatModel(GoodsMemberPrice);
+  GoodsMemberPrice.associate = () => {
+    // GoodsMemberPrice.belongsTo(app.model.models.goods, {
+    //   foreignKey: 'goodsId',
+    //   targetKey: 'goodsId'
+    // });
   };
-  return goodsMemberPrice;
+  return GoodsMemberPrice;
 };

@@ -1,6 +1,9 @@
 'use strict';
 module.exports = app => {
-  const { INTEGER } = app.Sequelize;
+  const {
+    INTEGER,
+    STRING
+  } = app.Sequelize;
   return {
     schema: {
       id: {
@@ -10,8 +13,8 @@ module.exports = app => {
         autoIncrement: true
       },
       value: {
-        type: INTEGER,
-        comment: '参数数量'
+        type: STRING(24),
+        comment: '手动添加规格或参数的值，参数单值，规格有多个时以逗号隔开'
       }
     },
     options: {

@@ -12,14 +12,13 @@
              @submit.native.prevent>
       <el-form-item v-for="(item,index) in formOption.formList"
                     v-show="!item.hidden"
-                    :label="item.title+'：'"
                     :prop="item.field"
                     :key='index'
                     :style="{width:'100%'}">
         <span slot="label">
           <span class="mb"
                 v-show="item.slotMark"> ~ </span>
-          {{item.title}}
+          {{item.title+'：'}}
           <el-tooltip v-if="item.slotLabel"
                       class="item"
                       effect="dark"
@@ -92,23 +91,25 @@
                      active-color="#13ce66"
                      :active-text="item.activeT"
                      :inactive-text="item.inactiveT"
-                     :active-value="item.activeV || true"
-                     :inactive-value="item.inactiveV || false"
+                     :active-value="item.activeV !== undefined ? item.activeV : true"
+                     :inactive-value="item.inactiveV !== undefined ? item.inactiveV : false"
                      inactive-color="#ff4949"> </el-switch>
         </template>
         <template v-else-if="item.type == 'datetime'">
           <el-date-picker style="width:100%"
-                          :format="item.format || ''"
+                          :format="item.timeFormat || ''"
+                          :value-format="item.valueFormat || ''"
                           v-model="paramsData[item.field]"
                           :disabled="item.disabled"
                           align="right"
                           :placeholder="'请选择'+(item.pla || item.title)"
                           :type="item.dateType || 'date'"
-                          :picker-options="item.pickerOpt"> </el-date-picker>
+                          :picker-options="item.pickerOpt"
+                          :style="{width:item.width || '100%'}"> </el-date-picker>
         </template>
         <template v-else-if="item.type == 'datetimerange'">
           <el-date-picker :style="{width:item.width || '100%'}"
-                          :format="item.format || ''"
+                          :format="item.timeFormat || ''"
                           v-model="paramsData['a']['b']['c']"
                           :disabled="item.disabled"
                           type="datetimerange"
@@ -285,9 +286,7 @@ export default {
         }
         if (item.option) {
           selArr = [...util.getSelectOpt(item.option, item.selectDataType || 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
-          console.log(selArr)
         }
-
         item.option = selArr;
         // let currentArr = ['datetimerange', 'upload', 'checkbox']
         // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');

@@ -5,7 +5,10 @@
  */
 
 module.exports = app => {
-  const { router, controller } = app;
+  const {
+    router,
+    controller
+  } = app;
   // app.beforeStart(async () => {
   //   await app.model.sync({
   //     alter: true
@@ -34,7 +37,10 @@ module.exports = app => {
   router.post('/order/changeOrderStatus', controller.order.changeOrderStatus);
   router.post('/order/diverGoods', controller.order.diverGoods);
   router.get('/goods/goodsList', controller.goods.goodsList);
+  // router.post('/goods/addGoods', controller.goods.addGoods);
   router.post('/goods/addGoods', controller.goods.addGoods);
+  router.post('/goods/deleteGoods', controller.goods.deleteGoods);
+  router.get('/goods/updateGoodsInfo', controller.goods.updateGoodsInfo);
   router.post('/goods/updateGoods', controller.goods.updateGoods);
   router.post('/goods/changeGoodsStatus', controller.goods.changeGoodsStatus);
   router.get('/goods/categoryList', controller.goods.categoryList);

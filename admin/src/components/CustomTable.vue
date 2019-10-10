@@ -290,8 +290,9 @@ export default {
     },
     getBtnStatus (scope, item) {
       let data = scope.row;
-      this.end(data);
-      return item.judgement_con ? eval('data.' + item.judgement_con) : false;
+      let index = scope.$index;
+      this.end(data, index);
+      return item.judgement_con ? eval('data.' + item.judgement_con) : (item.index_con ? eval(item.index_con) : false);
     },
     end () { },
     // hideDialog () {
@@ -619,14 +620,14 @@ export default {
         this.search.page = 1;
       if (this.defaultData) {
         this.setTabelData(this.defaultData);
-        this.$emit("tableData", this.defaultData);
+        // this.$emit("tableData", this.defaultData);
         return false;
       }
       let res = await this[this.optionData.ajaxType || '$ajaxGet'](this.optionData.baseUrl, this.search, this.optionData.urlType || 3);
       if (res.err_code == 0 || res.code == 200 || res.code == 0) {
         let dataKey = this.optionData.dataKey;
         const data = this.optionData.urlType == 1 ? res.result[dataKey] : res.result.data;
-        this.$emit("tableData", res.result, this.dataKey);
+        // this.$emit("tableData", res.result, this.dataKey);
         this.setTabelData(data);
         if (params.saveSelection)
           this.toggleRowSelection();
@@ -654,6 +655,7 @@ export default {
         })
       }
       this.taskTableData = data;
+      // this.$emit("tableData", this.defaultData);
       // this.$emit("tableData", {
       //   data
       // }, this.dataKey);
@@ -700,6 +702,12 @@ export default {
   watch: {
     defaultData (newV) {
       this.setTabelData(newV);
+    },
+    taskTableData: {
+      deep: true,
+      handler (newV) {
+        this.$emit("tableData", newV);
+      }
     }
   }
 };

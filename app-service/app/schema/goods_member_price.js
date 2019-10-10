@@ -1,6 +1,6 @@
 'use strict';
 module.exports = app => {
-  const { DECIMAL, INTEGER, BIGINT } = app.Sequelize;
+  const { DECIMAL, INTEGER, ENUM } = app.Sequelize;
   return {
     schema: {
       id: {
@@ -10,8 +10,8 @@ module.exports = app => {
         autoIncrement: true
       },
       memberLevelId: {
-        type: BIGINT(10, 2),
-        comment: '会员等级id'
+        type: ENUM('gold', 'platinum', 'diamond'),
+        comment: '会员等级 gold 黄金会员、 platinum 白金会员、diamond 钻石会员'
       },
       memberPrice: {
         type: DECIMAL(10, 2),

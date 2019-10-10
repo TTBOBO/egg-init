@@ -64,21 +64,5 @@ module.exports = {
         }
       });
     });
-  },
-  async getTreeData({ data, label, value }) {
-    let DataArr = [];
-    let obj = {};
-    data.forEach(async item => {
-      obj = { value: item[value], label: item[label] };
-      if (item.child && item.child.length) {
-        obj.children = await this.getTreeData({
-          data: item.child,
-          label,
-          value
-        });
-      }
-      DataArr.push(obj);
-    });
-    return DataArr;
   }
 };

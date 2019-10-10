@@ -31,7 +31,7 @@ export default {
           { field: "related_status", title: "相同属性产品是否关联", value: 0, validate: "", type: "radio", option: { 0: "不关联", 1: "关联" }, valueType: "number" },
           { field: "hand_add_status", title: "是否支持手动新增", value: 0, validate: "", type: "radio", option: { 0: "不支持", 1: "支持" }, valueType: "number" },
           { field: "type", title: "属性的类型", value: 0, validate: "", type: "radio", option: { 0: "规格", 1: "参数" }, valueType: "number" },
-          { field: "input_list", title: "可选值列表", value: '', validate: "required", type: "textarea" },
+          { field: "input_list", title: "可选值列表", value: '', validate: "", type: "textarea" },
           { field: "sort", title: "排序字段", value: 0, validate: "required", type: "input", valueType: "number" },
         ],
         validata: {},
