@@ -7,33 +7,6 @@ class Goods extends baseController {
       result
     });
   }
-  async addGoodsBack() {
-    const {
-      ctx
-    } = this;
-    ctx.validate({
-      name: {
-        type: 'string'
-      },
-      status: {
-        type: 'string'
-      },
-      salePrice: {
-        type: 'string'
-      },
-      categoryId: {
-        type: 'number'
-      },
-      goodsInfo: {
-        type: 'string?'
-      }
-    });
-    this.success({
-      result: await this.ctx.service.goods.addGoods({
-        ...ctx.request.body
-      })
-    });
-  }
 
   async addGoods() {
     const {
@@ -149,34 +122,6 @@ class Goods extends baseController {
     });
   }
 
-  async updateGoods() {
-    const {
-      ctx
-    } = this;
-    ctx.validate({
-      name: {
-        type: 'string'
-      },
-      status: {
-        type: 'string'
-      },
-      salePrice: {
-        type: 'string'
-      },
-      categoryId: {
-        type: 'number'
-      },
-      goodsInfo: {
-        type: 'string?'
-      },
-      goodsId: {
-        type: 'string'
-      }
-    });
-    this.success({
-      result: await this.ctx.service.goods.updateGoods(ctx.request.body)
-    });
-  }
 
   async changeGoodsStatus() {
     const {
@@ -187,7 +132,16 @@ class Goods extends baseController {
         type: 'array'
       },
       status: {
-        type: 'string'
+        type: 'string?'
+      },
+      newStatus: {
+        type: 'string?'
+      },
+      recommandStatus: {
+        type: 'string?'
+      },
+      verifyStatus: {
+        type: 'string?'
       }
     });
     this.success({
@@ -414,6 +368,44 @@ class Goods extends baseController {
     this.success({
       result: await this.ctx.service.goods.deleteGoodsAttribute({
         ...ctx.request.query
+      })
+    });
+  }
+
+  async getSkuList() {
+    const {
+      ctx
+    } = this;
+    ctx.validate({
+      goodsId: {
+        type: 'string'
+      }
+    },
+    ctx.request.query
+    );
+    this.success({
+      result: await this.ctx.service.goods.getSkuList({
+        ...ctx.request.query
+      })
+    });
+  }
+
+  async changeSku() {
+    const {
+      ctx
+    } = this;
+    ctx.validate({
+      data: {
+        type: 'array',
+        min: 1
+      },
+      goodsId: {
+        type: 'string'
+      }
+    });
+    this.success({
+      result: await this.ctx.service.goods.changeSku({
+        ...ctx.request.body
       })
     });
   }

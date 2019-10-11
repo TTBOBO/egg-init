@@ -110,7 +110,6 @@ class Goods extends Service {
     let id = null;
     let editStatus = false;
     let createGoods = null;
-    console.log(goodsId);
     if (!goodsId) {
       createGoods = await this.app.model.Goods.createOne({
         ...goodsData
@@ -176,7 +175,6 @@ class Goods extends Service {
     if (editStatus) {
       option.updateOnDuplicate = [ 'skuCode', 'price', 'stock', 'lowStock' ];
     }
-    console.log(goodsId, editStatus);
     let skuList = this.getListData(list, goodsId);
 
     let data = await this.app.model.GoodsSkuStock.bulkCreate(skuList, option);
@@ -260,24 +258,12 @@ class Goods extends Service {
       };
     });
   }
-  async updateGoods(body = {}) {
-    let {
-      goodsId,
-      ...updateData
-    } = body;
-    return await this.app.model.Goods.update({
-      ...updateData
-    }, {
-      where: {
-        goodsId
-      }
-    });
-  }
+
 
   async changeGoodsStatus(body = {}) {
     const {
       ids,
-      status
+      ...status
     } = body;
     const {
       app
@@ -287,9 +273,17 @@ class Goods extends Service {
         Op
       }
     } = app;
-    return await app.model.Goods.update({
-      status
-    }, {
+    const {
+      newStatus,
+      recommandStatus
+    } = status;
+    let updataData = {
+      ...status
+    };
+    if (newStatus || recommandStatus) {
+      updataData.verifyStatus = '0';
+    }
+    return await app.model.Goods.update(updataData, {
       where: {
         goodsid: {
           [Op.or]: ids
@@ -299,11 +293,11 @@ class Goods extends Service {
   }
 
   async categoryList({
-    // level = 0,
+    level,
     parentId
   }, hasGoods = false) {
     let where = {
-      // level
+      level
     };
     let include = [];
     if (parentId) {
@@ -537,6 +531,27 @@ class Goods extends Service {
       });
     }
     return data;
+  }
+  async getSkuList({
+    goodsId
+  }) {
+    return await this.app.model.GoodsSkuStock.grid({
+      type: 'findAll',
+      where: {
+        goodsId
+      }
+      // sort: [ sort_by, sort_type ],
+    });
+  }
+  async changeSku({
+    goodsId,
+    data
+  }) {
+    const transaction = await this.app.getTransaction();
+    let addSkuData = await this.addSku(goodsId, data, {
+      transaction
+    }, true);
+    return addSkuData;
   }
 }
 

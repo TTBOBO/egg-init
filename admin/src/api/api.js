@@ -11,6 +11,8 @@ const REQUEST = {
   addCategory: '/category/addCategory',
   deleteCategory: '/category/deleteCategory',
   updateCateGory: '/category/updateCateGory',
+  getSkuList: "/goods/getSkuList",
+  changeSku: "/goods/changeSku",
   goodsList: '/goods/goodsList',
   addGoods: '/goods/addGoods',
   updateGoods: '/goods/updateGoods',

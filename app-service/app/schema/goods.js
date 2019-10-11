@@ -41,8 +41,9 @@ module.exports = app => {
         comment: '0 不推荐 1 推荐'
       },
       verifyStatus: {
-        type: ENUM('0', '1'),
-        comment: '0 未审核 1 审核通过'
+        type: ENUM('0', '1', '2'),
+        comment: '0 待审核 1 审核通过 2审核失败',
+        defaultValue: '0'
       },
       sort: INTEGER.UNSIGNED,
       sale: {

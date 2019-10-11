@@ -15,14 +15,15 @@
             <span class="message-title">{{item.goodsId ? '商品' : '订单'}}</span>
             <span class="cre-time">{{item.createdTime}}</span>
           </div>
-          <div class="message-content">
+          <div class="message-content"
+               @click="handleClick(item)">
             {{getStr(item)}}
           </div>
           <div class="message-bottom">
             <el-button v-if="item.type == 'goods'"
                        @click="setGoodsStatus(item,index)"
                        size="mini"
-                       :type="item.Good.status === 'down' ? 'primary' : 'danger'">同意{{item.Good.status === 'down' ? '上' : '下'}}架</el-button>
+                       :type="item.good.status === 'down' ? 'primary' : 'danger'">同意{{item.good.status === 'down' ? '上' : '下'}}架</el-button>
             <el-button v-else
                        @click="putOrder(item,index)"
                        size="mini"
@@ -51,7 +52,16 @@ export default {
     }
   },
   methods: {
-    async setGoodsStatus ({ Good: { goodsId, status }, mid }, index) {
+    async handleClick (item) {
+      const { type, orderId, goodsId } = item;
+      this.$router.push({
+        path: type === 'goods' ? '/goods/goodsList' : '/order/orderlist',
+        query: {
+          id: type === 'goods' ? goodsId : orderId
+        }
+      });
+    },
+    async setGoodsStatus ({ good: { goodsId, status }, mid }, index) {
       let { code } = await this.$ajaxPost('changeMessageStatus', { goodsId, status, mid });
       if (code === 0) {
         this.messageData.splice(index, 1);
@@ -73,9 +83,9 @@ export default {
       this.data_total_num = data_total_num;
       console.log(this.messageData)
     },
-    getStr ({ type, Good = {}, order = {} }) {
+    getStr ({ type, good = {}, order = {} }) {
       if (type == 'goods') {
-        var { goodsId, name, status } = Good;
+        var { goodsId, name, status } = good;
       } else {
         var option = { initial: "待处理", audited: "已接单", dispatching: "配送中", completed: "已完成", canceled: "已取消" };
         var { orderId } = order;
