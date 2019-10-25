@@ -151,6 +151,31 @@ class Goods extends baseController {
     });
   }
 
+  async addVertifyRecord() {
+
+    const {
+      ctx
+    } = this;
+    console.log(ctx.getCookie('uuid'), '13');
+    ctx.validate({
+      goodsId: {
+        type: 'string'
+      },
+      status: {
+        type: 'string'
+      },
+      detail: {
+        type: 'string?'
+      }
+    });
+
+    this.success({
+      result: await this.ctx.service.goods.addVertifyRecord({
+        ...ctx.request.body
+      })
+    });
+  }
+
   async categoryList() {
     const query = this.ctx.query;
     let result = await this.service.goods.categoryList(query, query.hasGoods);

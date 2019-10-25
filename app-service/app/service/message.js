@@ -10,7 +10,9 @@ class Message extends Service {
     sort_by
     // createdTime
   }) {
-    const { app } = this;
+    const {
+      app
+    } = this;
     // const {
     //   Sequelize: { Op }
     // } = app;
@@ -24,35 +26,49 @@ class Message extends Service {
     //   };
     // }
     return await app.model.Message.grid({
-      pagination: { page, size },
-      where: { status },
+      pagination: {
+        page,
+        size
+      },
+      where: {
+        status
+      },
       sort: [ sort_by, sort_type ],
-      include: [
-        {
-          model: this.app.model.Order
-        },
-        {
-          model: this.app.model.Goods
-        }
+      include: [{
+        model: this.app.model.Order
+      },
+      {
+        model: this.app.model.Goods
+      }
       ]
     });
   }
 
   async changeMessageStatus(body = {}) {
     var res;
-    const { mid, goodsId, goodsStatus } = body;
+    const {
+      mid,
+      goodsId,
+      status
+    } = body;
     const transaction = await this.app.getTransaction();
-    let data = await this.app.model.Message.update(
-      { status: '2' },
-      { where: { mid }, transaction }
-    );
+    let data = await this.app.model.Message.update({
+      status: '2'
+    }, {
+      where: {
+        mid
+      },
+      transaction
+    });
     if (goodsId) {
-      res = await this.app.model.Goods.update(
-        {
-          status: goodsStatus === 'down' ? 'up' : 'down'
+      res = await this.app.model.Goods.update({
+        status: status === 'down' ? 'up' : 'down'
+      }, {
+        where: {
+          goodsId
         },
-        { where: { goodsId }, transaction }
-      );
+        transaction
+      });
     }
 
     return data[0] && res[0];

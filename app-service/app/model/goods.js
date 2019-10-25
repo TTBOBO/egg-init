@@ -15,28 +15,34 @@ module.exports = app => {
       foreignKey: 'goods_attribute_category_id',
       targetKey: 'goods_attribute_category_id'
     });
-    Goods.hasMany(app.model.models.goodsSku, {
+
+    Goods.hasMany(model.models.goodsSku, {
       foreignKey: 'goodsId',
       targetKey: 'goodsId',
       as: 'skuStockList'
     });
-    Goods.hasMany(app.model.models.goodsMemberPrice, {
+    Goods.hasMany(model.models.goodsMemberPrice, {
       foreignKey: 'goodsId',
       targetKey: 'goodsId',
       as: 'memberPrice'
     });
-    Goods.hasMany(app.model.models.goodsLadder, {
+    Goods.hasMany(model.models.goodsLadder, {
       foreignKey: 'goodsId',
       targetKey: 'goodsId',
       as: 'goodsLadderList'
     });
-    Goods.hasMany(app.model.models.goodsFullReduction, {
+    Goods.hasMany(model.models.goodsFullReduction, {
       foreignKey: 'goodsId',
       targetKey: 'goodsId',
       as: 'goodsFullReductionList'
     });
-    Goods.hasMany(app.model.models.goodsAttributeValue, {
+    Goods.hasMany(model.models.goodsAttributeValue, {
       as: 'goodsAttributeValueList',
+      foreignKey: 'goodsId',
+      targetKey: 'goodsId'
+    });
+    Goods.hasMany(app.model.models.goodsVertifyRecord, {
+      as: 'goodsVertifyRecord',
       foreignKey: 'goodsId',
       targetKey: 'goodsId'
     });

@@ -23,16 +23,20 @@
                             start-placeholder="开始日期"
                             end-placeholder="结束日期">
             </el-date-picker>
-            <el-select v-else-if="item.type == 'select' || item.type == 'switch' "
+            <el-select v-else-if="item.type == 'multiple' || item.type == 'select'"
                        filterable
                        v-model="item.value"
-                       clearable
-                       :placeholder="item.pla || '请选择'+item.lable">
-              <el-option v-for="_item in item.selectOPtion"
-                         :key="_item.value"
-                         :label="_item.label"
-                         :value="_item.value">
-              </el-option>
+                       :multiple="item.multiple"
+                       :placeholder="item.pla || '请选择'+item.lable"
+                       @change="(val) => changeSearchVal(val,index)">
+              <template v-if="item.selectOPtion">
+                <el-option v-for="(_item,_index) in item.selectOPtion"
+                           :key="_index"
+                           :disabled="_item.disabled"
+                           :label="_item.label"
+                           :value="_item.value">
+                </el-option>
+              </template>
             </el-select>
           </el-form-item>
         </template>
@@ -90,23 +94,23 @@
                        align="center"
                        v-if="optionData.indexNum">
       </el-table-column>
-      <template v-for="(item,index) in testColumn">
-        <column-item :t_columns="testColumn"
+      <!-- :t_columns="testColumn"
                      :columnDataObj="columnDataObj"
                      :columnData="columnData"
-                     :optionData="optionData"
-                     :item="item"
+                     :optionData="optionData" 
+                     :t_columns="testColumn"
+                       :columnDataObj="columnDataObj"
+                       :columnData="columnData"
+                       :optionData="optionData"-->
+      <template v-for="(item,index) in testColumn">
+        <column-item :item="item"
                      :key="index"
                      v-if="!item.child"></column-item>
         <el-table-column v-if="item.child"
                          :label="item.lable"
                          :width="item.width || '200'"
                          :key="index">
-          <column-item :t_columns="testColumn"
-                       :columnDataObj="columnDataObj"
-                       :columnData="columnData"
-                       :optionData="optionData"
-                       v-for="(_item,_index) in item.child"
+          <column-item v-for="(_item,_index) in item.child"
                        :key="_index"
                        :item="_item"></column-item>
         </el-table-column>
@@ -205,7 +209,7 @@ export default {
       index: 0,
       showTable: false,
       columnData: null, //存储 列的数据
-      columnDataObj: {},
+      // columnDataObj: {},
       defaultSort: null,
       toolLoading: []
     }
@@ -260,12 +264,12 @@ export default {
       })
       this.testColumn = this.optionData.columnData ? this.assignData(this.optionData.columnData, obj) : this
         .columns; //是否有表头合并
-      this.getColumnDataObj();
+      // this.getColumnDataObj();
     },
-    getColumnDataObj () {
-      this.columnDataObj = this.getChildColumn(this.testColumn)
-      this.columnData = JSON.parse(JSON.stringify(this.testColumn));
-    },
+    // getColumnDataObj () {
+    //   this.columnDataObj = this.getChildColumn(this.testColumn)
+    //   this.columnData = JSON.parse(JSON.stringify(this.testColumn));
+    // },
     getChildColumn (item) {
       return item.reduce((total, cur) => {
         if (cur.child) {
@@ -306,7 +310,7 @@ export default {
       });
       this.testColumn = JSON.parse(JSON.stringify(this.optionData.columnData ? this.assignData(this.optionData
         .columnData) : this.columns));
-      this.getColumnDataObj();
+      // this.getColumnDataObj();
       this.showTable = false;
       this.taskListloading = true;
       setTimeout(() => {
@@ -351,6 +355,8 @@ export default {
             type: item.type, //搜索 type   类型  time   select   普通框
             pla: item.pla, // placeholder值
             seaW: item.seaW, //搜索宽度
+            multiple: item.multiple || false,
+            field: item.value
           };
           if (item.searchVal) {
             this.search[item.search] = item.searchVal;
@@ -361,7 +367,6 @@ export default {
             serArr = item.mock ? util.getSelectOpt(res, 3) : util.getSelectOpt(res.result[item.url] || res
               .result[item.keyurl], item.selectDataType || 2, { colKey: item.colKey, colName: item.colName });
             if (item.selectOPtion) {
-
               serArr = [...util.getSelectOpt(item.selectOPtion, 1), ...serArr]; //默认的数据放前面，接口数据放后面
             }
             obj.selectOPtion = serArr; //下拉框数据   //select switch 存在
@@ -372,7 +377,7 @@ export default {
               serArr = util.getSelectOpt(item.selectOPtion, 1);
               obj.selectOPtion = serArr;
             }
-            this.searchData.splice(i, 0, obj);
+            this.searchData.splice(i, 1, obj);
           }
         }
       }
@@ -384,16 +389,23 @@ export default {
         /**
          * 分为   time  select  number 普通输入框
          */
-        if (item.search && item.value != "") {
-          if (item.type == "time") {
-            filter[item.search] = item.value.join(',') // util.time.getTime(item.value[0], true) + "," + util.time.getTime(item.value[1], true)
+        const { search, value, type, multiple } = item
+        if (search) {
+          if (value) {
+            if ((type == 'time' || multiple)) {
+              if (value.length && ((multiple && value[0] !== '全部') || (!multiple))) {
+                filter[search] = value.join(',');
+              } else {
+                delete this.search[search];
+              }
+              num += 1;
+            } else {
+              filter[search] = value;
+              num += 1;
+            }
           } else {
-            item.value != 'empty' ? filter[item.search] = item.value : (this.search[item.search] && delete this
-              .search[item.search]);
+            delete this.search[search];
           }
-          num += 1;
-        } else if (item.search && !item.value) {
-          delete this.search[item.search]
         }
       });
       this.$emit("getSearch", this.searchData);
@@ -543,6 +555,39 @@ export default {
         hasSel: item.hasSel, //需要选中几个
         hasMore: item.hasMore //( more,  less,   == ) =>  item.hasSel
       })
+    },
+    setSelectOption (options, valParams) {
+      this.columns.forEach((item, index) => {
+        if (item.type === 'select' && options[item.value]) {
+          //反序列数据给table表格使用
+          item.selectOPtion = util.getSelectReverse(options[item.value]);
+          if (item.search) {
+            this.searchData[index].selectOPtion = options[item.search]
+          }
+          //给multiple项设置默认值并制定option设置成不可选择
+          if (valParams && valParams[item.search]) {
+            this.searchData[index].value = valParams[item.search]
+            this.changeSearchVal(valParams[item.search], index);
+          } else {
+            this.changeSearchVal(this.searchData[index].value, index);
+          }
+        }
+      })
+      this.getCol()
+    },
+    changeSearchVal (val, index) {
+      if (typeof val === 'object') {
+        if (val.indexOf('全部') !== -1) {
+          this.searchData[index].value = ['全部'];
+          this.searchData[index].selectOPtion.forEach((item, _index) => {
+            if (_index > 0) {
+              item.disabled = true;
+            }
+          })
+        } else {
+          this.searchData[index].selectOPtion.forEach(item => item.disabled = false)
+        }
+      }
     },
     handBtn (item, index) {
       if (item.hasloading) {

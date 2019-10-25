@@ -1,6 +1,5 @@
 import Main from '@/view/main/main';
-export default [
-  {
+export default [{
     path: '/login',
     name: 'login',
     meta: {
@@ -41,20 +40,18 @@ export default [
       title: '首页',
       hideInMenu: false
     },
-    children: [
-      {
-        path: '/home',
-        name: 'home',
-        meta: {
-          icon: 'el-icon-eleme',
-          hideInMenu: false,
-          title: '首页'
-        },
-        component: resolve => {
-          require(['@/view/home/home'], resolve);
-        }
+    children: [{
+      path: '/home',
+      name: 'home',
+      meta: {
+        icon: 'el-icon-eleme',
+        hideInMenu: false,
+        title: '首页'
+      },
+      component: resolve => {
+        require(['@/view/home/home'], resolve);
       }
-    ]
+    }]
   },
   {
     path: '/user',
@@ -66,19 +63,17 @@ export default [
       icon: 'el-icon-eleme'
     },
     component: Main,
-    children: [
-      {
-        path: 'userlist',
-        name: 'userlist',
-        meta: {
-          icon: 'el-icon-eleme',
-          title: '系统会员'
-        },
-        component: resolve => {
-          require(['@/view/user/user'], resolve);
-        }
+    children: [{
+      path: 'userlist',
+      name: 'userlist',
+      meta: {
+        icon: 'el-icon-eleme',
+        title: '系统会员'
+      },
+      component: resolve => {
+        require(['@/view/user/user'], resolve);
       }
-    ]
+    }]
   },
 
   {
@@ -91,8 +86,7 @@ export default [
       title: '商品',
       hideInMenu: false
     },
-    children: [
-      {
+    children: [{
         path: 'goodsList',
         name: 'goodsList',
         meta: {
@@ -188,8 +182,7 @@ export default [
       icon: 'el-icon-eleme'
     },
     component: Main,
-    children: [
-      {
+    children: [{
         path: 'orderlist',
         name: 'orderlist',
         meta: {
@@ -209,6 +202,101 @@ export default [
         },
         component: resolve => {
           require(['@/view/order/evaluate'], resolve);
+        }
+      }
+    ]
+  },
+  {
+    path: '/sms',
+    name: 'sms',
+    redirect: '/sms/flash',
+    meta: {
+      title: '营销',
+      //   href: 'https://lison16.github.io/iview-admin-doc/#/',
+      icon: 'el-icon-eleme'
+    },
+    component: Main,
+    children: [{
+        path: 'flash',
+        name: 'flash',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '秒杀活动列表'
+        },
+        component: resolve => {
+          require(['@/view/flash/flash_promotion'], resolve);
+        }
+      },
+      {
+        path: 'flash_session',
+        name: 'flash_session',
+        meta: {
+          hideInMenu: true,
+          icon: 'el-icon-eleme',
+          title: '秒杀时间段列表'
+        },
+        component: resolve => {
+          require(['@/view/flash/flash_promotion_session'], resolve);
+        }
+      },
+      {
+        path: 'flash_goods',
+        name: 'flash_goods',
+        meta: {
+          hideInMenu: true,
+          icon: 'el-icon-eleme',
+          title: '秒杀时间段选择'
+        },
+        component: resolve => {
+          require(['@/view/flash/flash_goods'], resolve);
+        }
+      },
+      {
+        path: 'flash_promotion_goods',
+        name: 'flash_promotion_goods',
+        meta: {
+          hideInMenu: true,
+          icon: 'el-icon-eleme',
+          title: '秒杀商品列表'
+        },
+        component: resolve => {
+          require(['@/view/flash/flash_promotion_goods'], resolve);
+        }
+      },
+
+
+
+      {
+        path: 'new',
+        name: 'new',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '新品推荐'
+        },
+        component: resolve => {
+          require(['@/view/order/order'], resolve);
+        }
+      },
+      {
+        path: 'hot',
+        name: 'hot',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '人气推荐'
+        },
+        component: resolve => {
+          require(['@/view/order/order'], resolve);
+        }
+      },
+      {
+        path: 'advertise',
+        name: 'advertise',
+        meta: {
+          icon: 'el-icon-eleme',
+          title: '广告列表'
+        },
+        component: resolve => {
+          require(['@/view/order/order'], resolve);
         }
       }
     ]

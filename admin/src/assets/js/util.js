@@ -154,7 +154,7 @@ let util = {
      * @param {type} preNum
      * @returns {Number}向下取整获取百分比
      */
-    fixNumber: function(num, preNum) {
+    fixNumber: function (num, preNum) {
       if (num <= 0) {
         return preNum;
       }
@@ -163,7 +163,7 @@ let util = {
     /**
      * 转换为日期对象
      */
-    toDate: function(str) {
+    toDate: function (str) {
       if (typeof str === 'number') {
         return new Date(str);
       } else if (typeof str === 'string') {
@@ -176,16 +176,16 @@ let util = {
     /**
      * 根据时间戳转时间
      */
-    getNowTime: function(timeStr, statu = false, str = '-') {
+    getNowTime: function (timeStr, statu = false, str = '-') {
       if (!timeStr) {
         return ''; //请传入时间
       }
       // var time = new Date(time * 1000);
       var time = new Date(timeStr);
       let month =
-        time.getMonth() + 1 < 10
-          ? '0' + (time.getMonth() + 1)
-          : time.getMonth() + 1;
+        time.getMonth() + 1 < 10 ?
+        '0' + (time.getMonth() + 1) :
+        time.getMonth() + 1;
       let data = time.getDate() < 10 ? '0' + time.getDate() : time.getDate();
       let getMilliseconds =
         time.getSeconds() < 10 ? '0' + time.getSeconds() : time.getSeconds();
@@ -223,7 +223,7 @@ let util = {
       }
       return time;
     },
-    getStartTime: function() {
+    getStartTime: function () {
       let start = new Date();
       start.setHours(0);
       start.setMinutes(0);
@@ -234,7 +234,7 @@ let util = {
     /**
      * 根据时间转时间戳
      */
-    getTime: function(time, statu) {
+    getTime: function (time, statu) {
       if (statu) {
         return parseInt(time / 1000);
       } else {
@@ -249,7 +249,7 @@ let util = {
      * @param {type} date
      * @returns {String}日期格式化
      */
-    toDateString: function(date) {
+    toDateString: function (date) {
       var it = this;
       var hdate = it.formatDate(it.toDate(date), 'M月d日');
       var btDate =
@@ -275,7 +275,7 @@ let util = {
      * @param {type} time1
      * @returns {String|Number}
      */
-    timeLeft: function(time1, fixedTime, formtStr) {
+    timeLeft: function (time1, fixedTime, formtStr) {
       var it = this;
       if (!formtStr) {
         formtStr = 'hh:mm:ss.S';
@@ -298,27 +298,27 @@ let util = {
       }
     }
   },
-  version: function() {
+  version: function () {
     var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
     var isIE =
       userAgent.indexOf('compatible') > -1 && userAgent.indexOf('MSIE') > -1;
     console.log(isIE);
   },
-  setCookie: function(name, value, day) {
+  setCookie: function (name, value, day) {
     var Days = day ? day : 30; //默认30天
     var exp = new Date();
     exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
     document.cookie =
       name + '=' + escape(value) + ';path=/;expires=' + exp.toGMTString();
   },
-  getCookie: function(name) {
+  getCookie: function (name) {
     var arrstr = document.cookie.split('; ');
     for (var i = 0; i < arrstr.length; i++) {
       var temp = arrstr[i].split('=');
       if (temp[0] == name) return unescape(temp[1]);
     }
   },
-  delCookie: function(name) {
+  delCookie: function (name) {
     var it = this;
     var date = new Date();
     date.setTime(date.getTime() - 10000);
@@ -326,40 +326,40 @@ let util = {
     if (cval != null)
       document.cookie = name + '=' + cval + '; expires=' + date.toGMTString();
   },
-  setLocalStorage: function(name, value) {
+  setLocalStorage: function (name, value) {
     localStorage.setItem(name, value);
   },
-  setLocalStorage_mul: function(option) {
+  setLocalStorage_mul: function (option) {
     for (var i in option) {
       localStorage.setItem(i, option[i]);
     }
   },
-  getLocalStorage: function(name) {
+  getLocalStorage: function (name) {
     return localStorage.getItem(name);
   },
-  delLocalStorage: function(name) {
+  delLocalStorage: function (name) {
     localStorage.removeItem(name);
   },
-  clearLocalStorage: function() {
+  clearLocalStorage: function () {
     localStorage.clear();
   },
-  setSessionStorage: function(name, vlaue) {
+  setSessionStorage: function (name, vlaue) {
     localStorage.setItem(name, vlaue);
     // sessionStorage.setItem(name, vlaue);
   },
-  getSessionStorage: function(name) {
+  getSessionStorage: function (name) {
     // console.log(localStorage.getItem(name))
     return localStorage.getItem(name);
     // return sessionStorage.getItem(name);
   },
-  clearSessionStorage: function() {
+  clearSessionStorage: function () {
     localStorage.clear();
   },
-  delSessionStorage: function(name) {
+  delSessionStorage: function (name) {
     sessionStorage.removeItem(name);
   },
   //清楚obj属性值   登录注册 操作后需清空
-  clearObj: function(obj) {
+  clearObj: function (obj) {
     let _obj = JSON.parse(JSON.stringify(obj));
     for (var i in _obj) {
       _obj[i] = '';
@@ -386,9 +386,9 @@ let util = {
   getAllStatus(Arr) {
     return new Promise((resolve, reject) => {
       Promise.all(Arr).then(res => {
-        res.filter(item => item).length != res.length
-          ? reject('部分必填项没有输入！')
-          : resolve(true);
+        res.filter(item => item).length != res.length ?
+          reject('部分必填项没有输入！') :
+          resolve(true);
       });
     });
   },
@@ -421,21 +421,19 @@ let util = {
       // 例如  validate 传入 自定义 [/^[A-Za-z]+$/, "请填写英文"]   或者传入  verifyArr里面的某个属性时
       if (verifyArr[item.validate] || typeof item.validate == 'object') {
         let varify =
-          typeof item.validate == 'object'
-            ? item.validate
-            : verifyArr[item.validate];
+          typeof item.validate == 'object' ?
+          item.validate :
+          verifyArr[item.validate];
         validateNum = (rule, value, callback) => {
-          !varify[0].test(value)
-            ? callback(new Error(item.msg ? item.msg : varify[1]))
-            : callback(); //返回验证错误信息
+          !varify[0].test(value) ?
+            callback(new Error(item.msg ? item.msg : varify[1])) :
+            callback(); //返回验证错误信息
         };
-        obj[item.field] = [
-          {
-            required: true,
-            validator: validateNum,
-            trigger: item.blur || 'blur' //默认设置 blur
-          }
-        ];
+        obj[item.field] = [{
+          required: true,
+          validator: validateNum,
+          trigger: item.blur || 'blur' //默认设置 blur
+        }];
       } else if (item.validate == 'required' || item.validate == 'json') {
         if (
           !item.multiple &&
@@ -445,45 +443,36 @@ let util = {
         ) {
           //单选下拉是字符串
           validateNum = (rule, value, callback) => {
-            value === undefined || value === null || value === ''
-              ? callback(new Error('不能为空!'))
-              : callback();
+            value === undefined || value === null || value === '' ?
+              callback(new Error('不能为空!')) :
+              callback();
           };
-          obj[item.field] = [
-            {
-              required: true,
-              validator: validateNum,
-              message:
-                item.msg ||
-                (item.type == 'input' || !item.type ? '请填写' : '请选择') +
-                  item.title,
-              trigger:
-                item.blur || item.type == 'select' || item.type == 'checkbox'
-                  ? 'change'
-                  : 'blur'
-            }
-          ];
+          obj[item.field] = [{
+            required: true,
+            validator: validateNum,
+            message: item.msg ||
+              (item.type == 'input' || !item.type ? '请填写' : '请选择') +
+              item.title,
+            trigger: item.blur || item.type == 'select' || item.type == 'checkbox' ?
+              'change' : 'blur'
+          }];
         } else if (item.validate == 'json') {
           validateNum = (rule, value, callback) => {
             try {
-              typeof JSON.parse(value) === 'object'
-                ? callback()
-                : callback(new Error('请输入json字符串数据!'));
+              typeof JSON.parse(value) === 'object' ?
+                callback() :
+                callback(new Error('请输入json字符串数据!'));
             } catch (err) {
               callback(new Error('请输入json字符串数据!'));
             }
           };
-          obj[item.field] = [
-            {
-              required: true,
-              validator: validateNum,
-              type: item.validate,
-              trigger:
-                item.type == 'select' || item.type == 'checkbox'
-                  ? 'change'
-                  : 'blur'
-            }
-          ];
+          obj[item.field] = [{
+            required: true,
+            validator: validateNum,
+            type: item.validate,
+            trigger: item.type == 'select' || item.type == 'checkbox' ?
+              'change' : 'blur'
+          }];
         } else if (
           item.type == 'upload' ||
           (item.type == 'select' && item.multiple) ||
@@ -494,31 +483,23 @@ let util = {
             value.length ? callback() : callback(new Error('不能为空!'));
           };
 
-          obj[item.field] = [
-            {
-              required: true,
-              validator: validateNum,
-              message: item.msg || '请选择' + item.title,
-              trigger:
-                item.type == 'select' || item.type == 'checkbox'
-                  ? 'change'
-                  : 'blur'
-            }
-          ];
+          obj[item.field] = [{
+            required: true,
+            validator: validateNum,
+            message: item.msg || '请选择' + item.title,
+            trigger: item.type == 'select' || item.type == 'checkbox' ?
+              'change' : 'blur'
+          }];
         }
       } else {
         if (item.validate) {
-          obj[item.field] = [
-            {
-              required: true,
-              type: item.validate,
-              message: item.msg || '请选择' + item.title,
-              trigger:
-                item.type == 'select' || item.type == 'checkbox'
-                  ? 'change'
-                  : 'blur'
-            }
-          ];
+          obj[item.field] = [{
+            required: true,
+            type: item.validate,
+            message: item.msg || '请选择' + item.title,
+            trigger: item.type == 'select' || item.type == 'checkbox' ?
+              'change' : 'blur'
+          }];
         }
       }
       //加入自定义组件
@@ -540,18 +521,19 @@ let util = {
   getSelectOpt(data = [], status, params = {}, type) {
     let optArr = [];
     let val = null;
-    const { colKey, colName } = params;
+    const {
+      colKey,
+      colName
+    } = params;
     for (var i in data) {
       val = status == 2 ? data[i] : status == 4 ? data[i][colKey] : i;
       val = type === 'number' ? Number(val) : val;
       optArr.push({
         value: val,
-        label:
-          status == 1 || status == 2
-            ? data[i]
-            : status == 4
-            ? data[i][colName]
-            : data[i].label
+        label: status == 1 || status == 2 ?
+          data[i] : status == 4 ?
+          data[i][colName] : data[i].label,
+        disabled: false
       });
     }
     optArr.forEach((item, index) => {
@@ -592,7 +574,7 @@ let util = {
   throttle(func, wait, mustRun) {
     var timeout,
       startTime = new Date();
-    return function() {
+    return function () {
       var context = this,
         args = arguments,
         curTime = new Date();
@@ -610,11 +592,11 @@ let util = {
   },
   debounce(method, delay) {
     var timer = null;
-    return function() {
+    return function () {
       var context = this,
         args = arguments;
       clearTimeout(timer);
-      timer = setTimeout(function() {
+      timer = setTimeout(function () {
         method.apply(context, args);
       }, delay);
     };

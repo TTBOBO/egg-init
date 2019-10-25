@@ -10,7 +10,8 @@ class Goods extends Service {
     categoryId,
     sort_type,
     sort_by,
-    goodsId
+    goodsId,
+    promotionType
   }) {
     const {
       app
@@ -22,6 +23,16 @@ class Goods extends Service {
       categoryId,
       goodsId
     };
+    const {
+      Sequelize: {
+        Op
+      }
+    } = app;
+    if (promotionType) {
+      where.promotionType = {
+        [Op.ne]: 5
+      };
+    }
     return await app.model.Goods.grid({
       pagination: {
         page,
@@ -273,22 +284,32 @@ class Goods extends Service {
         Op
       }
     } = app;
-    const {
-      newStatus,
-      recommandStatus
-    } = status;
     let updataData = {
       ...status
     };
-    if (newStatus || recommandStatus) {
+    // newStatus || recommandStatus 当前只对上下架进行冻结操作
+    const transaction = await this.app.getTransaction();
+    if (status) {
       updataData.verifyStatus = '0';
+      let arr = [];
+      ids.forEach(item => arr.push({
+        status: '1',
+        type: 2,
+        goodsId: item
+      }));
+      console.log(arr);
+      await app.model.Message.bulkCreate(arr, {
+        transaction
+      });
     }
+
     return await app.model.Goods.update(updataData, {
       where: {
         goodsid: {
           [Op.or]: ids
         }
-      }
+      },
+      transaction
     });
   }
 
@@ -552,6 +573,12 @@ class Goods extends Service {
       transaction
     }, true);
     return addSkuData;
+  }
+
+  async addVertifyRecord(body = {}) {
+    return await this.app.model.GoodsVertifyRecord.createOne({
+      ...body
+    });
   }
 }
 

@@ -13,6 +13,7 @@ const REQUEST = {
   updateCateGory: '/category/updateCateGory',
   getSkuList: "/goods/getSkuList",
   changeSku: "/goods/changeSku",
+  addVertifyRecord: '/goods/addVertifyRecord',
   goodsList: '/goods/goodsList',
   addGoods: '/goods/addGoods',
   updateGoods: '/goods/updateGoods',
@@ -33,6 +34,13 @@ const REQUEST = {
   addRemark: '/order/addRemark',
   diverGoods: '/order/diverGoods',
   getMessageList: '/message/getMessageList',
-  changeMessageStatus: '/message/changeMessageStatus'
+  changeMessageStatus: '/message/changeMessageStatus',
+  getFlashList: '/flash/getFlashList',
+  crateFlashPromotion: '/flash/crateFlashPromotion',
+  delFlashPromotion: '/flash/delFlashPromotion',
+  getFlashPromotionGoodsList: '/flash/getFlashPromotionGoodsList',
+  crateFlashPromotionGoods: '/flash/crateFlashPromotionGoods',
+  delFlashPromotionGoods: '/flash/delFlashPromotionGoods',
+  updateFlashPromotionGoods: '/flash/updateFlashPromotionGoods'
 };
 export default REQUEST;

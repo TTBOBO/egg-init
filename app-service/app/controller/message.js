@@ -8,12 +8,22 @@ class Message extends BaseController {
     });
   }
   async changeMessageStatus() {
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.validate({
-      mid: { type: 'string' },
-      type: { type: 'string?' },
-      goodsId: { type: 'string?' },
-      goodsStatus: { type: 'string?' }
+      mid: {
+        type: 'string'
+      },
+      type: {
+        type: 'string?'
+      },
+      goodsId: {
+        type: 'string?'
+      },
+      tatus: {
+        type: 'string?'
+      }
     });
     let result = await this.ctx.service.message.changeMessageStatus(
       ctx.request.body

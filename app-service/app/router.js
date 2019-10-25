@@ -1,9 +1,7 @@
 'use strict';
-
 /**
  * @param {Egg.Application} app - egg application
  */
-
 module.exports = app => {
   const {
     router,
@@ -18,10 +16,7 @@ module.exports = app => {
   router.post('/user/login', controller.user.common.login);
   router.post('/user/register', controller.user.common.register);
   router.post('/upload', controller.home.uploadFile);
-  router.get(
-    '/user/get_user_addressList',
-    controller.user.address.getAddressList
-  );
+  router.get('/user/get_user_addressList', controller.user.address.getAddressList);
   router.post('/user/updateAddress', controller.user.address.updateAddress);
   router.post('/user/deleteAddress', controller.user.address.deleteAddress);
   router.post('/user/addAddress', controller.user.address.addAddress);
@@ -39,7 +34,7 @@ module.exports = app => {
   router.get('/goods/goodsList', controller.goods.goodsList);
   router.get('/goods/getSkuList', controller.goods.getSkuList);
   router.post('/goods/changeSku', controller.goods.changeSku);
-
+  router.post('/goods/addVertifyRecord', controller.goods.addVertifyRecord);
   // router.post('/goods/addGoods', controller.goods.addGoods);
   router.post('/goods/addGoods', controller.goods.addGoods);
   router.post('/goods/deleteGoods', controller.goods.deleteGoods);
@@ -48,39 +43,14 @@ module.exports = app => {
   router.post('/goods/changeGoodsStatus', controller.goods.changeGoodsStatus);
   router.get('/goods/categoryList', controller.goods.categoryList);
   router.get('/categary/getCategoryTree', controller.goods.getCategoryTree);
-  router.get(
-    '/category/goodsAttributeCategoryList',
-    controller.goods.goodsAttributeCategoryList
-  );
-  router.post(
-    '/category/addGoodsAttributeCategory',
-    controller.goods.addGoodsAttributeCategory
-  );
-  router.post(
-    '/category/updateGoodsAttributeCategory',
-    controller.goods.updateGoodsAttributeCategory
-  );
-  router.get(
-    '/category/GoodsAttributeList',
-    controller.goods.GoodsAttributeList
-  );
-  router.post(
-    '/category/deleteGoodsAttributeCategory',
-    controller.goods.deleteGoodsAttributeCategory
-  );
-
-  router.post(
-    '/category/addUpdateGoodsAttribute',
-    controller.goods.addUpdateGoodsAttribute
-  );
-  router.get(
-    '/category/GoodsAttributeInfo',
-    controller.goods.GoodsAttributeInfo
-  );
-  router.delete(
-    '/categary/deleteGoodsAttribute',
-    controller.goods.deleteGoodsAttribute
-  );
+  router.get('/category/goodsAttributeCategoryList', controller.goods.goodsAttributeCategoryList);
+  router.post('/category/addGoodsAttributeCategory', controller.goods.addGoodsAttributeCategory);
+  router.post('/category/updateGoodsAttributeCategory', controller.goods.updateGoodsAttributeCategory);
+  router.get('/category/GoodsAttributeList', controller.goods.GoodsAttributeList);
+  router.post('/category/deleteGoodsAttributeCategory', controller.goods.deleteGoodsAttributeCategory);
+  router.post('/category/addUpdateGoodsAttribute', controller.goods.addUpdateGoodsAttribute);
+  router.get('/category/GoodsAttributeInfo', controller.goods.GoodsAttributeInfo);
+  router.delete('/categary/deleteGoodsAttribute', controller.goods.deleteGoodsAttribute);
   router.post('/category/addCategory', controller.goods.addCategory);
   router.post('/category/deleteCategory', controller.goods.deleteCategory);
   router.post('/category/updateCateGory', controller.goods.updateCateGory);
@@ -89,10 +59,13 @@ module.exports = app => {
   router.post('/order/addRemark', controller.order.addRemark);
   router.get('/getSTS', controller.home.getSTS);
   router.get('/message/getMessageList', controller.message.getMessageList);
-  router.post(
-    '/message/changeMessageStatus',
-    controller.message.changeMessageStatus
-  );
-
+  router.post('/message/changeMessageStatus', controller.message.changeMessageStatus);
   router.post('/wechart/wechartLogin', controller.user.common.wechartLogin);
+  router.get('/flash/getFlashList', controller.flash.getFlashList);
+  router.post('/flash/crateFlashPromotion', controller.flash.crateFlashPromotion);
+  router.post('/flash/delFlashPromotion', controller.flash.delFlashPromotion);
+  router.get('/flash/getFlashPromotionGoodsList', controller.flash.getFlashPromotionGoodsList);
+  router.post('/flash/crateFlashPromotionGoods', controller.flash.crateFlashPromotionGoods);
+  router.post('/flash/delFlashPromotionGoods', controller.flash.delFlashPromotionGoods);
+  router.post('/flash/updateFlashPromotionGoods', controller.flash.updateFlashPromotionGoods);
 };

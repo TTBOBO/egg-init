@@ -2,13 +2,25 @@
 const baseController = require('../base_controller');
 class Common extends baseController {
   async login() {
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.validate({
-      userName: { type: 'string' },
-      password: { type: 'string' },
-      code: { type: 'string' }
+      userName: {
+        type: 'string'
+      },
+      password: {
+        type: 'string'
+      },
+      code: {
+        type: 'string'
+      }
     });
-    let { userName, password, code } = ctx.request.body;
+    let {
+      userName,
+      password,
+      code
+    } = ctx.request.body;
     if (!this.verifyCode(code)) {
       this.fail('图形验证码错误');
       return;
@@ -17,7 +29,10 @@ class Common extends baseController {
     if (userInfo) {
       ctx.setToken(userInfo);
       this.success({
-        result: { userInfo, token: this.ctx.getCookie() }
+        result: {
+          userInfo,
+          token: this.ctx.getCookie()
+        }
       });
     } else {
       this.fail('用户或密码不正确');
@@ -25,12 +40,21 @@ class Common extends baseController {
   }
 
   async register() {
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.validate({
-      userName: { type: 'string' },
-      password: { type: 'string' }
+      userName: {
+        type: 'string'
+      },
+      password: {
+        type: 'string'
+      }
     });
-    let { userName, password } = ctx.request.body;
+    let {
+      userName,
+      password
+    } = ctx.request.body;
     let regStaus = await ctx.service.admin.getUserInfo(userName);
     if (!regStaus) {
       this.success({
@@ -43,7 +67,9 @@ class Common extends baseController {
 
   async loginOut() {
     this.ctx.removecookies();
-    this.success({ result: '退出成功' });
+    this.success({
+      result: '退出成功'
+    });
   }
   async getCodeImg() {
     await this.getCode();
@@ -56,19 +82,35 @@ class Common extends baseController {
   }
 
   async wechartLogin() {
-    const { ctx, app, config } = this;
+    const {
+      ctx,
+      app,
+      config
+    } = this;
     ctx.validate({
-      code: { type: 'string' },
-      nickName: { type: 'string' },
-      province: { type: 'string' },
-      gender: { type: 'number' },
-      avatarUrl: { type: 'string' }
+      code: {
+        type: 'string'
+      },
+      nickName: {
+        type: 'string'
+      },
+      province: {
+        type: 'string'
+      },
+      gender: {
+        type: 'number'
+      },
+      avatarUrl: {
+        type: 'string'
+      }
     });
 
-    const { appid, secret } = config.wxConfig;
+    const {
+      appid,
+      secret
+    } = config.wxConfig;
     const resultData = await app.curl(
-      'https://api.weixin.qq.com/sns/jscode2session',
-      {
+      'https://api.weixin.qq.com/sns/jscode2session', {
         method: 'GET',
         dataType: 'json',
         data: {

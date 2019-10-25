@@ -18,12 +18,13 @@
         <span slot="label">
           <span class="mb"
                 v-show="item.slotMark"> ~ </span>
-          {{item.title+'：'}}
+          <span v-if="item.title">{{item.title+'：'}}</span>
           <el-tooltip v-if="item.slotLabel"
                       class="item"
                       effect="dark"
-                      :content="item.tip || ''"
                       :placement="item.tipAli || 'top'">
+            <div slot="content"
+                 v-html="item.tip || ''"></div>
             <i class="el-icon-question"></i>
           </el-tooltip>
         </span>
@@ -95,10 +96,22 @@
                      :inactive-value="item.inactiveV !== undefined ? item.inactiveV : false"
                      inactive-color="#ff4949"> </el-switch>
         </template>
+
+        <template v-else-if="item.type == 'time'">
+          <el-time-picker style="width:100%"
+                          :format="item.timeFormat || ''"
+                          :value-format="item.valueFormat || 'HH:mm:ss'"
+                          v-model="paramsData[item.field]"
+                          :disabled="item.disabled"
+                          align="right"
+                          :placeholder="'请选择'+(item.pla || item.title)"
+                          :picker-options="item.pickerOpt"
+                          :style="{width:item.width || '100%'}"> </el-time-picker>
+        </template>
         <template v-else-if="item.type == 'datetime'">
           <el-date-picker style="width:100%"
                           :format="item.timeFormat || ''"
-                          :value-format="item.valueFormat || ''"
+                          :value-format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
                           v-model="paramsData[item.field]"
                           :disabled="item.disabled"
                           align="right"
@@ -109,7 +122,7 @@
         </template>
         <template v-else-if="item.type == 'datetimerange'">
           <el-date-picker :style="{width:item.width || '100%'}"
-                          :format="item.timeFormat || ''"
+                          :format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
                           v-model="paramsData['a']['b']['c']"
                           :disabled="item.disabled"
                           type="datetimerange"
@@ -170,7 +183,8 @@ export default {
       deleteValidata: {}, //hidden存放的校验数据
       showForm: false,
       promises: [], //异步接口
-      showConf: false
+      showConf: false,
+      formOptionData: {}
     };
   },
   props: {
@@ -269,9 +283,10 @@ export default {
         }
       })
     },
-    setSelectOption (params) {
-      this.paramsData[this.selectItem] = JSON.stringify(params);
-      this.showConf = false;
+    setSelectOption (params, field) {
+      this.paramsData[field || this.selectItem] = JSON.stringify(params);
+      if (!field)
+        this.showConf = false;
     },
     async initForm () {
       let item = null;
@@ -281,7 +296,14 @@ export default {
         selArr = [];
         item = this.formOption.formList[i];
         if (item.optionUrl) {
-          let { result: { data } } = await this.$ajaxGet(item.optionUrl, item.selectPar);
+          let data = null;
+          if (!this.formOptionData[item.optionUrl]) {
+            let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar);
+            this.formOptionData[item.optionUrl] = result.data;
+            data = result.data;
+          } else {
+            data = this.formOptionData[item.optionUrl];
+          }
           selArr = (item.valueType || item.colKey) ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType) : data;
         }
         if (item.option) {
@@ -312,27 +334,27 @@ export default {
       })
     },
     setVal (field, val) {
-      this.paramsData[field] = val;
+      this.$set(this.paramsData, field, val); //设置新的值
     },
     async updateSelectOption (field, newV = '') {
-      this.optionData.formList.forEach((item, index) => {
-        if (item.field == field && item.optionUrl) {
-          this.$ajaxGet(item.optionUrl, item.selectPar).then(res => {
-            item.option = [];
-            res.result[item.urlkey].forEach(_item => {
-              (item.colKey && item.colName) ? item.option.push({
-                value: _item[item.colKey],
-                label: _item[item.colName]
-              }) : item.option.push({
-                value: _item,
-                label: _item
-              });
-            });
-            this.$set(this.formOption.formList, index, item);
-            this.$set(this.paramsData, field, newV); //设置新的值
-          })
+      let selArr = [], item = null;
+      for (var i = 0; i < this.optionData.formList.length; i++) {
+        item = this.optionData.formList[i];
+        if (item.field == field) {
+          selArr = [];
+          if (item.optionUrl) {
+            let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
+            let data = result[item.urlkey];
+            selArr = (item.valueType || item.colKey) ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType) : data;
+          }
+          if (item.option) {
+            selArr = [...util.getSelectOpt(item.option, item.selectDataType || 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
+          }
+          item.option = selArr;
+          this.$set(this.formOption.formList, i, item);
+          this.setVal(field, newV);
         }
-      })
+      }
     },
     async validate () {
       return new Promise((resolve, reject) => {
@@ -357,13 +379,14 @@ export default {
       this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
     }
   },
-  mounted () {
-
+  beforeDestroy () {
+    this.resetFields();
   },
   async created () {
-    this.formOption = JSON.parse(JSON.stringify(this.optionData));
-    this.initFormDefaultData = JSON.parse(JSON.stringify(this.optionData));
+    this.formOption = util.copyObj(this.optionData);
+    this.initFormDefaultData = util.copyObj(this.optionData);
     await this.initForm(); //初始化 form  数组格式
+
   },
   watch: {
     paramsData: {

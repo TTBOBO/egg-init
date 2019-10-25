@@ -23,7 +23,11 @@
             <el-button v-if="item.type == 'goods'"
                        @click="setGoodsStatus(item,index)"
                        size="mini"
-                       :type="item.good.status === 'down' ? 'primary' : 'danger'">同意{{item.good.status === 'down' ? '上' : '下'}}架</el-button>
+                       type="primary">同意{{item.good.status === 'down' ? '下' : '上'}}架</el-button>
+            <el-button v-if="item.type == 'goods'"
+                       @click="setFaild(item,index)"
+                       size="mini"
+                       type="danger">取消{{item.good.status === 'down' ? '下' : '上'}}架</el-button>
             <el-button v-else
                        @click="putOrder(item,index)"
                        size="mini"
@@ -61,8 +65,28 @@ export default {
         }
       });
     },
+    async setFaild ({ good: { goodsId, status }, mid }, index) {
+      try {
+        let { value } = await this.$prompt('请输入反馈信息', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^[\s|\S]{10,}$/,
+          inputErrorMessage: '不能为空 十个字以上'
+        })
+        let { code } = await this.$ajaxPost('changeMessageStatus', { goodsId, status: status === 'up' ? 'down' : 'up', mid });
+        await this.$ajaxPost('addVertifyRecord', { goodsId, detail: value, status: '2' });
+        this.showMessage(code, index)
+      } catch (err) {
+        console.log('您取消了');
+      }
+
+    },
     async setGoodsStatus ({ good: { goodsId, status }, mid }, index) {
       let { code } = await this.$ajaxPost('changeMessageStatus', { goodsId, status, mid });
+      await this.$ajaxPost('addVertifyRecord', { goodsId, status: '1' });
+      this.showMessage(code, index)
+    },
+    showMessage (code, index) {
       if (code === 0) {
         this.messageData.splice(index, 1);
         this.$message.success("操作成功");
@@ -81,7 +105,6 @@ export default {
       this.messageData = data;
 
       this.data_total_num = data_total_num;
-      console.log(this.messageData)
     },
     getStr ({ type, good = {}, order = {} }) {
       if (type == 'goods') {
@@ -91,7 +114,7 @@ export default {
         var { orderId } = order;
       }
       // console.log(item, goodsId)
-      return type == 'order' ? `您有新的订单（${orderId}）状态为“${option[order.status]}”需要处理订单` : `商品名称（${name}）、商品号（${goodsId}）申请${status === 'up' ? '下' : '上'}架`
+      return type == 'order' ? `您有新的订单（${orderId}）状态为“${option[order.status]}”需要处理订单` : `商品名称（${name}）、商品号（${goodsId}）申请${status === 'up' ? '上' : '下'}架`
     },
     async pageChange (page) {
       this.page = page;

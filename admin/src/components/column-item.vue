@@ -260,7 +260,7 @@ export default {
       return item.expand || item.index;
     },
     getFormat (formatStr, props) {
-      return formatStr.split('.').reduce((total, cur) => total[cur], props);
+      return formatStr.split('.').reduce((total, cur) => !total ? '' : total[cur], props);
     },
     //格式化时间
     formatterTime (row, column) {
