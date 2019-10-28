@@ -366,7 +366,7 @@ export default {
       })
     },
     resetFields () {
-      this.$refs['form'].resetFields();
+      this.$refs['form'] && this.$refs['form'].resetFields();
       this.formOption.formList.forEach(item => {
         this.paramsData[item.field] = item.value;
         // if ((item.type == "select" && item.multiple) || item.type == 'datetimerange' || item.type == 'upload' ||

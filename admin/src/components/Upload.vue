@@ -64,7 +64,8 @@ export default {
       this.$message.warning(`当前限制选择 ${this.getMaxLen} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     },
     changeFile (files, fileList) {
-      this.fileList = fileList;
+      console.log(fileList)
+      // this.fileList = this.getUpdateData(fileList);
     },
     beforeRemove (files, fileList) {
       console.log(files, fileList)
@@ -87,12 +88,17 @@ export default {
       }
       return isJPG && isLt2M;
     },
-    async successFile (response, file, fileList) {
-      console.log(response, file, fileList)
+    async successFile (response) {
+      this.fileList.push({ url: 'http://' + response.result });
     },
     async initCOS () {
       // let res = await this.$ajaxGet('getSTS');
       // console.log(res);
+    },
+    getUpdateData (list) {
+      return list.map(item => {
+        return item.response ? { url: item.response.result } : { url: item.url };
+      })
     }
   },
   async mounted () {
@@ -102,7 +108,7 @@ export default {
   watch: {
     fileList: {
       handler (newVal) {
-        this.$emit('input', newVal);
+        this.$emit('input', newVal || this.getUpdateData(newVal));
       },
       deep: true
     },

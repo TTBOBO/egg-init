@@ -50,6 +50,18 @@ module.exports = appInfo => {
             if (lastModifierTime) {
               return moment(lastModifierTime).format('YYYY-MM-DD HH:mm:ss');
             }
+          },
+          start_date() {
+            const start_date = this.getDataValue('start_date');
+            if (start_date) {
+              return moment(start_date).format('YYYY-MM-DD HH:mm:ss');
+            }
+          },
+          end_date() {
+            const end_date = this.getDataValue('end_date');
+            if (end_date) {
+              return moment(end_date).format('YYYY-MM-DD HH:mm:ss');
+            }
           }
         }
       }

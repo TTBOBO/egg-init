@@ -274,7 +274,7 @@ export default [{
           title: '新品推荐'
         },
         component: resolve => {
-          require(['@/view/order/order'], resolve);
+          require(['@/view/sms/newGoodsList'], resolve);
         }
       },
       {
@@ -285,7 +285,7 @@ export default [{
           title: '人气推荐'
         },
         component: resolve => {
-          require(['@/view/order/order'], resolve);
+          require(['@/view/sms/recommendList'], resolve);
         }
       },
       {
@@ -296,9 +296,21 @@ export default [{
           title: '广告列表'
         },
         component: resolve => {
-          require(['@/view/order/order'], resolve);
+          require(['@/view/sms/advertise'], resolve);
         }
-      }
+      },
+      {
+        path: 'addAdv',
+        name: 'addAdv',
+        meta: {
+          hideInMenu: true,
+          icon: 'el-icon-eleme',
+          title: '添加编辑广告'
+        },
+        component: resolve => {
+          require(['@/view/sms/addAdv'], resolve);
+        }
+      },
     ]
   },
   {

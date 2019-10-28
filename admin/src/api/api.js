@@ -41,6 +41,14 @@ const REQUEST = {
   getFlashPromotionGoodsList: '/flash/getFlashPromotionGoodsList',
   crateFlashPromotionGoods: '/flash/crateFlashPromotionGoods',
   delFlashPromotionGoods: '/flash/delFlashPromotionGoods',
-  updateFlashPromotionGoods: '/flash/updateFlashPromotionGoods'
+  updateFlashPromotionGoods: '/flash/updateFlashPromotionGoods',
+  getSmsList: '/smsHome/getSmsList',
+  delSms: '/smsHome/delSms',
+  updateSms: '/smsHome/updateSms',
+  createdSms: '/smsHome/createdSms',
+  getAdvList: '/smsHome/getAdvList',
+  createdAndUpdateAdv: '/smsHome/createdAndUpdateAdv',
+  getAdvInfo: '/smsHome/getAdvInfo',
+  delAdv: "/smsHome/delAdv"
 };
 export default REQUEST;

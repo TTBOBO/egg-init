@@ -25,6 +25,7 @@
             </el-date-picker>
             <el-select v-else-if="item.type == 'multiple' || item.type == 'select'"
                        filterable
+                       clearable
                        v-model="item.value"
                        :multiple="item.multiple"
                        :placeholder="item.pla || '请选择'+item.lable"

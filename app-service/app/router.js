@@ -68,4 +68,12 @@ module.exports = app => {
   router.post('/flash/crateFlashPromotionGoods', controller.flash.crateFlashPromotionGoods);
   router.post('/flash/delFlashPromotionGoods', controller.flash.delFlashPromotionGoods);
   router.post('/flash/updateFlashPromotionGoods', controller.flash.updateFlashPromotionGoods);
+  router.get('/smsHome/getSmsList', controller.smsHome.getSmsList);
+  router.post('/smsHome/delSms', controller.smsHome.delSms);
+  router.post('/smsHome/updateSms', controller.smsHome.updateSms);
+  router.post('/smsHome/createdSms', controller.smsHome.createdSms);
+  router.get('/smsHome/getAdvList', controller.smsHome.getAdvList);
+  router.get('/smsHome/getAdvInfo', controller.smsHome.getAdvInfo);
+  router.post('/smsHome/createdAndUpdateAdv', controller.smsHome.createdAndUpdateAdv);
+  router.post('/smsHome/delAdv', controller.smsHome.delAdv);
 };

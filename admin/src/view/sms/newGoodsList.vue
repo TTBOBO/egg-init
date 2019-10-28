@@ -5,11 +5,21 @@
                  @edit="edit"
                  @delete="delItem"
                  @add="add">
+      <template slot-scope="props"
+                slot="recommend_status">
+        <el-switch v-model="props.row.recommend_status"
+                   :active-value="1"
+                   :inactive-value="0"
+                   active-text="推荐"
+                   inactive-text="不推荐"
+                   @change="changeStatus(props.row)">
+        </el-switch>
+      </template>
     </CustomTable>
-    <el-dialog title="编辑秒杀商品信息"
+    <el-dialog title="设置排序"
                :visible="status"
                width="50%">
-      <CustomForm :optionData="promotionOption"
+      <CustomForm :optionData="smsOption"
                   ref="Form"
                   v-if="status"
                   v-model="goodsData"></CustomForm>
@@ -48,26 +58,26 @@ export default {
       status1: false,
       selsectedList: [],
       tableOption: {
-        baseUrl: "getFlashPromotionGoodsList",
+        baseUrl: "getSmsList",
         toolEventWidth: "250px",
         initheight: true,
         evalKey: "id",
         search: {
           page: 1,  //页数
           size: 10,  //每页多少条
-          type: 1
+          type: this.baseType
         },
         columns: [
           { lable: "编号", value: "id", tooltip: true, tipAlign: "right" },
-          { lable: "商品名称", value: 'name', evelKey: "good.name", tooltip: true, tipAlign: "right" },
-          { lable: "商品价格", value: 'salePrice', evelKey: "good.salePrice", tooltip: true, tipAlign: "right" },
-          { lable: "剩余数量", value: 'stock', evelKey: "good.stock", tooltip: true, tipAlign: "right" },
-          { lable: "秒杀价格", value: "flash_promotion_price", tooltip: true, tipAlign: "right" },
-          { lable: "秒杀数量", value: "flash_promotion_count", tooltip: true, tipAlign: "right" },
-          { lable: "限购数量", value: "flash_promotion_limit", tooltip: true, tipAlign: "right" },
+          { lable: "商品名称", value: 'name', evelKey: "good.name", tooltip: true, tipAlign: "right", search: "name", type: '' },
+          { lable: "上线/下线", value: "recommend_status", type: "", search: "", tooltip: true, tipAlign: "right", scoped: true },
+          { lable: "状态", value: 'recommend_status', search: "recommend_status", tooltip: true, tipAlign: "right", type: "select", selectOPtion: { 1: "推荐", 0: "不推荐" } },
+          { lable: "创建时间", value: 'createdTime', search: "", tooltip: true, tipAlign: "right", type: "" },
+          { lable: "排序", value: 'sort', tooltip: true, tipAlign: "right" },
+
         ],
         toolEvent: [
-          { type: "primary", emit: "edit", title: "编辑" },
+          { type: "primary", emit: "edit", title: "设置排序" },
           { type: "danger", emit: "delete", title: "删除" }],
         topBtnGroup: [
           { name: "添加", bgcolor: "primary", emit: "add" }
@@ -82,7 +92,7 @@ export default {
         search: {
           page: 1,  //页数
           size: 10,  //每页多少条
-          promotionType: true
+          // promotionType: true
         },
         columns: [
           { lable: "商品名称", value: 'name', tooltip: true, tipAlign: "right" },
@@ -91,18 +101,19 @@ export default {
         toolEvent: [],
         topBtnGroup: []
       },
-      promotionOption: {
+      smsOption: {
         formList: [
-          { field: "name", title: "商品名称", value: '', validate: "required", type: 'lable' },
-          { field: "salePrice", title: "商品价格", value: '', validate: "required", type: 'lable' },
-          { field: "flash_promotion_price", title: "秒杀价格", value: '', validate: "required" },
-          { field: "stock", title: "剩余数量", value: '', validate: "required", type: 'lable' },
-          { field: "flash_promotion_count", title: "秒杀数量", value: '', validate: "required", type: "input", valueType: "number" },
-          { field: "flash_promotion_limit", title: "限购数量", value: '', validate: "required", type: "input", valueType: "number" },
+          { field: "sort", title: "排序", value: '', validate: "required", type: "input", valueType: "number" },
         ],
         validata: {},
         LabelWidth: '130px',
       }
+    }
+  },
+  props: {
+    baseType: {
+      type: String,
+      default: '1'
     }
   },
   components: {
@@ -117,10 +128,7 @@ export default {
       this.status1 = true;
     },
     async edit ({ row }) {
-      this.goodsData = {
-        ...row,
-        ...row.good
-      }
+      this.goodsData = row
       this.currentId = row.id
       this.status = true;
     },
@@ -143,10 +151,13 @@ export default {
         this.$refs.customTable.curReload();
       }
     },
+    async changeStatus ({ id, recommend_status }) {
+      await this.$ajaxPost('updateSms', { id, recommend_status, type: this.baseType });
+      this.$refs.customTable.curReload();
+    },
     async updateData () {
-      const { flash_promotion_price, flash_promotion_count, flash_promotion_limit } = this.goodsData;
 
-      let { code, message } = await this.$ajaxPost('updateFlashPromotionGoods', { flash_promotion_price, flash_promotion_count, flash_promotion_limit, id: this.currentId });
+      let { code, message } = await this.$ajaxPost('updateSms', { ...this.goodsData, id: this.currentId, type: this.baseType });
       if (code !== 0) {
         this.$message.error(message);
         return false;
@@ -157,9 +168,7 @@ export default {
       this.$refs.customTable.curReload();
     },
     async addData () {
-      const { promotionId, sessionId } = this.$route.query;
-
-      let { code, message } = await this.$ajaxPost('crateFlashPromotionGoods', { promotionId: Number(promotionId), sessionId: Number(sessionId), goodsId: this.selectedList.map(item => item.goodsId) })
+      let { code, message } = await this.$ajaxPost('createdSms', { type: this.baseType, goodsIds: this.selectedList.map(i => i.goodsId) })
       if (code !== 0) {
         this.$message.error(message);
       } else {
