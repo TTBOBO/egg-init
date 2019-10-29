@@ -39,7 +39,9 @@
 <script>
 import CustomTable from '@/components/CustomTable';
 import CustomForm from '@/components/CustomForm';
+import common from '../../minix/common';
 export default {
+  mixins: [common],
   data () {
     return {
       goodsData: {},
@@ -125,11 +127,7 @@ export default {
       this.status = true;
     },
     async delItem ({ row }) {
-      let status = await this.$confirm('确认删除？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
+      let status = await this.confirm({ text: '是否要删除?' });
       if (status) {
         const { id, goodsId } = row
         let { code, message } = await this.$ajaxPost('delFlashPromotionGoods', { id, goodsId });

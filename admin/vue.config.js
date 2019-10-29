@@ -1,12 +1,25 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const BasicPlugin = require('./BasicPlugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const BasicPlugin = require('./BasicPlugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 let prodPlugins = []
 if (process.env.NODE_ENV === 'production') {
-  prodPlugins.push(new BundleAnalyzerPlugin(), new BasicPlugin())
+  prodPlugins.push(new BundleAnalyzerPlugin({
+      analyzerPort: 8889
+    }), new BasicPlugin(),
+    new CompressionPlugin({
+      filename: '[path].gz[query]',
+      algorithm: 'gzip',
+      include: ['static'],
+      exclude: ['index.html'],
+      test: new RegExp('\\.(' + ['js', 'css'].join('|') + ')$'),
+      threshold: 10240,
+      minRatio: 0.8,
+      cache: true
+    }), )
 }
 module.exports = {
   assetsDir: 'static',

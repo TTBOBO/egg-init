@@ -33,7 +33,9 @@
 <script>
 import CustomTable from '@/components/CustomTable';
 import CustomForm from '@/components/CustomForm';
+import common from '../../minix/common';
 export default {
+  mixins: [common],
   data () {
     return {
       addEditStatus: false,
@@ -95,8 +97,11 @@ export default {
 
     },
     async del ({ row: { goods_attribute_category_id } }) {
-      await this.$ajaxPost('deleteGoodsAttributeCategory', { goods_attribute_category_id });
-      this.$message.success("删除成功");
+      let status = await this.confirm({ text: '是否要删除?' });
+      if (status) {
+        await this.$ajaxPost('deleteGoodsAttributeCategory', { goods_attribute_category_id });
+        this.$message.success("删除成功");
+      }
       this.$refs.customTable.curReload();
     },
     changeDialogStatus () {

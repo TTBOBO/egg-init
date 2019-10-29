@@ -35,7 +35,9 @@
 <script>
 import CustomTable from '@/components/CustomTable';
 import CustomForm from '@/components/CustomForm';
+import common from '../../minix/common';
 export default {
+  mixins: [common],
   data () {
     return {
       showAddPromotion: false,
@@ -105,11 +107,17 @@ export default {
       this.currentId = row.id;
     },
     async del ({ row: { id } }) {
-      await this.$ajaxPost('delFlashPromotion', { id });
+      let status = await this.confirm({ text: '是否要删除?' });
+      if (status) {
+        await this.$ajaxPost('delFlashPromotion', { id });
+      }
       this.$refs.customTable.curReload();
     },
     async changeStatus ({ id, name, status }) {
-      await this.$ajaxPost('crateFlashPromotion', { id, name, status });
+      let res = await this.confirm({ text: '是否要修改上线/下线状态?' });
+      if (res) {
+        await this.$ajaxPost('crateFlashPromotion', { id, name, status });
+      }
       this.$refs.customTable.curReload();
     },
     async addUpdatePromotion () {
