@@ -8,7 +8,7 @@
                         @after-enter="afterEnter">
 
         <div v-for="(item,index) in messageData"
-             :key="index"
+             :key="index+'1'"
              :data-delay="(index % 20)*100"
              class="message-item">
           <div class="message-header">
