@@ -7,6 +7,7 @@
     "declarations": true
   },
   "dependencies": {
+    "@grpc/proto-loader": "^0.5.2",
     "await-stream-ready": "^1.0.1",
     "cos-nodejs-sdk-v5": "^2.5.11",
     "crypto": "^1.0.1",

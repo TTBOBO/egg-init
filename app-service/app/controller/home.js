@@ -45,16 +45,16 @@ class HomeController extends BaseController {
     // 向服务端发送请求
     const result = await helloService.sayHello({
       code: '0',
-      message: '来自Node客户端的OK'
+      message: '来自Node客户端的OK1'
     });
     this.success({
-      data: result
+      result
     });
   }
   async deleteAdmin() {
     let res = await this.ctx.service.admin.deleteAdmin();
     this.success({
-      data: res
+      result: res
     });
   }
   // async uploadFile() {

@@ -49,6 +49,7 @@ const REQUEST = {
   getAdvList: '/smsHome/getAdvList',
   createdAndUpdateAdv: '/smsHome/createdAndUpdateAdv',
   getAdvInfo: '/smsHome/getAdvInfo',
-  delAdv: "/smsHome/delAdv"
+  delAdv: "/smsHome/delAdv",
+  grpc: 'http://154.8.237.169:8081'
 };
 export default REQUEST;
