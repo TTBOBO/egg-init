@@ -76,4 +76,7 @@ module.exports = app => {
   router.get('/smsHome/getAdvInfo', controller.smsHome.getAdvInfo);
   router.post('/smsHome/createdAndUpdateAdv', controller.smsHome.createdAndUpdateAdv);
   router.post('/smsHome/delAdv', controller.smsHome.delAdv);
+
+
+  router.get('/grpc', controller.home.grpc);
 };
