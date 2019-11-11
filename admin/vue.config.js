@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === 'production') {
     }), new ZipPlugin({
       filename: 'static.zip',
       pathPrefix: '',
-      exclude: ['index.html'],
+      // exclude: ['index.html'],
       pathMapper: function (assetPath) {
         // put all pngs in an `images` subdir
         if (assetPath.indexOf('static/index/') > -1) {
