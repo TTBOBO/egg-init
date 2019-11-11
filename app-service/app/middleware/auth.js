@@ -12,7 +12,9 @@ module.exports = () => {
       '/exec',
       '/user/get_user_list'
     ];
-    const { verify, message } = await ctx.verifyToken();
+    const {
+      verify
+    } = await ctx.verifyToken();
     verify || noAuth.indexOf(ctx.path) !== -1 ? await next() : await next();
     // (ctx.body = {
     //   code: 403,
