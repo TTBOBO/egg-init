@@ -6,6 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
 const TerserPlugin = require('terser-webpack-plugin');
 const BasicPlugin = require('./BasicPlugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+var ZipPlugin = require('zip-webpack-plugin')
 let prodPlugins = []
 if (process.env.NODE_ENV === 'production') {
   prodPlugins.push(new BundleAnalyzerPlugin({
@@ -20,7 +21,30 @@ if (process.env.NODE_ENV === 'production') {
       threshold: 10240,
       minRatio: 0.8,
       cache: true
-    }), )
+    }), new ZipPlugin({
+      filename: 'static.zip',
+      pathPrefix: '',
+      exclude: ['index.html'],
+      pathMapper: function (assetPath) {
+        // put all pngs in an `images` subdir
+        if (assetPath.indexOf('static/index/') > -1) {
+          return path.join(
+            path.dirname(assetPath).replace('static/index', 'index'),
+            path.basename(assetPath)
+          )
+        }
+        return assetPath
+      },
+      fileOptions: {
+        mtime: new Date(),
+        mode: 0o100664, // -rw-rw-r--
+        compress: true,
+        forceZip64Format: false
+      },
+      zipOptions: {
+        forceZip64Format: false
+      }
+    }))
 }
 module.exports = {
   assetsDir: 'static',

@@ -13,7 +13,7 @@ COPY package.json /var/www/node-app/egg-init/package.json
 RUN npm install -g cnpm --registry=http://r.cnpmjs.org
 #RUN npm config set registry http://r.cnpmjs.org
 #RUN cnpm install forever -g
-RUN cnpm install
+RUN cnpm install --production
 
 COPY . /var/www/node-app/egg-init
 
