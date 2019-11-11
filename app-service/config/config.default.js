@@ -10,6 +10,8 @@ module.exports = appInfo => {
    * built-in config
    * @type {Egg.EggAppConfig}
    **/
+  const pwd = appInfo.env === 'local' ? '123456' : 'Tab_520520';
+  const username = appInfo.env === 'local' ? 'root' : 'test';
   const config = (exports = {
     cluster: {
       listen: {
@@ -21,8 +23,8 @@ module.exports = appInfo => {
       client: {
         host: '127.0.0.1',
         port: 3306,
-        user: 'root',
-        password: appInfo.env === 'local' ? '123456' : 'Tab_520520',
+        user: username,
+        password: pwd,
         database: 'egg-init-shop'
       }
     },
@@ -32,8 +34,8 @@ module.exports = appInfo => {
       host: '127.0.0.1',
       port: 3306,
       timezone: '+08:00',
-      username: 'root',
-      password: '123456',
+      username,
+      password: pwd,
       define: {
         freezeTableName: true,
         createdAt: 'createdTime',
@@ -74,7 +76,7 @@ module.exports = appInfo => {
       domainWhiteList: [ 'http://10.6.52.41:8080' ]
     },
     cors: {
-      origin: 'http://10.6.52.41:8080',
+      origin: [ 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ],
       credentials: true,
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
     },
