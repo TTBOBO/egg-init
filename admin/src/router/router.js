@@ -6,7 +6,7 @@ export default [{
       title: '登录',
       hideInMenu: true
     },
-    component: () => import('@/view/sign/login')
+    component: () => import('@/view/sign/login.vue')
   },
   {
     path: '/403',
