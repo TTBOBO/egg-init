@@ -34,6 +34,8 @@ module.exports = {
     COS: true,
     proto: true,
     COMPILED: true,
-    f: true
+    f: true,
+    d3: true,
+    scale: true
   }
 }
