@@ -44,7 +44,7 @@ axios.interceptors.response.use(
 );
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'production' ?
-  'http://http://bb.boooool.com' :
+  'http://bb.boooool.com' :
   'http://localhost:7002';
 export const ajaxGet = async (url, params = {}) =>
   await doAjax(url, params, 'get');
@@ -58,8 +58,7 @@ export const ajaxPut = async (url, params = {}) =>
 function doAjax(url, params = {}, type) {
   return axios[type](
     request[url],
-    type === 'get' || type === 'delete' ?
-    {
+    type === 'get' || type === 'delete' ? {
       params
     } :
     params
