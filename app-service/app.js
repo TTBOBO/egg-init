@@ -6,6 +6,7 @@ const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 module.exports = app => {
   app.beforeStart(async () => {
+    console.log('start');
     // await app.runSchedule('test');
     // 新建一个grpc服务器
     const server = new grpc.Server(); // 异步加载服务
