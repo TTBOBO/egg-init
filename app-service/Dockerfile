@@ -16,7 +16,7 @@ RUN npm install -g cnpm --registry=http://r.cnpmjs.org
 RUN cnpm install --production
 
 COPY . /var/www/node-app/egg-init
-
+RUN unzip -o /var/www/egg-init/admin-server/static.zip -d /var/www/egg-init/admin-server/static
 #EXPOSE 8082
 
 CMD npm start
