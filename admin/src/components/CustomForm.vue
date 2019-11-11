@@ -31,7 +31,7 @@
 
         <!-- && !item.format -->
         <template v-if="(!item.type && !item.scoped) || (item.type == 'input' || item.type == 'textarea' && !item.scoped)">
-          <div style="display: flex;">
+          <div :style="{display:item.otherScoped ? '' : 'flex'}">
             <el-input v-if="item.valueType"
                       :min="0"
                       :style="{width:item.width || '100%'}"
@@ -222,7 +222,6 @@ export default {
         rule: [Array]
       },
       render: (h, ctx) => {
-        // return h('div','123')
         const params = {
           index: ctx.props.index,
           rule: ctx.props.rule,

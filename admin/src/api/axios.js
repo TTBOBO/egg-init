@@ -43,9 +43,9 @@ axios.interceptors.response.use(
   }
 );
 axios.defaults.baseURL =
-  process.env.NODE_ENV === 'production'
-    ? 'http://localhost:7002'
-    : 'http://localhost:7002';
+  process.env.NODE_ENV === 'production' ?
+  'http://http://bb.boooool.com' :
+  'http://localhost:7002';
 export const ajaxGet = async (url, params = {}) =>
   await doAjax(url, params, 'get');
 export const ajaxPost = async (url, params = {}) =>
@@ -54,13 +54,14 @@ export const ajaxDelete = async (url, params = {}) =>
   await doAjax(url, params, 'delete');
 export const ajaxPut = async (url, params = {}) =>
   await doAjax(url, params, 'put');
+
 function doAjax(url, params = {}, type) {
   return axios[type](
     request[url],
-    type === 'get' || type === 'delete'
-      ? {
-          params
-        }
-      : params
+    type === 'get' || type === 'delete' ?
+    {
+      params
+    } :
+    params
   );
 }

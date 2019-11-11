@@ -1,10 +1,13 @@
 <template>
-  <div>
+  <div style="width:800px;height:800px;"
+       id="viewBox">
     123
     {{value}}
+    <svg width="100%"
+         height="100%"></svg>
     <!-- <el-cascader v-model="value"
                  :options="options"></el-cascader> -->
-    <svg width="100%"
+    <!-- <svg width="100%"
          height="100%">
 
       <rect width="300"
@@ -20,14 +23,15 @@ stroke:yellow; fill-opacity:0.5" />
                style="fill:rgb(200,100,50);
 stroke:rgb(0,0,100);stroke-width:2" />
 
-    </svg>
+    </svg> -->
+
   </div>
 </template>
 
 <script>
 // import protobuf from 'google-protobuf';
 import { helloRequest } from '../../proto/generated/hello_pb';
-import { HelloServiceClient } from '../../proto/generated/hello_grpc_web_pb'
+// import { HelloServiceClient } from '../../proto/generated/hello_grpc_web_pb'
 
 export default {
   data () {
@@ -50,13 +54,165 @@ export default {
       //   message: '来自Node客户端的OK1'
       // }
 
+    },
+    getColor (idx) {
+      var palette = [
+        '#2ec7c9', '#b6a2de', '#5ab1ef', '#ffb980', '#d87a80',
+        '#8d98b3', '#e5cf0d', '#97b552', '#95706d', '#dc69aa',
+        '#07a2a4', '#9a7fd1', '#588dd5', '#f5994e', '#c05050',
+        '#59678c', '#c9ab00', '#7eb00a', '#6f5553', '#c14089'
+      ]
+      return palette[idx % palette.length];
+    },
+    async initD3 () {
+      // var width = 600, height = 300;
+      // // 创建一个分组用来组合要画的图表元素
+      // var main = d3.select('svg').append('g')
+      //   .classed('main', true)
+      //   .attr('transform', "translate(" + width / 2 + ',' + height / 2 + ')');
+      // // 模拟数据
+      // var dataset = [
+      //   { name: '购物', value: 983 },
+      //   { name: '日常饮食', value: 300 },
+      //   { name: '医药', value: 1400 },
+      //   { name: '交通', value: 402 },
+      //   { name: '杂费', value: 134 }
+      // ];
+
+      // // 转换原始数据为能用于绘图的数据
+      // var pie = d3.pie().value(d => d.value);
+      // // 创建计算弧形路径的函数
+      // var arc = d3.arc()
+      //   .innerRadius(0)
+      //   .outerRadius(100);
+
+      // console.log(dataset);
+      // // pie是一个函数
+      // var pieData = pie(dataset);
+      // console.log(pieData);
+      // 创建计算弧形路径的函数
+
+      // var slices = main.append('g').attr('class', 'slices');
+      // 添加弧形元素（g中的path）
+      // var arcs = slices.selectAll('g')
+      //   .data(pieData)
+      //   .enter()
+      //   .append('path')
+      //   .attr('fill', (d, i) => {
+      //     return this.getColor(i);
+      //   })
+      //   .attr('d', function (d) {
+      //     return arc(d);
+      //   });
+    },
+    initD3Line () {
+      // var width = 500;
+      // var height = 500;
+
+      // var dataset = [
+      //   {
+      //     country: "china",
+      //     gdp: [[2000, 11920], [2001, 13170], [2002, 14550],
+      //     [2003, 16500], [2004, 19440], [2005, 22870],
+      //     [2006, 27930], [2007, 35040], [2008, 45470],
+      //     [2009, 51050], [2010, 59490], [2011, 73140],
+      //     [2012, 83860], [2013, 103550],]
+      //   },
+      //   {
+      //     country: "japan",
+      //     gdp: [[2000, 47310], [2001, 41590], [2002, 39800],
+      //     [2003, 43020], [2004, 46550], [2005, 45710],
+      //     [2006, 43560], [2007, 43560], [2008, 48490],
+      //     [2009, 50350], [2010, 54950], [2011, 59050],
+      //     [2012, 59370], [2013, 48980],]
+      //   }
+      // ];
+
+      // var padding = { top: 70, right: 70, bottom: 70, left: 70 };
+      // var gdpmax = 0;
+      // for (var i = 0; i < dataset.length; i++) {
+      //   var currGdp = d3.max(dataset[i].gdp, function (d) {
+      //     return d[1];
+      //   });
+      //   if (currGdp > gdpmax)
+      //     gdpmax = currGdp;
+      // }
+      // console.log(gdpmax);
+
+      // var xScale = d3.scale.linear()
+      //   .domain([2000, 2013])
+      //   .range([0, width - padding.left - padding.right]);
+
+      // var yScale = d3.scale.linear()
+      //   .domain([0, gdpmax * 1.1])
+      //   .range([height - padding.bottom - padding.top, 0]);
+
+      // var linePath = d3.svg.line()//创建一个直线生成器
+      //   .x(function (d) {
+      //     return xScale(d[0]);
+      //   })
+      //   .y(function (d) {
+      //     return yScale(d[1]);
+      //   })
+      //   .interpolate("basis")//插值模式
+      //   ;
+
+      // //定义两个颜色
+      // var colors = [d3.rgb(0, 0, 255), d3.rgb(0, 255, 0)];
+
+      // var svg = d3.select("svg")
+      //   .attr("width", width)
+      //   .attr("height", height);
+
+      // svg.selectAll("path")
+      //   .data(dataset)
+      //   .enter()
+      //   .append("path")
+      //   .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+      //   .attr("d", function (d) {
+      //     return linePath(d.gdp);
+      //     //返回线段生成器得到的路径
+      //   })
+      //   .attr("fill", "none")
+      //   .attr("stroke-width", 3)
+      //   .attr("stroke", function (d, i) {
+      //     return colors[i];
+      //   });
+
+      // var xAxis = d3.svg.axis()
+      //   .scale(xScale)
+      //   .ticks(5)
+      //   .tickFormat(d3.format("d"))
+      //   .orient("bottom");
+
+      // var yAxis = d3.svg.axis()
+      //   .scale(yScale)
+      //   .orient("left");
+
+      // //添加一个g用于放x轴
+      // svg.append("g")
+      //   .attr("class", "axis")
+      //   .attr("transform", "translate(" + padding.left + "," + (height - padding.top) + ")")
+      //   .call(xAxis);
+
+      // svg.append("g")
+      //   .attr("class", "axis")
+      //   .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
     }
   },
   async created () {
     // await this.$ajaxPost('grpc', { a: 1 })
-    this.client = new HelloServiceClient("http://154.8.237.169:8081");
-    // console.log(this.client)
-    this.sayHello();
+    // this.client = new HelloServiceClient("http://154.8.237.169:8081");
+    // // console.log(this.client)
+    // this.sayHello();
+    await util.str.createScript('https://d3js.org/d3.v5.min.js');
+    await util.str.createScript('https://d3js.org/d3-axis.v1.min.js');
+    await util.str.createScript('https://d3js.org/d3-path.v1.min.js')
+    await util.str.createScript('https://d3js.org/d3-shape.v1.min.js')
+    await util.str.createScript('https://d3js.org/d3-scale.v2.min.js')
+
+    // this.initD3Arcs();
+    this.initD3Line();
   },
   async mounted () {
 

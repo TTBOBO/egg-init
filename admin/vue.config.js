@@ -2,7 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const BasicPlugin = require('./BasicPlugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 let prodPlugins = []
@@ -43,9 +44,9 @@ module.exports = {
     }, //配置全局变量
     optimization: {
       minimizer: [
-        new UglifyJsPlugin({
+        new TerserPlugin({
           sourceMap: true,
-          uglifyOptions: {
+          terserOptions: {
             // ecma: 8,
             // warnings: false,
             compress: {
