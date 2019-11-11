@@ -13,12 +13,12 @@ module.exports = appInfo => {
   const pwd = appInfo.env === 'local' ? '123456' : 'Tab_520520';
   const username = appInfo.env === 'local' ? 'root' : 'test';
   const config = (exports = {
-    cluster: {
+    cluster: appInfo.env === 'local' ? {
       listen: {
         port: 7002,
         hostname: '0.0.0.0'
       }
-    },
+    } : {},
     // mysql: {
     //   client: {
     //     host: 'localhost',
