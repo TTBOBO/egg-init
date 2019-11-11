@@ -17,7 +17,7 @@ RUN cnpm install --production
 
 COPY . /var/www/node-app/egg-init
 #RUN unzip -o /var/www/egg-init/admin-server/static.zip -d /var/www/egg-init/admin-server/static
-#EXPOSE 8082
+EXPOSE 8082
 
 CMD npm start
 #CMD forever start --minUptime 1000 --spinSleepTime 1000 /var/www/node-app/egg-test/app.js 
