@@ -22,7 +22,7 @@ exports.cors = {
   enable: true,
   package: 'egg-cors'
 };
-exports.grpc = {
-  enable: true,
-  package: 'egg-grpc'
-};
+// exports.grpc = {
+//   enable: true,
+//   package: 'egg-grpc'
+// };

@@ -19,19 +19,19 @@ module.exports = appInfo => {
         hostname: '127.0.0.1'
       }
     },
-    mysql: {
-      client: {
-        host: '127.0.0.1',
-        port: 3306,
-        user: username,
-        password: pwd,
-        database: 'egg-init-shop'
-      }
-    },
+    // mysql: {
+    //   client: {
+    //     host: 'localhost',
+    //     port: 3306,
+    //     user: username,
+    //     password: pwd,
+    //     database: 'egg-init-shop'
+    //   }
+    // },
     sequelize: {
       dialect: 'mysql',
       database: 'egg-init-shop',
-      host: '127.0.0.1',
+      host: 'localhost',
       port: 3306,
       timezone: '+08:00',
       username,
@@ -73,7 +73,7 @@ module.exports = appInfo => {
         enable: false,
         ignoreJSON: true
       },
-      domainWhiteList: [ 'http://10.6.52.41:8080' ]
+      domainWhiteList: [ 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ]
     },
     cors: {
       origin: [ 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ],
@@ -107,9 +107,9 @@ module.exports = appInfo => {
   // add your middleware config here
   config.middleware = [ 'auth', 'dataHandler' ];
   // egg-grpc配置
-  config.grpc = {
-    endpoint: 'localhost:50051' // 服务端地址
-  };
+  // config.grpc = {
+  //   endpoint: 'localhost:50051' // 服务端地址
+  // };
 
   // add your user config here
   const userConfig = {
