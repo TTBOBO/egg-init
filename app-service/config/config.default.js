@@ -16,7 +16,7 @@ module.exports = appInfo => {
     cluster: {
       listen: {
         port: 7002,
-        hostname: '127.0.0.1'
+        hostname: '0.0.0.0'
       }
     },
     // mysql: {
@@ -76,7 +76,7 @@ module.exports = appInfo => {
       domainWhiteList: [ 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ]
     },
     cors: {
-      origin: [ 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ],
+      origin: 'http://10.6.52.41:8080' || [ 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ],
       credentials: true,
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
     },
