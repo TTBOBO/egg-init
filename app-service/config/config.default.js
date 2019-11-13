@@ -81,7 +81,7 @@ module.exports = appInfo => {
     cors: {
       origin: [],
       credentials: true,
-      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+      allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
     },
     multipart: {
       fileExtensions: [ '.py' ]

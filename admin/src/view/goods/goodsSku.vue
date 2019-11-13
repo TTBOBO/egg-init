@@ -4,7 +4,10 @@
     123
     {{value}}
     <svg width="100%"
-         height="100%"></svg>
+         height="100%">
+      <!-- <circle v-for="(item,index) in dataList"
+              :key="index"></circle> -->
+    </svg>
     <!-- <el-cascader v-model="value"
                  :options="options"></el-cascader> -->
     <!-- <svg width="100%"
@@ -38,7 +41,11 @@ export default {
     return {
       value: [],
       options: [],
-      client: null
+      client: null,
+      dataList: [
+        [5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+        [410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
+      ]
     }
   },
   methods: {
@@ -65,6 +72,122 @@ export default {
       return palette[idx % palette.length];
     },
     async initD3 () {
+      // let svg = d3.select('svg');
+      // svg.selectAll('circle').data(this.dataList).enter().append('circle').attr('cx', d => d[0]).attr('cy', d => d[1]).attr('r', d => Math.sqrt(100 - d[1])).attr('fill', 'blue');
+      // svg.selectAll('text').data(this.dataList).enter().append('text').text(d => d[0] + ',' + d[1]).attr('x', d => d[0]).attr('y', d => d[1]).attr('fill', 'red').attr('font-size', '12px')
+      // var dataset = [
+      //   [0, 0], [65.66, 420], [540, 260], [360, 320], [200, 200],
+      //   [130, 623], [652, 52], [333, 666], [729, 656], [134, 352],
+      //   [120, 56], [905, 177], [777, 888], [550, 680]
+      // ];
+      // d3.interval(function () {
+      //   d3.select("svg").transition()
+      //     .duration(1000)
+      //     .attrTween("width", function () {
+      //       var i = d3.interpolate(20, 400);
+      //       var ci = d3.interpolate('#2394F5', '#BDF436');
+      //       var that = this;
+      //       return function (t) {
+      //         that.style.width = i(t) * 2 + 'px';
+      //         that.style.background = ci(t);
+      //       };
+      //     });
+      // }, 1500)
+
+      // return false;
+      var dataset = [];
+      for (var i = 0; i < 1; i += 0.1) {
+        for (var j = 0; j < 1; j += 0.1) {
+          dataset.push([i, j]);
+        }
+      }
+      let width = 800
+      let height = 800
+      let padding = 60
+
+      //创建画布
+      let svg = d3.select("svg")
+
+      //添加标题
+      svg.append("text")
+        .attr("x", width / 2 - 120)
+        .attr("y", 30)
+        .attr("class", "title")
+        .text("d3散点图")
+
+      //x轴标尺
+      let xScale = d3.scaleLinear()
+        .domain([0, d3.max(dataset, (d) => d[0])])
+        .range([padding, width - padding * 2])
+
+      //y轴标尺
+      let yScale = d3.scaleLinear()
+        .domain([0, d3.max(dataset, (d) => d[1])])
+        .range([height - padding, padding])
+
+      //原点的标尺
+      var rScale = d3.scaleLinear()
+        .domain([0, d3.max(dataset, function (d) {
+          return d[1];
+        })]).range([2, 4]);
+      console.log(d3)
+      let compute = d3.interpolate(d3.rgb('255,0,0'), d3.rgb('0,255,0'));
+
+      var linear = d3.scaleLinear().domain([0, 150])
+
+      //画出各个点点并添加到画布中
+      svg.selectAll("circle")
+        .data(dataset)
+        .enter()
+        .append("circle")
+        .attr("cx", (d) => {
+          return xScale(d[0])
+        })
+        .attr("cy", (d) => {
+          return yScale(d[1])
+        })
+        .attr("r", (d) => {
+          return rScale(d[1])
+        })
+        .attr("fill", d => d[1] > 5 ? 'red' : 'blue').on("mouseenter", function (d) {
+          console.log(d3)
+
+          d3.select(this).style("fill", d => compute(linear(d)));
+        }).on("mouseout", function (d) {
+          d3.select(this).style("stroke-width", "0");
+        })
+
+
+      // x坐标轴
+      let xAxis = d3.axisBottom()
+        .scale(xScale)
+        .ticks(7)
+
+      //y坐标轴
+      let yAxis = d3.axisLeft()
+        .scale(yScale)
+        .ticks(7)
+
+      //把坐标轴添加到画布中
+      svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(0," + (height - padding) + ")")
+        .call(xAxis)
+      svg.append("g")
+        .attr("class", "axis")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(yAxis)
+      // console.log(d3)
+
+      // var svg = d3.select('svg')
+      // svg.selectAll('circle').data(this.dataList).enter().append('circle');
+      // svg.attr("cx", function (d) {
+      //   return d[0];
+      // })
+      //   .attr("cy", function (d) {
+      //     return d[1];
+      //   })
+      //   .attr("r", 5);
       // var width = 600, height = 300;
       // // 创建一个分组用来组合要画的图表元素
       // var main = d3.select('svg').append('g')
@@ -206,12 +329,12 @@ export default {
     // // console.log(this.client)
     // this.sayHello();
     await util.str.createScript('https://d3js.org/d3.v5.min.js');
-    await util.str.createScript('https://d3js.org/d3-axis.v1.min.js');
-    await util.str.createScript('https://d3js.org/d3-path.v1.min.js')
-    await util.str.createScript('https://d3js.org/d3-shape.v1.min.js')
-    await util.str.createScript('https://d3js.org/d3-scale.v2.min.js')
+    // await util.str.createScript('https://d3js.org/d3-axis.v1.min.js');
+    // await util.str.createScript('https://d3js.org/d3-path.v1.min.js')
+    // await util.str.createScript('https://d3js.org/d3-shape.v1.min.js')
+    // await util.str.createScript('https://d3js.org/d3-scale.v2.min.js')
 
-    // this.initD3Arcs();
+    this.initD3();
     this.initD3Line();
   },
   async mounted () {

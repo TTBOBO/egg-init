@@ -2,6 +2,7 @@
 
 module.exports = () => {
   return async function auth(ctx, next) {
+    ctx.set('Access-Control-Allow-Origin', '*');
     const noAuth = [
       '/user/login',
       '/user/register',
