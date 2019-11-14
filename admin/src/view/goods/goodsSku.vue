@@ -321,6 +321,52 @@ export default {
       // svg.append("g")
       //   .attr("class", "axis")
       //   .attr("transform", "translate(" + padding.left + "," + padding.top + ")")
+    },
+    async initD3Circle () {
+      let data = await d3.csv("https://gist.githubusercontent.com/mbostock/3007180/raw/2f604adf60cc5d1c82426c52471df35bbc2d47a2/exoplanets.csv", ({ name, radius, distance }) =>
+        ({ name, radius: +radius, distance: distance ? +distance : NaN })
+      )
+      data = data.filter(item => !isNaN(item.distance))
+      let color = d3.scaleQuantize().domain(data.map(item => item.radius)).range(["#156b87", "#876315", "#543510", "#872815"]);
+      var packFun = () => {
+        const pack = d3.pack().size([800, 800]).padding(5);
+        const planets = [{ children: data.filter(d => d.distance === 0) }];
+        const exoplanets = data.filter(d => d.distance !== 0);
+        const root = { children: planets.concat(exoplanets) };
+        return pack(d3.hierarchy(root)
+          .sum(d => d.radius * d.radius));
+      }
+      var svg = d3.select('svg');
+      const circle = svg.selectAll("circle")
+        .data(packFun(data).descendants().slice(1))
+        .enter().append("circle")
+        .attr("fill", d => color(d.data.radius))
+      circle.attr("cx", function (d) { return d.data.distance ? Math.cos(d.data.distance) * (800 / Math.SQRT2 + 30) : 0; })
+        .attr("cy", function (d) { return d.data.distance ? Math.sin(d.data.distance) * (800 / Math.SQRT2 + 30) : 0; })
+        .attr("r", function (d) { return d.r || 0; })
+        .transition()
+        .ease(d3.easeCubicOut)
+        .delay(1000)
+        .duration(1000)
+        .attr("r", d => d.r)
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+      console.log(circle.filter(d => d.data.distance))
+      circle.filter(d => d.data.distance).on("mouseenter", function (d) {
+        d3.select(this).transition().delay(100).style("fill-opacity", 0.5).attr("r", d => d.r * 3);
+      }).on("mouseout", function (d) {
+        d3.select(this).transition().delay(100).style("fill-opacity", 1).attr("r", d => d.r * 1);
+      })
+        .append("title")
+        .text(d => `${d.data.name}
+Planet radius: ${d.data.radius} EU
+Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
+        ;
+
+      circle.filter(d => d.children)
+        .attr("fill", "red")
+        .attr("stroke", "#000")
+        .attr("stroke-width", 0);
     }
   },
   async created () {
@@ -334,8 +380,9 @@ export default {
     // await util.str.createScript('https://d3js.org/d3-shape.v1.min.js')
     // await util.str.createScript('https://d3js.org/d3-scale.v2.min.js')
 
-    this.initD3();
-    this.initD3Line();
+    // this.initD3();
+    // this.initD3Line();
+    this.initD3Circle();
   },
   async mounted () {
 

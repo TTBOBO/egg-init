@@ -672,14 +672,14 @@ export default {
       let res = await this[this.optionData.ajaxType || '$ajaxGet'](this.optionData.baseUrl, this.search, this.optionData.urlType || 3);
       if (res.err_code == 0 || res.code == 200 || res.code == 0) {
         let dataKey = this.optionData.dataKey;
-        const data = this.optionData.urlType == 1 ? res.result[dataKey] : res.result.data;
+        const data = res.result[dataKey] || res.result.data;
         // this.$emit("tableData", res.result, this.dataKey);
         this.setTabelData(data);
         if (params.saveSelection)
           this.toggleRowSelection();
         if (this.optionData.tableLoadIcon)
           this.taskListloading = false;
-        this.search.count = this.optionData.urlType == 1 ? res.result.jobs_total_num : res.result.data_total_num;
+        this.search.count = res.result.jobs_total_num || res.result.data_total_num;
       } else {
         this.$alert(res.err_msg || res.data.message || res.data.err_msg, "获取列表失败", {
           dangerouslyUseHTMLString: true
