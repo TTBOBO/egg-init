@@ -571,25 +571,45 @@ let util = {
     }
     return arget;
   },
-  throttle(func, wait, mustRun) {
-    var timeout,
-      startTime = new Date();
+  throttle(fun, delay) {
+    let last, deferTimer
     return function () {
-      var context = this,
-        args = arguments,
-        curTime = new Date();
-
-      clearTimeout(timeout);
-      // 如果达到了规定的触发时间间隔，触发 handler
-      if (curTime - startTime >= mustRun) {
-        func.apply(context, args);
-        startTime = curTime;
-        // 没达到触发间隔，重新设定定时器
+      let that = this
+      let _args = arguments
+      let now = +new Date()
+      if (last && now < last + delay) {
+        clearTimeout(deferTimer)
+        deferTimer = setTimeout(function () {
+          last = now
+          fun.apply(that, _args)
+        }, delay)
       } else {
-        timeout = setTimeout(func, wait);
+        last = now
+        fun.apply(that, _args)
       }
-    };
+    }
   },
+  // throttle(func, wait, mustRun) {
+  //   var timeout,
+  //     startTime = new Date();
+  //   return function () {
+  //     var context = this,
+  //       args = arguments,
+  //       curTime = new Date();
+
+  //     clearTimeout(timeout);
+  //     // 如果达到了规定的触发时间间隔，触发 handler
+  //     if (curTime - startTime >= mustRun) {
+  //       console.log(args)
+  //       func.apply(context, args);
+  //       startTime = curTime;
+  //       // 没达到触发间隔，重新设定定时器
+  //     } else {
+  //       debugger;
+  //       timeout = setTimeout(func, wait);
+  //     }
+  //   };
+  // },
   debounce(method, delay) {
     var timer = null;
     return function () {

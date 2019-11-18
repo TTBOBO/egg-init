@@ -3,7 +3,8 @@
        id="viewBox">
     123
     {{value}}
-    <svg width="100%"
+    <svg class="svg"
+         width="100%"
          height="100%">
       <!-- <circle v-for="(item,index) in dataList"
               :key="index"></circle> -->
@@ -122,8 +123,8 @@ export default {
 
       //y轴标尺
       let yScale = d3.scaleLinear()
-        .domain([0, d3.max(dataset, (d) => d[1])])
-        .range([height - padding, padding])
+        .domain([0, 1, 2, 3, 4, 5])
+        .range([height - padding, 60])
 
       //原点的标尺
       var rScale = d3.scaleLinear()
@@ -150,18 +151,17 @@ export default {
           return rScale(d[1])
         })
         .attr("fill", d => d[1] > 5 ? 'red' : 'blue').on("mouseenter", function (d) {
-          console.log(d3)
-
           d3.select(this).style("fill", d => compute(linear(d)));
         }).on("mouseout", function (d) {
-          d3.select(this).style("stroke-width", "0");
+          d3.select(this).transition().duration(500).style("fill", d => d[1] > 5 ? 'red' : 'blue');
+          // d3.select(this).style("stroke-width", "0");
         })
 
 
-      // x坐标轴
-      let xAxis = d3.axisBottom()
-        .scale(xScale)
-        .ticks(7)
+      // // x坐标轴
+      // let xAxis = d3.axisBottom()
+      //   .scale(xScale)
+      //   .ticks(7)
 
       //y坐标轴
       let yAxis = d3.axisLeft()
@@ -169,15 +169,15 @@ export default {
         .ticks(7)
 
       //把坐标轴添加到画布中
-      svg.append("g")
-        .attr("class", "axis")
-        .attr("transform", "translate(0," + (height - padding) + ")")
-        .call(xAxis)
+      // svg.append("g")
+      //   .attr("class", "axis")
+      //   .attr("transform", "translate(0," + (height - padding) + ")")
+      //   .call(xAxis)
       svg.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(" + padding + ",0)")
         .call(yAxis)
-      // console.log(d3)
+      console.log(d3)
 
       // var svg = d3.select('svg')
       // svg.selectAll('circle').data(this.dataList).enter().append('circle');
@@ -329,7 +329,7 @@ export default {
       data = data.filter(item => !isNaN(item.distance))
       let color = d3.scaleQuantize().domain(data.map(item => item.radius)).range(["#156b87", "#876315", "#543510", "#872815"]);
       var packFun = () => {
-        const pack = d3.pack().size([800, 800]).padding(5);
+        const pack = d3.pack().size([300, 300]).padding(5);
         const planets = [{ children: data.filter(d => d.distance === 0) }];
         const exoplanets = data.filter(d => d.distance !== 0);
         const root = { children: planets.concat(exoplanets) };
@@ -351,10 +351,9 @@ export default {
         .attr("r", d => d.r)
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
-      console.log(circle.filter(d => d.data.distance))
-      circle.filter(d => d.data.distance).on("mouseenter", function (d) {
+      circle.filter(d => d.data.distance).on("mouseenter", function () {
         d3.select(this).transition().delay(100).style("fill-opacity", 0.5).attr("r", d => d.r * 3);
-      }).on("mouseout", function (d) {
+      }).on("mouseout", function () {
         d3.select(this).transition().delay(100).style("fill-opacity", 1).attr("r", d => d.r * 1);
       })
         .append("title")
@@ -367,7 +366,233 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .attr("fill", "red")
         .attr("stroke", "#000")
         .attr("stroke-width", 0);
+    },
+
+    async initLine () {
+      var svg = d3.select('svg');
+      // First dataset
+      var datasetBottom = [
+        { date: new Date(2013, 17, 2), value: 2 },
+        { date: new Date(2013, 17, 3), value: 3 },
+        { date: new Date(2013, 17, 4), value: 4 },
+        { date: new Date(2013, 17, 5), value: 6 },
+        { date: new Date(2013, 17, 6), value: 7 },
+        { date: new Date(2013, 17, 7), value: 5 }
+      ];
+
+      // Second dataset
+      var datasetTop = [
+        { date: new Date(2013, 17, 2), value: 3 },
+        { date: new Date(2013, 17, 3), value: 5 },
+        { date: new Date(2013, 17, 4), value: 1 },
+        { date: new Date(2013, 17, 5), value: 3 },
+        { date: new Date(2013, 17, 6), value: 9 },
+        { date: new Date(2013, 17, 7), value: 5 }
+      ];
+
+      // Define the padding around the graph
+      var padding = 30;
+      var width = 800;
+      var height = 800;
+      // Set the scales
+      var xScale = d3.scaleLinear()
+        .domain([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
+        .range([padding, width - padding]);
+
+      // Bottom y scale
+      var yScaleBottom = d3.scaleLinear()
+        .domain([0, d3.max(datasetBottom, function (d) { return d.value; })])
+        .range([height / 2 - padding, padding]);
+
+      // Top y-scale
+      var yScaleTop = d3.scaleLinear()
+        .domain([0, d3.max(datasetTop, function (d) { return d.value; })])
+        .range([height / 2 - padding, padding]);
+
+      // x-axis
+      var format = d3.timeFormat("%d %b");
+
+      var xAxis = d3.axisBottom()
+        .scale(xScale)
+        .tickFormat(format)
+      // .ticks(d3.timeDay, 1);
+
+      var topchart = svg.append("g").attr("class", "topchart");
+      var bottomchart = svg.append("g").attr("class", "bottomchart").attr("transform", "translate(0," + height / 2 + ")");
+
+      bottomchart.append("g")
+
+        .attr("class", "axis x-axis")
+        .attr("transform", "translate(0," + (height / 2 - padding) + ")")
+        .call(xAxis);
+
+      // y-axis for bottom chart
+      var yAxisBottom = d3.axisLeft()
+        .scale(yScaleBottom)
+        .tickFormat(function (d) { return d; })
+        .tickSize(5, 5, 0);
+
+      // y-axis for top chart
+      var yAxisTop = d3.axisLeft()
+        .scale(yScaleTop)
+        .tickFormat(function (d) { return d; })
+        .tickSize(5, 5, 0);
+
+      bottomchart.append("g")
+        .attr("class", "axis y-axis")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(yAxisBottom);
+
+      topchart.append("g")
+        .attr("class", "axis y-axis")
+        .attr("transform", "translate(" + padding + ",0)")
+        .call(yAxisTop);
+      let offectX = [];
+      // draw line graph
+      var lineTop = d3
+        .area()
+        .curve(d3.curveMonotoneX)
+        .x(function (d) {
+          offectX.push(xScale(d.date))
+          return xScale(d.date);
+        })
+        .y0(yScaleTop(0))
+        .y1(function (d) {
+          return yScaleTop(d.value);
+        }).curve(d3.curveMonotoneX);
+      var lineTop1 = d3.line()
+        .x(function (d) {
+          return xScale(d.date);
+        })
+        .y(function (d) {
+          return yScaleTop(d.value);
+        }).curve(d3.curveMonotoneX);
+      var lineBottom = d3.line()
+        .x(function (d) {
+          return xScale(d.date);
+        })
+        .y(function (d) {
+          return yScaleBottom(d.value);
+        }).curve(d3.curveMonotoneX);
+      var tip = d3.select('#viewBox').append('div')   	//添加tip提示框
+        .attr('class', 'tooltip')
+        .style('display', 'none');
+      var hoverLineGroup = svg.append("g")
+        .attr("class", "hover-line");
+      var hoverLine = hoverLineGroup
+        .append("line")
+        .attr("x1", 10).attr("x2", 10)
+        .attr("y1", 0 + padding).attr("y2", height - padding);
+      hoverLine.style("opacity", 1e-6);
+
+      topchart
+        .append('defs')
+        .append('clipPath')
+        .attr('id', 'clip-main')
+        .append('rect')
+        .attr('height', height + 40)
+        .attr('y', '-10')
+        .attr('x', '-10')
+        .attr('width', 0)
+        .transition()
+        .duration(1500)
+        .attr('width', width + 70)
+
+      let topPath = topchart.append('g')
+        .append('path')
+
+      topPath.attr('class', 'area')
+        .datum(datasetTop)
+        .attr('d', lineTop)
+        .attr('stroke', 'none')
+        // .attr('stroke-widh', '2px')
+        .attr('fill', 'rgba(5,140,255, 0.2)' || 'steelblue')
+        .attr('clip-path', 'url(#clip-main)')
+
+
+      let Differ = (offectX[1] - offectX[0]) / 2;
+      let _offectX = offectX.map((item) => !item ? item : item - Differ);
+      var mousemove = (_this, x) => {
+        let index = this.getCurrentIndex(_offectX, x, Differ)
+        hoverLine.transition().duration(60).attr("x1", offectX[index]).attr("x2", offectX[index]).style("opacity", 1);
+      }
+      var mousemoveTip = (x, y) => {
+        let index = this.getCurrentIndex(_offectX, x, Differ)
+        tip.html("<span id='tip' style='color: #fff'>Value:" + (datasetTop[index].value) + "</span>")
+          .transition().duration(200)				//提示框的内容
+          .style('left', x + 20 + 'px')  //提示框的位置
+          .style('top', y + 20 + 'px')
+      }
+      let throFun = util.throttle(mousemove, 500);
+      let tipFun = util.debounce(mousemoveTip, 50);
+      var _this = this;
+      let isFirst = true;
+      svg.on('mousemove', function () {
+        tip.style('display', 'block')
+        throFun(this, d3.event.offsetX);
+        if (isFirst) {
+          let index = _this.getCurrentIndex(_offectX, d3.event.offsetX, Differ)
+          tip.html("<span id='tip' style='color: #fff'>Value:" + (datasetTop[index].value) + "</span>")
+            .style('left', d3.event.offsetX + 20 + 'px')  //提示框的位置
+            .style('top', d3.event.offsetY + 20 + 'px')
+          isFirst = false;
+        }
+
+        tipFun(d3.event.offsetX, d3.event.offsetY)
+      })
+      svg.on('mouseout', function () {
+        if (d3.event.offsetX < offectX[0] || d3.event.offsetX > offectX[offectX.length - 1]) {
+          hoverLine.attr("x1", 10).attr("x2", 10).style('opacity', 0);
+          tip.style('display', 'none')
+          isFirst = true;
+        }
+      })
+      bottomchart.append("path").attr("d", lineBottom(datasetBottom)).attr('stroke-width', 3).attr("stroke", '#058cff')
+      let line = topchart.append("path").attr("d", lineTop1(datasetTop));
+      var totalLength = line.node().getTotalLength();
+      line
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .attr("stroke-width", 3)
+        .attr("stroke", '#058cff')
+        .transition()
+        .duration(2500)
+        .attr("stroke-dashoffset", 0);
+      let circleView = topchart
+        .append('g')
+        .selectAll('g')
+        .data(datasetTop)
+        .enter()
+        .append('g')
+        .attr('clip-path', 'url(#clip-main)')
+      let circle = circleView
+        .append('circle')
+        .attr('class', 'circle')
+      circle
+        .attr('cx', d => xScale(d.date))
+        .attr('cy', d => yScaleTop(d.value))
+        .attr('r', '2')
+        .attr('fill', '#fff')
+        .attr('stroke-width', 1).attr("stroke", '#058cff')
+        .style('z-index', 999)
+        .transition()
+        .duration((d, i) => 1500 + i * 1000)
+        .attr('r', '5')
+
+    },
+    getCurrentIndex (offectX, x, diff) {
+      let curIndex = 0;
+      offectX.some((item, index) => {
+        if ((x >= item && x <= offectX[index + 1]) || (x - diff) <= item) {
+          curIndex = index
+          return true
+        }
+      })
+      return curIndex;
     }
+
+
+
   },
   async created () {
     // await this.$ajaxPost('grpc', { a: 1 })
@@ -382,7 +607,8 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
 
     // this.initD3();
     // this.initD3Line();
-    this.initD3Circle();
+    // this.initD3Circle();
+    this.initLine();
   },
   async mounted () {
 
@@ -425,4 +651,35 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
 </script>
 
 <style>
+#viewBox {
+  position: relative;
+  /* background: red; */
+}
+.svg {
+  fill: none;
+}
+.circle {
+  cursor: pointer;
+}
+.tooltip {
+  font-size: 15px;
+  width: auto;
+  padding: 10px;
+  height: auto;
+  position: absolute;
+  text-align: center;
+  background-color: #000000;
+  opacity: 0.6;
+  border-radius: 5px;
+  color: #ffffff;
+}
+.hover-line {
+  stroke: #c6c3c3;
+  fill: none;
+  stroke-width: 1px;
+}
+.tick text {
+  font-size: 10px;
+  font-weight: bold;
+}
 </style>
