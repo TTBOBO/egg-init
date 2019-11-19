@@ -336,15 +336,19 @@ export default {
       this.$set(this.paramsData, field, val); //设置新的值
     },
     async updateSelectOption (field, newV = '') {
-      let selArr = [], item = null;
+      let selArr = [],
+        item = null;
       for (var i = 0; i < this.optionData.formList.length; i++) {
-        item = this.optionData.formList[i];
+        item = util.copy(this.optionData.formList[i]);
         if (item.field == field) {
           selArr = [];
           if (item.optionUrl) {
             let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
             let data = result[item.urlkey];
-            selArr = (item.valueType || item.colKey) ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType) : data;
+            selArr =
+              item.valueType || item.colKey
+                ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType)
+                : data;
           }
           if (item.option) {
             selArr = [...util.getSelectOpt(item.option, item.selectDataType || 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面

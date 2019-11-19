@@ -420,8 +420,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       var topchart = svg.append("g").attr("class", "topchart");
       var bottomchart = svg.append("g").attr("class", "bottomchart").attr("transform", "translate(0," + height / 2 + ")");
 
-      bottomchart.append("g")
-
+      let xGroup = bottomchart.append("g")
         .attr("class", "axis x-axis")
         .attr("transform", "translate(0," + (height / 2 - padding) + ")")
         .call(xAxis);
@@ -454,6 +453,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .curve(d3.curveMonotoneX)
         .x(function (d) {
           offectX.push(xScale(d.date))
+          console.log(offectX)
           return xScale(d.date);
         })
         .y0(yScaleTop(0))
@@ -498,10 +498,9 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .duration(1500)
         .attr('width', width + 70)
 
-      let topPath = topchart.append('g')
+      topchart.append('g')
         .append('path')
-
-      topPath.attr('class', 'area')
+        .attr('class', 'area')
         .datum(datasetTop)
         .attr('d', lineTop)
         .attr('stroke', 'none')
@@ -547,17 +546,21 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
           isFirst = true;
         }
       })
-      bottomchart.append("path").attr("d", lineBottom(datasetBottom)).attr('stroke-width', 3).attr("stroke", '#058cff')
-      let line = topchart.append("path").attr("d", lineTop1(datasetTop));
-      var totalLength = line.node().getTotalLength();
-      line
-        .attr("stroke-dasharray", totalLength + " " + totalLength)
-        .attr("stroke-dashoffset", totalLength)
-        .attr("stroke-width", 3)
+      bottomchart.append("path").datum(datasetBottom).attr("d", lineBottom).attr('stroke-width', 3).attr("stroke", '#058cff').attr('class', 'bottomLine')
+      let line = topchart.append("g").datum(datasetTop).append("path").attr("d", lineTop1).attr('class', 'lineTop1').attr("stroke-width", 3)
         .attr("stroke", '#058cff')
         .transition()
         .duration(2500)
         .attr("stroke-dashoffset", 0);
+      // var totalLength = line.node().getTotalLength();
+      // line
+      //   .attr("stroke-dasharray", totalLength + " " + totalLength)
+      //   .attr("stroke-dashoffset", totalLength)
+      //   .attr("stroke-width", 3)
+      //   .attr("stroke", '#058cff')
+      //   .transition()
+      //   .duration(2500)
+      //   .attr("stroke-dashoffset", 0);
       let circleView = topchart
         .append('g')
         .selectAll('g')
@@ -578,6 +581,125 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .transition()
         .duration((d, i) => 1500 + i * 1000)
         .attr('r', '5')
+
+
+      let x2Scale = d3
+        .scaleTime()
+        .domain([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
+        .range([padding, width - padding]);
+      // .range([0, width])
+      // .domain(xScale.domain());
+      //定义画刷
+      let brush = d3
+        .brushX()
+        .extent([[30, 0], [770, 20]])
+        .on('brush end', brushed)
+
+
+      bottomchart.append("g")
+        // .attr("width", 400)
+        // .attr("height", 20)
+        .attr("transform", "translate(0," + (height / 2 - padding - 10) + ")")
+        .attr("class", "brush")
+        .call(brush)
+        // .call(brush.move, xScale.range())
+        .selectAll("rect")
+        .attr("width", 400)
+        .attr("height", 20)
+
+
+      // bottomchart.append("g")
+      //   .attr("class", "axis y-axis")
+      //   .attr("transform", "translate(" + padding + ",0)")
+      //   .call(yAxisBottom);
+      // let subChart = svg
+      //   .append('g')
+      //   // 设subChart的最外包层在总图上的相对位置
+      //   .attr('transform', 'translate(' + 30 + ',' + 30 + ')')
+      // bottomchart.append("g")
+      //   .attr("class", "brush")
+      //   .attr("fill", 'red')
+      //   .call(brush)
+      //   .call(brush.move, xScale.range())
+      //   .selectAll("rect")
+      //   .attr("width", width)
+      //   .attr("height", 20)
+      //   .attr('transform', "translate(0," + (height / 2 - padding) + ")")
+      let zoom = d3.zoom()              //设置zoom参数       
+        .scaleExtent([1, 8])          //放大倍数
+        .translateExtent([[0, 0], [800, 770]])//移动的范围
+        .extent([[0, 0], [width, height]])
+        //视窗 （左上方，右下方）,默认最近父级元素的[0,0],[width,height]
+        .on("zoom", zoomed);          //zoom事件，调用zoomed函数
+
+
+      let zoomRect = svg.append('g').append("rect") //设置缩放的区域，一般覆盖整个绘图区
+        .attr("width", 740)
+        .attr("height", 730)
+        .attr("transform", "translate(30,30)")
+        .attr("fill", "none")
+        .attr("pointer-events", "all")
+        .call(zoom);
+
+
+      function zoomed () {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return
+        let t = d3.event.transform.rescaleX(xScale)
+        //t为随着滚轮缩放的动态比例值包含缩放信息k以及transform信息x和y
+        //通过t上的rescaleX方法重新定义动态的domain且绑定至xScale
+        // xScale.domain(t.rescaleX(xScale).domain())
+        bottomchart.select(".brush").call(brush.move, xScale.range().map(d3.event.transform.invertX, d3.event.transform))
+        xGroup.call(xAxis.scale(t))
+
+        //重新绘制面积图与坐标轴
+        // xScale.domain(t.rescaleX(xScale).domain())
+        svg.select('.x-axis').call(xAxis)
+        topchart.select('.area').attr('d', lineTop)
+        // let line = topchart.append("path").attr("d", lineTop1(datasetTop)).attr('class', 'lineTop1');
+        // bottomchart.select("lineBottom").attr("d", lineBottom.x(d => {
+        //   return t(d.date)
+        // }))
+        //选取所有面积图上的点和文字动态修改位置信息
+        // circle
+        //   .select('circle')
+        //   .attr('cx', function (d) {
+        //     return xScale(d.date)
+        //   })
+        // circle
+        //   .select('text')
+        //   .attr('x', function(d) {
+        //     return xScale(d.day)
+        //   })
+
+
+        //当面积图产生缩放时，让brush跟着变化大小与位置
+        //s为获取的当前面积图的domain(是一个时间数组)
+        // let s = xScale.domain()
+        // //把当前的domain通过x2Scale转化为range的数字数组(即为brush的位置信息)
+        // let d = s.map(item => {
+        //   return x2Scale(item)
+        // })
+        // // 通过brush.move方法动态修改brush的大小与位置
+        // brush.move(subChart.select('.brush'), d)
+
+      }
+      function brushed () {
+        if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'zoom') return
+        //通过事件对象获取画刷目前的长度以及位置，类似brush.move(selection, [50, 100])
+        let s = d3.event.selection || xScale.range()
+        // //通过x2Scale.invert转化为新的xScale的domain
+        xScale.domain(s.map(x2Scale.invert, x2Scale))
+        //设置完新的xScale 重绘面积图以及x坐标轴
+        svg.select('.area').attr('d', lineTop)
+        svg.select('.lineTop1').attr('d', lineTop1)
+        svg.select('.bottomLine').attr('d', lineBottom)
+        circleView
+          .select('circle')
+          .attr('cx', function (d) {
+            return xScale(d.date)
+          })
+        offectX = [];
+      }
 
     },
     getCurrentIndex (offectX, x, diff) {
