@@ -1,40 +1,24 @@
 <template>
-  <div style="width:800px;height:800px;"
-       id="viewBox">
-    123
-    {{value}}
-    <svg class="svg"
-         width="100%"
-         height="100%">
-      <!-- <circle v-for="(item,index) in dataList"
-              :key="index"></circle> -->
-    </svg>
-    <!-- <el-cascader v-model="value"
-                 :options="options"></el-cascader> -->
-    <!-- <svg width="100%"
-         height="100%">
-
-      <rect width="300"
-            rx="20"
-            ry="20"
-            height="100"
-            style="fill:red;stroke-width:10;
-stroke:yellow; fill-opacity:0.5" />
-      <ellipse cx="300"
-               cy="150"
-               rx="200"
-               ry="80"
-               style="fill:rgb(200,100,50);
-stroke:rgb(0,0,100);stroke-width:2" />
-
-    </svg> -->
-
+  <div style="overflow-y:auto;    height: 100%;">
+    <div style="width:800px;height:800px;"
+         id="viewBox">
+      <svg class="svg"
+           width="100%"
+           height="100%">
+      </svg>
+    </div>
+    <div style="width:800px">
+      <div id="chart"
+           ref="chart"
+           style="height:400px"></div>
+    </div>
   </div>
 </template>
 
 <script>
 // import protobuf from 'google-protobuf';
 import { helloRequest } from '../../proto/generated/hello_pb';
+import Line from './line'
 // import { HelloServiceClient } from '../../proto/generated/hello_grpc_web_pb'
 
 export default {
@@ -395,7 +379,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       var width = 800;
       var height = 800;
       // Set the scales
-      var xScale = d3.scaleLinear()
+      var xScale = d3.scaleTime()
         .domain([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
         .range([padding, width - padding]);
 
@@ -417,7 +401,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .tickFormat(format)
       // .ticks(d3.timeDay, 1);
 
-      var topchart = svg.append("g").attr("class", "topchart");
+      var topchart = svg.append("g").attr("class", "topchart")
       var bottomchart = svg.append("g").attr("class", "bottomchart").attr("transform", "translate(0," + height / 2 + ")");
 
       let xGroup = bottomchart.append("g")
@@ -453,7 +437,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .curve(d3.curveMonotoneX)
         .x(function (d) {
           offectX.push(xScale(d.date))
-          console.log(offectX)
+          // console.log(offectX)
           return xScale(d.date);
         })
         .y0(yScaleTop(0))
@@ -490,15 +474,33 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .append('clipPath')
         .attr('id', 'clip-main')
         .append('rect')
-        .attr('height', height + 40)
+        .attr('height', 760)
         .attr('y', '-10')
-        .attr('x', '-10')
+        // .attr('x', '-10')
+        .attr("transform", "translate(30,30)")
         .attr('width', 0)
         .transition()
         .duration(1500)
-        .attr('width', width + 70)
+        .ease(d3.easeExpInOut)
+        .attr('width', 740)
+      var defs = svg.append("defs");
+      //线性渐变
+      var linearGradient = defs.append("linearGradient")
+        .attr("id", "linearColor")
+        .attr("x1", "0%")
+        .attr("y1", "100%")
+        .attr("x2", "100%")
+        .attr("y2", "100%");
 
+      linearGradient.append("stop")
+        .attr("offset", "0%")
+        .style("stop-color", '#CC56CB');
+
+      linearGradient.append("stop")
+        .attr("offset", "100%")
+        .style("stop-color", '#CB8993');
       topchart.append('g')
+        // .attr("transform", "translate(" + padding + ",0)")
         .append('path')
         .attr('class', 'area')
         .datum(datasetTop)
@@ -507,6 +509,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         // .attr('stroke-widh', '2px')
         .attr('fill', 'rgba(5,140,255, 0.2)' || 'steelblue')
         .attr('clip-path', 'url(#clip-main)')
+        .style('fill', "url(#" + linearGradient.attr("id") + ")")
 
 
       let Differ = (offectX[1] - offectX[0]) / 2;
@@ -546,21 +549,24 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
           isFirst = true;
         }
       })
-      bottomchart.append("path").datum(datasetBottom).attr("d", lineBottom).attr('stroke-width', 3).attr("stroke", '#058cff').attr('class', 'bottomLine')
-      let line = topchart.append("g").datum(datasetTop).append("path").attr("d", lineTop1).attr('class', 'lineTop1').attr("stroke-width", 3)
-        .attr("stroke", '#058cff')
+
+      bottomchart.append("path").datum(datasetBottom).attr("d", lineBottom).attr('stroke-width', 3).attr("stroke", '#058cff').attr('class', 'bottomLine').attr('clip-path', 'url(#clip-main)')
+      let line = topchart.append("g").datum(datasetTop).append("path").attr("d", lineTop1).attr('class', 'lineTop1').attr("stroke-width", 0).attr('clip-path', 'url(#clip-main)')
+        // .attr("stroke", 'rgb(255, 70, 131)')
+        // .style('stroke', "url(#" + linearGradient.attr("id") + ")")
+        // .transition()
+        // .duration(2500)
+        .attr("stroke-dashoffset", 0);
+      var totalLength = line.node().getTotalLength();
+      line
+        .attr("stroke-dasharray", totalLength + " " + totalLength)
+        .attr("stroke-dashoffset", totalLength)
+        .attr("stroke-width", 3)
+        .attr('clip-path', 'url(#clip-main)')
+        .attr("stroke", 'rgb(255, 70, 131)')
         .transition()
         .duration(2500)
         .attr("stroke-dashoffset", 0);
-      // var totalLength = line.node().getTotalLength();
-      // line
-      //   .attr("stroke-dasharray", totalLength + " " + totalLength)
-      //   .attr("stroke-dashoffset", totalLength)
-      //   .attr("stroke-width", 3)
-      //   .attr("stroke", '#058cff')
-      //   .transition()
-      //   .duration(2500)
-      //   .attr("stroke-dashoffset", 0);
       let circleView = topchart
         .append('g')
         .selectAll('g')
@@ -572,6 +578,11 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .append('circle')
         .attr('class', 'circle')
       circle
+        .attr('cx', () => 0)
+        .attr('cy', d => yScaleTop(d.value))
+        .transition()
+        .duration((d, i) => i * 600)
+        .ease(d3.easeElasticIn.amplitude(3).period(2))
         .attr('cx', d => xScale(d.date))
         .attr('cy', d => yScaleTop(d.value))
         .attr('r', '2')
@@ -579,7 +590,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .attr('stroke-width', 1).attr("stroke", '#058cff')
         .style('z-index', 999)
         .transition()
-        .duration((d, i) => 1500 + i * 1000)
+        .duration((d, i) => i * 1000)
         .attr('r', '5')
 
 
@@ -587,8 +598,6 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .scaleTime()
         .domain([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
         .range([padding, width - padding]);
-      // .range([0, width])
-      // .domain(xScale.domain());
       //定义画刷
       let brush = d3
         .brushX()
@@ -607,24 +616,6 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .attr("width", 400)
         .attr("height", 20)
 
-
-      // bottomchart.append("g")
-      //   .attr("class", "axis y-axis")
-      //   .attr("transform", "translate(" + padding + ",0)")
-      //   .call(yAxisBottom);
-      // let subChart = svg
-      //   .append('g')
-      //   // 设subChart的最外包层在总图上的相对位置
-      //   .attr('transform', 'translate(' + 30 + ',' + 30 + ')')
-      // bottomchart.append("g")
-      //   .attr("class", "brush")
-      //   .attr("fill", 'red')
-      //   .call(brush)
-      //   .call(brush.move, xScale.range())
-      //   .selectAll("rect")
-      //   .attr("width", width)
-      //   .attr("height", 20)
-      //   .attr('transform', "translate(0," + (height / 2 - padding) + ")")
       let zoom = d3.zoom()              //设置zoom参数       
         .scaleExtent([1, 8])          //放大倍数
         .translateExtent([[0, 0], [800, 770]])//移动的范围
@@ -644,43 +635,26 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
 
       function zoomed () {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return
-        let t = d3.event.transform.rescaleX(xScale)
-        //t为随着滚轮缩放的动态比例值包含缩放信息k以及transform信息x和y
-        //通过t上的rescaleX方法重新定义动态的domain且绑定至xScale
-        // xScale.domain(t.rescaleX(xScale).domain())
+        let t = d3.event.transform.rescaleX(x2Scale)
         bottomchart.select(".brush").call(brush.move, xScale.range().map(d3.event.transform.invertX, d3.event.transform))
-        xGroup.call(xAxis.scale(t))
 
         //重新绘制面积图与坐标轴
-        // xScale.domain(t.rescaleX(xScale).domain())
+        xScale.domain(t.domain())
         svg.select('.x-axis').call(xAxis)
         topchart.select('.area').attr('d', lineTop)
-        // let line = topchart.append("path").attr("d", lineTop1(datasetTop)).attr('class', 'lineTop1');
-        // bottomchart.select("lineBottom").attr("d", lineBottom.x(d => {
-        //   return t(d.date)
-        // }))
-        //选取所有面积图上的点和文字动态修改位置信息
-        // circle
-        //   .select('circle')
-        //   .attr('cx', function (d) {
-        //     return xScale(d.date)
-        //   })
-        // circle
-        //   .select('text')
-        //   .attr('x', function(d) {
-        //     return xScale(d.day)
-        //   })
-
-
-        //当面积图产生缩放时，让brush跟着变化大小与位置
-        //s为获取的当前面积图的domain(是一个时间数组)
-        // let s = xScale.domain()
-        // //把当前的domain通过x2Scale转化为range的数字数组(即为brush的位置信息)
-        // let d = s.map(item => {
-        //   return x2Scale(item)
-        // })
-        // // 通过brush.move方法动态修改brush的大小与位置
-        // brush.move(subChart.select('.brush'), d)
+        svg.select('.lineTop1').attr('d', lineTop1)
+        var totalLength = line.node().getTotalLength();
+        line
+          .attr("stroke-dasharray", totalLength + " " + totalLength)
+          .attr("stroke-dashoffset", totalLength)
+          .attr("stroke-dashoffset", 0);
+        svg.select('.bottomLine').attr('d', lineBottom)
+        circleView
+          .select('circle')
+          .attr('cx', function (d) {
+            return xScale(d.date)
+          })
+        offectX = [];
 
       }
       function brushed () {
@@ -721,18 +695,34 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
     // this.client = new HelloServiceClient("http://154.8.237.169:8081");
     // // console.log(this.client)
     // this.sayHello();
+
+  },
+  async mounted () {
     await util.str.createScript('https://d3js.org/d3.v5.min.js');
-    // await util.str.createScript('https://d3js.org/d3-axis.v1.min.js');
-    // await util.str.createScript('https://d3js.org/d3-path.v1.min.js')
-    // await util.str.createScript('https://d3js.org/d3-shape.v1.min.js')
-    // await util.str.createScript('https://d3js.org/d3-scale.v2.min.js')
 
     // this.initD3();
     // this.initD3Line();
     // this.initD3Circle();
     this.initLine();
-  },
-  async mounted () {
+    let chart = new Line(this.$refs.chart)
+    chart.setOption({
+      title: {
+        text: "测试标题",
+        textStyle: {
+          color: "blue",
+          fontSize: "12px"
+        }
+      },
+      grid: [{
+        left: 50,
+        right: 50,
+        height: '50'
+      }],
+      xAxis: {
+
+      }
+
+    })
 
     // const { result } = await this.$ajaxGet('getCategoryTree', { level: 0 });
     // console.log(result);
