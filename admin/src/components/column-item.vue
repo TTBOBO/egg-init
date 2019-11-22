@@ -24,7 +24,7 @@
         <span v-html="getFormat(item.evelKey,scope.row)"></span>
       </template>
       <template v-else-if="item.type ==  'select' ">
-        <span>{{item.selectOPtion[scope.row[item.value]] || scope.row[item.value]}}</span>
+        <span>{{item.selectOPtion[scope.row[item.value]] || scope.row[item.value] || item.defaultVal}}</span>
       </template>
       <template v-else-if="item.dbclick">
         <div @dblclick="showInput(scope,scope['$index'])">
@@ -108,7 +108,7 @@
         <span v-html="getFormat(item.evelKey,scope.row)"></span>
       </template>
       <template v-else-if="item.type ==  'select' ">
-        <span>{{item.selectOPtion[scope.row[item.value]] || scope.row[item.value]}}</span>
+        <span>{{item.selectOPtion[scope.row[item.value]] || scope.row[item.value] || item.defaultVal}}</span>
       </template>
       <template v-else-if="item.dbclick">
         <div @dblclick="showInput(scope,scope['$index'])">

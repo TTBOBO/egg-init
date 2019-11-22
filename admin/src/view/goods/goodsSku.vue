@@ -1,16 +1,17 @@
 <template>
   <div style="overflow-y:auto;    height: 100%;">
+
+    <div style="width:800px">
+      <div id="chart"
+           ref="chart"
+           style="height:400px"></div>
+    </div>
     <div style="width:800px;height:800px;"
          id="viewBox">
       <svg class="svg"
            width="100%"
            height="100%">
       </svg>
-    </div>
-    <div style="width:800px">
-      <div id="chart"
-           ref="chart"
-           style="height:400px"></div>
     </div>
   </div>
 </template>
@@ -379,10 +380,10 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       var width = 800;
       var height = 800;
       // Set the scales
+      console.log([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
       var xScale = d3.scaleTime()
         .domain([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
         .range([padding, width - padding]);
-
       // Bottom y scale
       var yScaleBottom = d3.scaleLinear()
         .domain([0, d3.max(datasetBottom, function (d) { return d.value; })])
@@ -394,7 +395,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .range([height / 2 - padding, padding]);
 
       // x-axis
-      var format = d3.timeFormat("%d %b");
+      var format = d3.timeFormat("%Y-%m-%d");
 
       var xAxis = d3.axisBottom()
         .scale(xScale)
@@ -443,7 +444,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .y0(yScaleTop(0))
         .y1(function (d) {
           return yScaleTop(d.value);
-        }).curve(d3.curveMonotoneX);
+        });
       var lineTop1 = d3.line()
         .x(function (d) {
           return xScale(d.date);
@@ -551,7 +552,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       })
 
       bottomchart.append("path").datum(datasetBottom).attr("d", lineBottom).attr('stroke-width', 3).attr("stroke", '#058cff').attr('class', 'bottomLine').attr('clip-path', 'url(#clip-main)')
-      let line = topchart.append("g").datum(datasetTop).append("path").attr("d", lineTop1).attr('class', 'lineTop1').attr("stroke-width", 0).attr('clip-path', 'url(#clip-main)')
+      let line = topchart.append("g").datum(datasetTop).append("path").attr("d", lineTop1).attr('class', 'lineTop1').attr("stroke-width", 3).attr("stroke", 'rgb(255, 70, 131)').attr('clip-path', 'url(#clip-main)')
         // .attr("stroke", 'rgb(255, 70, 131)')
         // .style('stroke', "url(#" + linearGradient.attr("id") + ")")
         // .transition()
@@ -561,9 +562,9 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       line
         .attr("stroke-dasharray", totalLength + " " + totalLength)
         .attr("stroke-dashoffset", totalLength)
-        .attr("stroke-width", 3)
-        .attr('clip-path', 'url(#clip-main)')
-        .attr("stroke", 'rgb(255, 70, 131)')
+        // .attr("stroke-width", 3)
+        // .attr('clip-path', 'url(#clip-main)')
+        // .attr("stroke", 'rgb(255, 70, 131)')
         .transition()
         .duration(2500)
         .attr("stroke-dashoffset", 0);
@@ -699,7 +700,6 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
   },
   async mounted () {
     await util.str.createScript('https://d3js.org/d3.v5.min.js');
-
     // this.initD3();
     // this.initD3Line();
     // this.initD3Circle();
@@ -709,19 +709,60 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       title: {
         text: "测试标题",
         textStyle: {
-          color: "blue",
+          color: "#5793f3",
           fontSize: "12px"
         }
       },
       grid: [{
         left: 50,
         right: 50,
-        height: '50'
+        top: 50,
+        bottom: 50
       }],
       xAxis: {
-
-      }
-
+        align: 'bottom',
+        show: true,
+        type: 'time',
+        data: ['2016-12-13', '2016-12-14', '2016-12-15', '2016-12-16', '2016-12-17'],
+        axisLabel: {
+          y: 10,
+          x: 2,
+          transform: 'rotate(30)',
+        },
+        format: (svg) => {
+          svg.ticks(d3.timeDay.every(1))
+            .tickFormat(d3.timeFormat("%Y-%m"))
+        }
+      },
+      yAxis: {
+        align: 'left',
+        type: 'line'
+      },
+      series: [{
+        name: "",
+        type: 'line',
+        lineStyle: {
+          'stroke-width': 2,
+          'stroke': 'red',
+          transition: {
+            duration: 2500
+          }
+        },
+        areaStyle: {
+          fill: {
+            x1: 0,
+            y1: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              { offect: 0, color: "rgb(255, 158, 68)" },
+              { offect: 0.5, color: "rgb(255, 70, 131)" },
+              { offect: 1, color: "rgb(204, 86, 203)" }
+            ]
+          } || "rgb(255, 158, 68)",
+        },
+        data: [100, 932, 400, 200, 1290]
+      }]
     })
 
     // const { result } = await this.$ajaxGet('getCategoryTree', { level: 0 });
