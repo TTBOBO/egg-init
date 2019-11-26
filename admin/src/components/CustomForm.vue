@@ -312,6 +312,7 @@ export default {
         // let currentArr = ['datetimerange', 'upload', 'checkbox']
         // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');
       }
+      this.$emit('afterInit');
       this.initvalidata();
       this.updateData();
       this.$nextTick(() => this.showForm = !this.showForm)

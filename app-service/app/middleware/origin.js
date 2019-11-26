@@ -4,6 +4,7 @@ module.exports = options => {
   const {
     whiteList
   } = options;
+  console.log(whiteList);
   /**
    * 如果传入的不是数组，直接抛出错误
    *  */
@@ -13,15 +14,17 @@ module.exports = options => {
 
   return async function setOrigin(ctx, next) {
     // 当前访问的域名
-    console.log(ctx.request.header);
+    // console.log(ctx.request.header);
     const {
       origin
     } = ctx.request.header; // 如果设置成 '*'，就给访问的域名设置允许跨域
     if (whiteList.indexOf('*') > -1) {
       ctx.response.set('Access-Control-Allow-Origin', origin);
+      // ctx.response.set('Access-Control-Allow-Credentials', true);
     } else if (whiteList.indexOf(origin) > -1) {
       ctx.response.set('Access-Control-Allow-Origin', origin);
     }
+    ctx.response.set('Access-Control-Allow-Credentials', true);
     await next();
   };
 };

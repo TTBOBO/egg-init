@@ -4,6 +4,8 @@ const axios = Axios.create({
   timeout: 1300000,
   withCredentials: true
 });
+// axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
+
 axios.interceptors.request.use(
   config => {
     config.headers = {
@@ -45,7 +47,7 @@ axios.interceptors.response.use(
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'production' ?
   'http://bb.boooool.com' :
-  'http://localhost:7002';
+  'http://10.6.52.39:7002';
 export const ajaxGet = async (url, params = {}) =>
   await doAjax(url, params, 'get');
 export const ajaxPost = async (url, params = {}) =>

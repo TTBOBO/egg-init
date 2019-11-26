@@ -70,21 +70,21 @@ module.exports = appInfo => {
     },
     security: {
       csrf: {
-        enable: false,
-        ignoreJSON: true
+        enable: false
+        // ignoreJSON: true
       },
-      domainWhiteList: [ 'http://localhost:8080', 'http://10.6.52.41:8080', 'http://bobo.boooool.com' ]
+      domainWhiteList: ['http://10.6.52.39:8080'] //, 'http://10.6.52.41:8080', 'http://bobo.boooool.com'
     },
     origin: {
-      whiteList: [ '*' ]
+      whiteList: ['*']
     },
     cors: {
-      origin: [],
+      origin: ['http://10.6.52.39:8080'],
       credentials: true,
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
     },
     multipart: {
-      fileExtensions: [ '.py' ]
+      fileExtensions: ['.py']
     },
     jwt: {
       secret: 'application'
@@ -108,7 +108,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1565625687216_9155';
 
   // add your middleware config here
-  config.middleware = [ 'auth', 'dataHandler', 'origin' ];
+  config.middleware = ['auth', 'dataHandler', 'origin'];
   // egg-grpc配置
   // config.grpc = {
   //   endpoint: 'localhost:50051' // 服务端地址

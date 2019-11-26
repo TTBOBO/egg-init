@@ -400,7 +400,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       var xAxis = d3.axisBottom()
         .scale(xScale)
         .tickFormat(format)
-      // .ticks(d3.timeDay, 1);
+        .ticks(d3.timeDay.every(1));
 
       var topchart = svg.append("g").attr("class", "topchart")
       var bottomchart = svg.append("g").attr("class", "bottomchart").attr("transform", "translate(0," + height / 2 + ")");
@@ -546,7 +546,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       svg.on('mouseout', function () {
         if (d3.event.offsetX < offectX[0] || d3.event.offsetX > offectX[offectX.length - 1]) {
           hoverLine.attr("x1", 10).attr("x2", 10).style('opacity', 0);
-          tip.style('display', 'none')
+          // tip.style('display', 'none')
           isFirst = true;
         }
       })
@@ -633,7 +633,6 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .attr("pointer-events", "all")
         .call(zoom);
 
-
       function zoomed () {
         if (d3.event.sourceEvent && d3.event.sourceEvent.type === 'brush') return
         let t = d3.event.transform.rescaleX(x2Scale)
@@ -713,6 +712,11 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
           fontSize: "12px"
         }
       },
+      tooltip: {
+        formatter: (d) => {
+          return 'Value:' + d.yData
+        }
+      },
       grid: [{
         left: 50,
         right: 50,
@@ -720,10 +724,11 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         bottom: 50
       }],
       xAxis: {
+        name: 'xtest',
         align: 'bottom',
         show: true,
         type: 'time',
-        data: ['2016-12-13', '2016-12-14', '2016-12-15', '2016-12-16', '2016-12-17'],
+        data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
         axisLabel: {
           y: 10,
           x: 2,
@@ -731,21 +736,30 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         },
         format: (svg) => {
           svg.ticks(d3.timeDay.every(1))
-            .tickFormat(d3.timeFormat("%Y-%m"))
+            .tickFormat(d3.timeFormat("%Y-%m-%d"))
+          return svg;
         }
       },
+      dataZoom: [{
+        inside: true,
+        slider: true,
+        disabledIndex: [],
+        realtime: true,
+        xAxisIndex: []
+      }],
       yAxis: {
         align: 'left',
-        type: 'line'
+        type: 'line',
+        name: 'test'
       },
       series: [{
         name: "",
         type: 'line',
         lineStyle: {
-          'stroke-width': 2,
-          'stroke': 'red',
+          'stroke-width': 5,
+          // 'stroke': 'blue',
           transition: {
-            duration: 2500
+            duration: 1000
           }
         },
         areaStyle: {
@@ -761,7 +775,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
             ]
           } || "rgb(255, 158, 68)",
         },
-        data: [100, 932, 400, 200, 1290]
+        data: [100, 932, 400, 200, 1290, 800, 700, 600]
       }]
     })
 
@@ -827,6 +841,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
   color: #ffffff;
 }
 .hover-line {
+  /* stroke: #c6c3c3; */
   stroke: #c6c3c3;
   fill: none;
   stroke-width: 1px;
