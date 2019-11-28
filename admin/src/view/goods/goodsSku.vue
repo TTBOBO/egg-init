@@ -380,7 +380,6 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       var width = 800;
       var height = 800;
       // Set the scales
-      console.log([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
       var xScale = d3.scaleTime()
         .domain([d3.min(datasetTop, function (d) { return d.date; }), d3.max(datasetTop, function (d) { return d.date; })])
         .range([padding, width - padding]);
@@ -713,9 +712,9 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         }
       },
       tooltip: {
-        formatter: (d) => {
-          return 'Value:' + d.yData
-        }
+        // formatter: (d) => {
+        //   return 'Value:' + d.yData + '111'
+        // }
       },
       grid: [{
         left: 50,
@@ -733,6 +732,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
           y: 10,
           x: 2,
           transform: 'rotate(30)',
+          'text-anchor': 'start'
         },
         format: (svg) => {
           svg.ticks(d3.timeDay.every(1))
@@ -741,11 +741,11 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         }
       },
       dataZoom: [{
-        inside: true,
-        slider: true,
-        disabledIndex: [],
+        inside: true,  //控制数据滑动变化区间的zoom功能
+        brush: true,
+        zoomIndex: [0],  //指定grid使用zoom
         realtime: true,
-        xAxisIndex: []
+        xAxisIndex: [0]  //使用brush控制设置指定的grid
       }],
       yAxis: {
         align: 'left',
@@ -753,30 +753,58 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         name: 'test'
       },
       series: [{
-        name: "",
+        name: "d31",
         type: 'line',
+        symbolSize: 3,
+        // transition: (cir) => {
+        //   return cir.transition()
+        //     .duration((d, i) => i * 600)
+        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+        // },
         lineStyle: {
-          'stroke-width': 5,
+          'stroke-width': 2,
           // 'stroke': 'blue',
           transition: {
             duration: 1000
           }
         },
         areaStyle: {
-          fill: {
-            x1: 0,
-            y1: 0,
-            x2: 1,
-            y2: 0,
-            colorStops: [
-              { offect: 0, color: "rgb(255, 158, 68)" },
-              { offect: 0.5, color: "rgb(255, 70, 131)" },
-              { offect: 1, color: "rgb(204, 86, 203)" }
-            ]
-          } || "rgb(255, 158, 68)",
+          fill: "rgb(255, 158, 68)"
         },
-        data: [100, 932, 400, 200, 1290, 800, 700, 600]
-      }]
+        data: [100, 932, 400, 200, 600, 800, 700, 600]
+      }
+        //   , {
+        //   name: "d32",
+        //   type: 'line',
+        //   symbolSize: 3,
+        //   transition: (cir) => {
+        //     return cir.transition()
+        //       .duration((d, i) => i * 600)
+        //       .ease(d3.easeElasticIn.amplitude(3).period(2))
+        //   },
+        //   lineStyle: {
+        //     'stroke-width': 2,
+        //     'stroke': 'red',
+        //     transition: {
+        //       duration: 1500
+        //     }
+        //   },
+        //   areaStyle: {
+        //     fill: {
+        //       x1: 0,
+        //       y1: 0,
+        //       x2: 1,
+        //       y2: 0,
+        //       colorStops: [
+        //         { offect: 0, color: "rgb(255, 158, 68)" },
+        //         { offect: 0.5, color: "rgb(255, 70, 131)" },
+        //         { offect: 1, color: "rgb(204, 86, 203)" }
+        //       ]
+        //     },
+        //   },
+        //   data: [20, 180, 600, 150, 1000, 770, 300, 700]
+        // }
+      ]
     })
 
     // const { result } = await this.$ajaxGet('getCategoryTree', { level: 0 });

@@ -132,6 +132,7 @@
                        size="mini"
                        :loading="toolLoading[scope.$index] && btn.hasloading"
                        :icon="btn.icon"
+                       :class="btn.class ? [...btn.class] : []"
                        :disabled="getBtnStatus(scope,btn)"
                        :plain="btn.plain"
                        @click.native.prevent="btnMethod(btn,scope.row, scope.$index)">
@@ -140,9 +141,11 @@
             <el-dropdown :key="index"
                          v-else
                          style="margin-left:10px;">
-              <el-button type="primary"
+              <el-button :type="btn.type || 'primary'"
+                         :class="btn.class ? [...btn.class] : []"
                          size="mini">
-                {{btn.title}}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{btn.title}}<i class="el-icon--right"
+                   :class="{[btn.icon]:btn.icon,'el-icon-arrow-down':!btn.icon}"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="(child,_index) in btn.child"
@@ -150,6 +153,7 @@
                   <el-button :key="index"
                              :type="child.handStatus ? getHandType(scope.row[child.handStatus.obj],child.handStatus.type) : (child.type || 'primary')"
                              size="mini"
+                             :class="btn.class ? [...btn.class] : []"
                              :icon="child.icon"
                              :loading="toolLoading[scope.$index] && child.hasloading"
                              :disabled="getBtnStatus(scope,child)"

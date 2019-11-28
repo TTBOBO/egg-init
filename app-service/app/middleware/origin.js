@@ -4,7 +4,6 @@ module.exports = options => {
   const {
     whiteList
   } = options;
-  console.log(whiteList);
   /**
    * 如果传入的不是数组，直接抛出错误
    *  */

@@ -73,13 +73,13 @@ module.exports = appInfo => {
         enable: false
         // ignoreJSON: true
       },
-      domainWhiteList: ['http://10.6.52.39:8080'] //, 'http://10.6.52.41:8080', 'http://bobo.boooool.com'
+      domainWhiteList: ['http://10.29.34.42:8080'] //, 'http://10.6.52.41:8080', 'http://bobo.boooool.com'
     },
     origin: {
       whiteList: ['*']
     },
     cors: {
-      origin: ['http://10.6.52.39:8080'],
+      origin: ['http://10.29.34.42:8080'],
       credentials: true,
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
     },
