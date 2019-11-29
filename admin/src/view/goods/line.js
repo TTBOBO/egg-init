@@ -6,6 +6,7 @@ class Chart {
     this.svg = null;
     this.title = null;
     this.gridsConfig = null; //视图配置
+    this.gridsContainer = {} // grid 外围视同
     this.grids = {}; //视组图
     this.line = {}; //线储存
     this.lineObj = {}; //加入data的line
@@ -21,11 +22,20 @@ class Chart {
     this.axisX = {}; //X轴
     this.yScale = {}; //存储纵坐标数据
     this.series = []; //存储体表数据
+    this.seriesNames = {};
     this.seriesData = []; // 储存真实提供给可视化图的数据
     this.container = {}
     this.dataZoom = null;
-    this.zoomRect = {}, // 存储zoom容器
-      this.brushRect = {}; // 存储brush容器
+    this.selectCol = null; //选中的列
+    this.selectRow = null; //选中的行
+    this.color = null;
+    this.zoomRect = {}; // 存储zoom容器
+    this.brushRect = {}; // 存储brush容器
+    this.legendData = []; //存储legend的数据
+    this.legendGroup = {};
+    this.legendText = null;
+    this.legendRect = null;
+    this.seriesIndexConfig = {};
     this.id = null;
     this.tip = null;
     this.hoverLine = {};
@@ -48,7 +58,7 @@ class Chart {
       'stroke-width': 1,
       type: 'solid',
       "stroke-opacity": 1,
-      stroke: '#058cff'
+      // stroke: '#058cff'
     }
 
     this.areaStyle = {
@@ -73,18 +83,49 @@ class Chart {
       yAxis,
       series,
       tooltip,
-      dataZoom
+      dataZoom,
+      legend
     } = option;
     this.series = series;
     this.dataZoom = dataZoom;
     this.setGrid(grid);
     this.setTitle(title);
     this.setXAxis(xAxis);
+    this.initlegend(legend);
     this.setSeries(series);
     this.setYAxis(yAxis);
     this.createSeries();
     this.createTooltip(tooltip);
     this.setDataZoom();
+  }
+
+  dispatchAction({
+    type,
+    ...otherParams
+  }) {
+    // type: legendMouse | legendSelect
+    this[type] && this[type](otherParams);
+  }
+
+  MouseLegend({
+    name,
+    status = 'over'
+  }) {
+    let [gridIndex, serisesIndex] = this.seriesIndexConfig[name];
+    this.updateLegendOverStatus(gridIndex, serisesIndex, status === 'over' ? true : false)
+  }
+
+  selectLegend({
+    name, // legend name
+    show, // 显示隐藏
+    resover //是否反选  true 时  show字段无效
+  }) {
+    let [gridIndex, serisesIndex] = this.seriesIndexConfig[name];
+    let item = this.legendData.filter(item => item.value === name)[0]
+    this.showHideLegeng(gridIndex, serisesIndex, {
+      ...item,
+      show: resover ? item.show : !show
+    });
   }
 
   createTooltip(tooltip = {}) {
@@ -93,71 +134,61 @@ class Chart {
         formatter
     } = tooltip;
     if (!show) return;
-
     let tip = d3.select('#' + this.id).append('div') //添加tip提示框
       .attr('class', 'tooltip')
       .style('display', 'none')
     this.tip = tip;
     var _this = this;
     var bisect = d3.bisector(d => d.xType === 'time' ? new Date(d.xData) : d.xData).left;
-    console.log(this.gridsConfig)
-    this.series.forEach((item, index) => {
-      let _index = this.gridsConfig.length === 1 ? 0 : index;
+    this.gridsConfig.forEach((item, index) => {
       let {
         left,
         right,
         top,
         bottom,
-      } = this.gridsConfig[_index];
-      this.createHoverLine(_index);
-      let data = this.seriesData[_index];
-      let react = this.grids['grid_' + _index].append("rect")
+      } = item;
+      this.createHoverLine(index);
+      let data = this.seriesData[0]; //x轴值都是一样的  取第0个就行
+      let react = this.gridsContainer['grid_' + index].append("rect")
         .attr("class", "overPlane")
         .attr("opacity", 0)
         .attr('height', this.container.height - (top + bottom))
         .attr("transform", `translate(${left},${top})`)
         .attr('width', this.container.width - (left + right))
       var tipFun = util.debounce(function (x, y, params) {
-        tip.style("display", null);
-        let len = params.length - 1;
-        let data = params.map((item, index) => `${item.seriesName}:${item.value}${index === len ? '' :'<br/>'}`);
-        _this.tip.html(formatter ? formatter(params) : "<div id='tip' style='color: #fff;text-align:left;line-height: 20px;'>" + params[0].axisValue + "<br/>" + data.join('') + "</div>")
+        _this.tip.style("display", null);
+        let resultData = params.map(item => `<div style="display: flex;align-items: center;"><span style="display: inline-block;margin-right:5px;width: 8px;height: 8px;background: ${item.color || 'red'};border-radius:4px;mrgin-right:5px;"></span>${item.seriesName}:${item.value}</div>`);
+        _this.tip.html(formatter ? formatter(params) : "<div id='tip' style='color: #fff;text-align:left;line-height: 20px;'>" + params[0].axisValue + "<br/>" + resultData.join('') + "</div>")
           .transition().duration(100) //提示框的内容
           .style('left', x + 20 + 'px') //提示框的位置
           .style('top', y + 20 + 'px')
       }, 50)
-      console.log(1111)
       react.on("mouseover", () => {
-        _this.hoverLine[`grid_hoverline_${_index}`].style("display", null);
+        this.hoverLine[`grid_hoverline_${index}`].style("display", null);
       }).on('mousemove', function () {
-        let xScale = _this.xScale['xScale_' + _index];
+        let xScale = _this.xScale['xScale_' + index];
         var xdata = xScale.invert(d3.mouse(this)[0]);
         var yIndex = bisect(data, xdata);
         var d0 = data[yIndex - 1];
         var d1 = data[yIndex];
         var current = d1.xType === 'time' ? new Date(d1.xData) : d1.xData;
         var d = d0 ? (xdata - d0.xData > current - xdata ? d : d1) : data[0];
-        console.log(`grid_${_index}_circle_${index}`);
-        // //_this.circleView[`grid_${index}_circle_${_index}`].select('circle').attr('cx', d => _this.xScale['xScale_' + index](d.xType === 'time' ? new Date(d.xData) : d.xData))
-        let result = _this.circleView[`grid_${_index}_circle_${index}`].select('circle').filter(cur => {
-          return cur.index === d.index
-        })
-        console.log(result);
-
-        result.attr('r', 7)
-        _this.hoverLine[`grid_hoverline_${_index}`].attr("transform", "translate(" + xScale(d.xType === 'time' ? new Date(d.xData) : d.xData) + ",0)");
-        let res = _this.series.map((item, _index) => {
+        _this.hoverLine[`grid_hoverline_${index}`].attr("transform", "translate(" + xScale(d.xType === 'time' ? new Date(d.xData) : d.xData) + ",0)");
+        let res = _this.series.map((item, sIndex) => {
+          _this.circleView[`grid_${index}_circle_${sIndex}`].select('circle').filter(function (cur) {
+            d3.select(this).attr("r", () => cur.index === d.index ? item.symbolSize * 1.5 : item.symbolSize);
+          })
           return {
             value: item.data[d.index],
-            axisIndex: _index,
+            axisIndex: index,
             dataIndex: d.index,
             axisValue: d.xData,
-            seriesIndex: _index,
+            seriesIndex: sIndex,
             seriesName: item.name,
-            seriesType: item.type
+            seriesType: item.type,
+            color: _this.color(item.name)
           }
         })
-
         if (tooltip) {
           const {
             offsetX,
@@ -165,11 +196,15 @@ class Chart {
           } = d3.event;
           tipFun(offsetX, offsetY, res)
         }
-      }).on("mouseout", function () {
-        tip.style("display", "none");
-        _this.hoverLine[`grid_hoverline_${_index}`].style("display", 'none');
+        this.selectCol = d;
+      }).on("mouseout", () => {
+        setTimeout(() => this.tip.style("display", "none"), 50);
+        this.hoverLine[`grid_hoverline_${index}`].style("display", 'none');
+        _this.series.map((item, sIndex) => {
+          _this.circleView[`grid_${index}_circle_${sIndex}`].select('circle').attr("r", item.symbolSize)
+        })
       })
-      this.zoomRect[_index] = react;
+      this.zoomRect[index] = react;
     })
   }
 
@@ -188,14 +223,141 @@ class Chart {
     this.hoverLine[`grid_hoverline_${index}`] = hoverLine;
   }
 
+  initlegend(legend = {}) {
+    this.seriesNames = this.series.map(item => item.name);
+    const {
+      show,
+      data = [],
+      itemWidth = 25,
+      itemHeight = 18,
+      itemMargn = 15,
+      itemPadding = 5,
+      fontSize = 14
+    } = legend
+    if (!show) return;
+    let width = 0;
+    let legendData = [];
+    this.color = d3.scaleOrdinal().domain(this.seriesNames).range(d3.schemeSet2);
+    this.gridsConfig.forEach((grid, index) => {
+      data.forEach(value => {
+        let _index = this.seriesNames.indexOf(value)
+        if (_index != -1) {
+          let obj = {
+            value,
+            width,
+            axisIndex: index,
+            seriesIndex: _index,
+            show: true
+          }
+          width += this.calculateWidth(value) + itemPadding + itemWidth + itemMargn
+          legendData.push(obj);
+        }
+        this.series.forEach((_, _index) => this.seriesIndexConfig[_.name] = [index, _index]); //存储seriesItem 对应grid  以及 group的 index
+      })
+    })
+
+    var lableGrops = this.svg.append('g').attr('class', 'lableGrops')
+      .attr('transform', 'translate(20,20)')
+      .selectAll('g')
+      .data(legendData)
+      .enter()
+      .append('g')
+      .attr('transform', d => 'translate(' + [d.width, itemHeight / 2] + ')')
+      .style('cursor', 'pointer')
+
+    let rect = lableGrops.append('rect');
+    let text = lableGrops.append('text');
+    this.setNodeAttr(rect, {
+      'width': itemWidth,
+      'height': itemHeight,
+      'x': 0,
+      y: -(itemHeight / 2),
+      'rx': 5,
+      'ry': 5,
+      'fill-opacity': 1,
+      fill: d => this.color(d.value)
+    })
+
+    this.setNodeAttr(text, {
+      x: itemWidth + itemPadding,
+      'alignment-baseline': 'middle',
+      fill: 'black',
+      y: 2,
+      opacity: 1
+    })
+    text.text(d => d.value);
+    this.setNodeAttr(text, {
+      'font-size': fontSize,
+      'line-height': itemHeight + 'px'
+    }, 'style');
+    this.legendText = text;
+    this.legendRect = rect;
+    this.legendData = legendData;
+    this.lableGrops = lableGrops;
+    lableGrops.on('mouseover', (d) => {
+      this.updateLegendOverStatus(d.axisIndex, d.seriesIndex, true);
+    }).on('mouseout', (d) => {
+      this.updateLegendOverStatus(d.axisIndex, d.seriesIndex, false);
+    }).on('click', (d) => {
+      const {
+        axisIndex,
+        seriesIndex
+      } = d;
+      this.showHideLegeng(axisIndex, seriesIndex, d);
+    })
+  }
+
+  showHideLegeng(axisIndex, seriesIndex, item) {
+    const {
+      show
+    } = item;
+    if (show) {
+      this.circleView[`grid_${axisIndex}_circle_${seriesIndex}`].remove();
+      this.grids['grid_' + axisIndex].select(`.grid_${axisIndex}_area_${seriesIndex}`).remove();
+      this.grids['grid_' + axisIndex].select(`.grid_${axisIndex}_line_${seriesIndex}`).remove();
+    } else {
+      this.addChart(this.series[seriesIndex], axisIndex, seriesIndex);
+      this.grids['grid_' + axisIndex].selectAll(`.grid_line`).sort((a, b) => a[0].seriesIndex - b[0].seriesIndex);
+      this.grids['grid_' + axisIndex].selectAll(`.grid_area`).sort((a, b) => a[0].seriesIndex - b[0].seriesIndex);
+    }
+    let opacity = show ? 0.5 : 1;
+    this.legendData[seriesIndex] = {
+      ...item,
+      show: !show
+    };
+    this.lableGrops.data(this.legendData);
+    this.legendText.filter(_d => seriesIndex == _d.seriesIndex).attr('opacity', opacity);
+    this.legendRect.filter(_d => seriesIndex == _d.seriesIndex).attr('fill-opacity', opacity)
+    this.series[seriesIndex].show = !show;
+    this.creatYaxis('update');
+  }
+
+  updateLegendOverStatus(gridIndex, seriesIndex, status) {
+    this.circleView[`grid_${gridIndex}_circle_${seriesIndex}`].select('circle').attr("r", this.series[seriesIndex].symbolSize * (status ? 1.5 : 1));
+  }
+
+  calculateWidth(item) {
+    let pre = d3.select(this.el).append('span').style('display', 'inline-block').attr('font-size', '12px').text(item);
+    let width = pre._groups[0][0].clientWidth;
+    pre.remove();
+    return width
+  }
+
   setSeries(series) {
-    this.seriesData = series.map(item => {
-      return item.data.map((_item, _index) => {
+    this.seriesData = series.map(({
+      data = [],
+      name = ''
+    }, seriesIndex) => {
+      let color = this.color(name)
+      return data.map((_item, _index) => {
         return {
           xData: this.xAxisConfig[0].data[_index], // 暂时取第0个xAxis数据
           yData: _item,
           xType: this.xAxisConfig[0].type,
-          index: _index
+          index: _index,
+          color,
+          name,
+          seriesIndex
         }
       })
     })
@@ -203,24 +365,26 @@ class Chart {
 
   createSeries() {
     this.series.forEach((item, index) => {
-      const {
-        id,
-        name,
-        lineStyle,
-        areaStyle,
-      } = item;
       let gridIndex = this.gridsConfig.length === 1 ? 0 : index;
       this.createClipPath();
-      this.createLine({
-        lineStyle: Object.assign({}, this.lineStyle, lineStyle || {})
-      }, gridIndex, index);
-      if (areaStyle) {
-        this.createArea({
-          areaStyle: Object.assign(this.areaStyle, areaStyle || {})
-        }, gridIndex, index);
-      }
-      this.creatCircle(item, gridIndex, index);
+      this.addChart(item, gridIndex, index)
     })
+  }
+
+  addChart(item, gridIndex, seriesIndex) {
+    const {
+      lineStyle,
+      areaStyle,
+    } = item;
+    this.createLine({
+      lineStyle: Object.assign({}, this.lineStyle, lineStyle || {})
+    }, gridIndex, seriesIndex);
+    if (areaStyle) {
+      this.createArea({
+        areaStyle: Object.assign({}, this.areaStyle, areaStyle || {})
+      }, gridIndex, seriesIndex);
+    }
+    this.creatCircle(item, gridIndex, seriesIndex);
   }
 
   creatCircle(item, gridIndex, index) {
@@ -232,6 +396,7 @@ class Chart {
     let circleView = this.grids['grid_' + gridIndex]
       .append('g')
       .selectAll('g')
+
       .data(this.seriesData[index])
       .enter()
       .append('g')
@@ -258,10 +423,7 @@ class Chart {
       .attr('cy', d => this.yScale['yScale_' + gridIndex](d.yData))
       .attr('r', '2')
       .attr('fill', '#fff')
-      .attr('stroke-width', 1).attr("stroke", '#058cff')
-      .style('z-index', 999)
-      .transition()
-      .duration((d, i) => i * 1000)
+      .attr('stroke-width', 1).attr("stroke", d => d.color)
       .attr('r', symbolSize)
     this.circle[`grid_${gridIndex}_circle`] = circle;
   }
@@ -282,18 +444,18 @@ class Chart {
       .attr('d', this.area[areaName])
     this.setNodeAttr(area, {
       ...areaStyle,
-      class: areaName,
+      class: areaName + ' grid_area',
       stroke: 'none',
       'clip-path': 'url(#grid_' + gridIndex + '_clip)',
       'fill-opacity': this.series.length > 1 && this.yAxisConfig.length === 1 ? '0.5' : '1' //同一坐标系多个area的时，file-opacity 0.5
     })
-    if (areaStyle.fill) {
+    if (areaStyle) {
       if (typeof areaStyle.fill === 'object') {
         //生成渐变
         let id = this.createLineGradient(areaStyle.fill, gridIndex);
         area.style('fill', "url(#" + id + ")")
       } else {
-        area.attr('fill', areaStyle.fill)
+        area.attr('fill', areaStyle.fill || (d => d[0].color))
       }
     }
   }
@@ -312,6 +474,7 @@ class Chart {
       .append("path")
       .datum(this.seriesData[index])
       .attr("d", this.line[lineName])
+      .attr('stroke', d => d[0].color)
     const {
       transition,
       ...style
@@ -322,7 +485,7 @@ class Chart {
     };
     this.setNodeAttr(line, {
       ...style,
-      class: lineName,
+      class: lineName + ' grid_line',
       fill: 'none',
       'clip-path': 'url(#grid_' + gridIndex + '_clip)'
     })
@@ -433,6 +596,7 @@ class Chart {
     _this.grids['grid_' + index].select('.x-axis_' + index).call(_this.xAxis['xAxis' + index]);
     this.series.forEach((_, _index) => {
       _this.circleView[`grid_${index}_circle_${_index}`].select('circle').attr('cx', d => _this.xScale['xScale_' + index](d.xType === 'time' ? new Date(d.xData) : d.xData))
+        .attr('cy', d => _this.yScale['yScale_' + index](d.yType === 'time' ? new Date(d.yData) : d.yData))
       _this.grids['grid_' + index].select(`.grid_${index}_line_${_index}`).attr('d', _this.line[`grid_${index}_line_${_index}`])
       const {
         line,
@@ -457,7 +621,8 @@ class Chart {
     this.creatXaxis(); //创建x轴
   }
 
-  creatYaxis() {
+  //type create | update
+  creatYaxis(yaxisType = 'create') {
     this.yAxisConfig.forEach((item, index) => {
       let {
         type = 'line', show = true, getDomain, format, align = 'bottom', resover = true, axisLabel,
@@ -465,28 +630,39 @@ class Chart {
       } = item;
       let data = null;
       if (this.yAxisConfig.length === 1 && this.seriesData.length >= 1) {
-        data = this.series.reduce((total, item) => total.concat(item.data), [])
+        data = this.series.reduce((total, {
+          data,
+          show = true
+        }) => show ? total.concat(data) : total, [])
       } else {
         console.log('多个y轴');
       }
-      // let {
-      //   data = []
-      // } = this.series[index] || {};
+      if (!data.length) return;
       let {
         left,
       } = this.gridsConfig[index];
-      this.yScale['yScale_' + index] = d3[`${this.axisType[type]}`]()
-        .domain((this.isFun(getDomain) ? getDomain({
-          type,
-          resover
-        }, data) : this.getDomain({
-          type,
-          resover
-        }, data)))
-        .range(this.getRange(align, index))
-      this.yAxis['yAxis' + index] = d3[this.lineAlign[align]]().scale(this.yScale['yScale_' + index])
+      let domain = (this.isFun(getDomain) ? getDomain({
+        type,
+        resover
+      }, data) : this.getDomain({
+        type,
+        resover
+      }, data))
+      if (yaxisType === 'create') {
+        console.log(111)
+        this.yScale['yScale_' + index] = d3[`${this.axisType[type]}`]()
+          .domain(domain)
+          .range(this.getRange(align, index))
+        this.yAxis['yAxis' + index] = d3[this.lineAlign[align]]().scale(this.yScale['yScale_' + index])
+      } else {
+        this.yScale['yScale_' + index].domain(domain);
+        this.grids['grid_' + index].select('.y-axis_' + index).call(this.yAxis['yAxis' + index]);
+        this.changeChart(index);
+        return false;
+      }
       if (format)
         format(this.yAxis['yAxis' + index])
+      if (yaxisType !== 'create') return;
       if (!show) return;
       let axis = this.grids['grid_' + index].append('g')
         .attr("class", "axis y-axis_" + index)
@@ -613,7 +789,8 @@ class Chart {
       let {
         id = 'grid_' + index
       } = grid;
-      this.grids[id] = this.svg.append('g').attr('id', id);
+      this.gridsContainer[id] = this.svg.append('g').attr('id', id + '_container');
+      this.grids[id] = this.gridsContainer[id].append('g').attr('id', id);
     })
   }
 
@@ -663,6 +840,7 @@ class Chart {
 
   createSvgContainer(el) {
     let box = d3.select(el);
+    this.el = el;
     this.setNodeAttr(box, {
       width: "100%",
       'user-select': "none",
@@ -721,7 +899,6 @@ class Chart {
     linearGradient.attr('id', id)
     return id;
   }
-
 
   createClipPath(index = 0) {
     let {

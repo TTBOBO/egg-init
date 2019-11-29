@@ -1,6 +1,39 @@
 <template>
   <div style="overflow-y:auto;    height: 100%;">
+    <el-button size="mini"
+               type="primary"
+               @click="mouse('d3245456467','over')">高亮d3245456467</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="mouse('d3245456467','out')">取消高亮d3245456467</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="mouse('d32','over')">高亮d32</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="mouse('d32','out')">取消高亮d32</el-button>
 
+    <br />
+    <br />
+    <el-button size="mini"
+               type="primary"
+               @click="selectL('d3245456467',true)">显示d3245456467</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="selectL('d3245456467',false)">隐藏d3245456467</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="selectL('d3245456467','',true)">反选d3245456467</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="selectL('d32',true)">显示d32</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="selectL('d32',false)">隐藏d32</el-button>
+    <el-button size="mini"
+               type="primary"
+               @click="selectL('d32','',true)">反选d32</el-button>
+    <br />
     <div style="width:800px">
       <div id="chart"
            ref="chart"
@@ -684,10 +717,24 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         }
       })
       return curIndex;
+    },
+
+    mouse (name, status = 'over') {
+      this.chart.dispatchAction({
+        type: 'MouseLegend',
+        name,
+        status
+      })
+    },
+
+    selectL (name, show, resover) {
+      this.chart.dispatchAction({
+        type: 'selectLegend',
+        name,
+        resover,
+        show
+      })
     }
-
-
-
   },
   async created () {
     // await this.$ajaxPost('grpc', { a: 1 })
@@ -697,19 +744,30 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
 
   },
   async mounted () {
+
     await util.str.createScript('https://d3js.org/d3.v5.min.js');
+    // console.log(d3.schemeSet2)
+    // var myColor = d3.scaleOrdinal()
+    //   .domain(["valueA", "valueB", "valueC"])
+    //   .range(d3.schemeSet2);
+    // console.log(myColor('valueA'), myColor('valueB'), myColor('valueC15'), myColor('valueC14'))
     // this.initD3();
     // this.initD3Line();
     // this.initD3Circle();
     this.initLine();
-    let chart = new Line(this.$refs.chart)
-    chart.setOption({
+    this.chart = new Line(this.$refs.chart)
+    this.chart.setOption({
       title: {
         text: "测试标题",
         textStyle: {
           color: "#5793f3",
           fontSize: "12px"
         }
+      },
+      legend: {
+        show: true,
+        data: ['d3245456467', 'd32'],
+        fontSize: 14
       },
       tooltip: {
         // formatter: (d) => {
@@ -753,7 +811,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         name: 'test'
       },
       series: [{
-        name: "d31",
+        name: "d3245456467",
         type: 'line',
         symbolSize: 3,
         // transition: (cir) => {
@@ -769,41 +827,41 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
           }
         },
         areaStyle: {
-          fill: "rgb(255, 158, 68)"
+          // fill: "rgb(255, 158, 68)"
         },
         data: [100, 932, 400, 200, 600, 800, 700, 600]
       }
-        //   , {
-        //   name: "d32",
-        //   type: 'line',
-        //   symbolSize: 3,
-        //   transition: (cir) => {
-        //     return cir.transition()
-        //       .duration((d, i) => i * 600)
-        //       .ease(d3.easeElasticIn.amplitude(3).period(2))
-        //   },
-        //   lineStyle: {
-        //     'stroke-width': 2,
-        //     'stroke': 'red',
-        //     transition: {
-        //       duration: 1500
-        //     }
-        //   },
-        //   areaStyle: {
-        //     fill: {
-        //       x1: 0,
-        //       y1: 0,
-        //       x2: 1,
-        //       y2: 0,
-        //       colorStops: [
-        //         { offect: 0, color: "rgb(255, 158, 68)" },
-        //         { offect: 0.5, color: "rgb(255, 70, 131)" },
-        //         { offect: 1, color: "rgb(204, 86, 203)" }
-        //       ]
-        //     },
-        //   },
-        //   data: [20, 180, 600, 150, 1000, 770, 300, 700]
-        // }
+        , {
+        name: "d32",
+        type: 'line',
+        symbolSize: 3,
+        // transition: (cir) => {
+        //   return cir.transition()
+        //     .duration((d, i) => i * 600)
+        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+        // },
+        lineStyle: {
+          'stroke-width': 2,
+          // 'stroke': 'red',
+          transition: {
+            duration: 1500
+          }
+        },
+        areaStyle: {
+          fill: {
+            x1: 0,
+            y1: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              { offect: 0, color: "rgb(255, 158, 68)" },
+              { offect: 0.5, color: "rgb(255, 70, 131)" },
+              { offect: 1, color: "rgb(204, 86, 203)" }
+            ]
+          },
+        },
+        data: [20, 180, 600, 150, 1000, 770, 300, 700]
+      }
       ]
     })
 
