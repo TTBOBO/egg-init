@@ -778,9 +778,18 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         left: 50,
         right: 50,
         top: 50,
-        bottom: 50
-      }],
-      xAxis: {
+        bottom: 50,
+        height: 200
+      }
+        // , {
+        //   left: 50,
+        //   right: 50,
+        //   top: 200,
+        //   bottom: 50,
+        //   height: 200
+        // }
+      ],
+      xAxis: [{
         name: 'xtest',
         align: 'bottom',
         show: true,
@@ -797,7 +806,26 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
             .tickFormat(d3.timeFormat("%Y-%m-%d"))
           return svg;
         }
-      },
+      }
+        // , {
+        //   name: 'xtest',
+        //   align: 'bottom',
+        //   show: true,
+        //   type: 'time',
+        //   data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
+        //   axisLabel: {
+        //     y: 10,
+        //     x: 2,
+        //     transform: 'rotate(30)',
+        //     'text-anchor': 'start'
+        //   },
+        //   format: (svg) => {
+        //     svg.ticks(d3.timeDay.every(1))
+        //       .tickFormat(d3.timeFormat("%Y-%m-%d"))
+        //     return svg;
+        //   }
+        // }
+      ],
       dataZoom: [{
         inside: true,  //控制数据滑动变化区间的zoom功能
         brush: true,
@@ -805,11 +833,17 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         realtime: true,
         xAxisIndex: [0]  //使用brush控制设置指定的grid
       }],
-      yAxis: {
+      yAxis: [{
         align: 'left',
         type: 'line',
         name: 'test'
-      },
+      }
+        // , {
+        //   align: 'left',
+        //   type: 'line',
+        //   name: 'test1'
+        // }
+      ],
       series: [{
         name: "d3245456467",
         type: 'line',

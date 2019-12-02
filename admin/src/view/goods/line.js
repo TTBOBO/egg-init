@@ -121,7 +121,8 @@ class Chart {
     resover //是否反选  true 时  show字段无效
   }) {
     let [gridIndex, serisesIndex] = this.seriesIndexConfig[name];
-    let item = this.legendData.filter(item => item.value === name)[0]
+    let item = this.legendData.filter(item => item.value === name)[0];
+    if (item.show === show) return;
     this.showHideLegeng(gridIndex, serisesIndex, {
       ...item,
       show: resover ? item.show : !show
@@ -623,6 +624,7 @@ class Chart {
 
   //type create | update
   creatYaxis(yaxisType = 'create') {
+    console.log(this.yAxisConfig)
     this.yAxisConfig.forEach((item, index) => {
       let {
         type = 'line', show = true, getDomain, format, align = 'bottom', resover = true, axisLabel,
@@ -636,6 +638,7 @@ class Chart {
         }) => show ? total.concat(data) : total, [])
       } else {
         console.log('多个y轴');
+        data = this.series[index].data;
       }
       if (!data.length) return;
       let {
@@ -648,6 +651,7 @@ class Chart {
         type,
         resover
       }, data))
+      console.log(domain)
       if (yaxisType === 'create') {
         console.log(111)
         this.yScale['yScale_' + index] = d3[`${this.axisType[type]}`]()
@@ -700,6 +704,7 @@ class Chart {
         top,
         left
       } = this.gridsConfig[index];
+
       this.xScale['xScale_' + index] = d3['scaleTime' || `${this.axisType[type]}`]()
         .domain((this.isFun(getDomain) ? getDomain({
           type
@@ -716,7 +721,8 @@ class Chart {
           }, data)))
           .range(this.getRange(align, index));
       }
-      this.xAxis['xAxis' + index] = d3[this.lineAlign[align]]().scale(this.xScale['xScale_' + index])
+      this.xAxis['xAxis' + index] = d3[this.lineAlign[align]]().scale(this.xScale['xScale_' + index]);
+
       if (format)
         this.xAxis['xAxis' + index] = format(this.xAxis['xAxis' + index])
       if (show) {
@@ -724,7 +730,7 @@ class Chart {
           .attr("class", "axis x-axis_" + index)
           .attr("transform", "translate(0," + (height / len - (top)) + ")")
           .call(this.xAxis['xAxis' + index]);
-
+        // console.log("transform", "translate(0," + (height / len - (top)) + ")")
         if (name) {
           if (typeof name === 'string') {
             this.grids['grid_' + index]
