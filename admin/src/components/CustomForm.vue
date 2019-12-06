@@ -336,7 +336,7 @@ export default {
     setVal (field, val) {
       this.$set(this.paramsData, field, val); //设置新的值
     },
-    async updateSelectOption (field, newV = '') {
+    async updateSelectOption (field, newV = '', noLoad = false) {
       let selArr = [],
         item = null;
       for (var i = 0; i < this.optionData.formList.length; i++) {
@@ -344,8 +344,14 @@ export default {
         if (item.field == field) {
           selArr = [];
           if (item.optionUrl) {
-            let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
-            let data = result[item.urlkey];
+            let data;
+            if (noLoad) {
+              data = this.formOptionData[field];
+            } else {
+              let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
+              data = result[item.urlkey];
+              this.formOptionData[field] = data;
+            }
             selArr =
               item.valueType || item.colKey
                 ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType)
