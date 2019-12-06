@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package demo;
+
+service HelloService {
+    rpc SayHello (helloRequest) returns (helloResponse) {}
+}
+
+message helloRequest {
+    string code = 1;
+    string message = 2;
+}
+//安装  proto  192.168.99.100
+//npm install protoc-gen-grpc - g
+//protoc -I=. hello.proto   --js_out=import_style=commonjs:.   --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.  生成proto文件
+message helloResponse {
+    string code = 1;
+    string message = 2;
+}

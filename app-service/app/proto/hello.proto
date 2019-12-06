@@ -3,15 +3,14 @@ syntax = "proto3";
 package demo;
 
 service HelloService {
-    rpc SayHello (HelloRequest) returns (HelloResponse) {}
+    rpc SayHello (helloRequest) returns (helloResponse) {}
 }
 
-message HelloRequest {
+message helloRequest {
     string code = 1;
     string message = 2;
 }
-
-message HelloResponse {
+message helloResponse {
     string code = 1;
     string message = 2;
 }

@@ -6,10 +6,11 @@ module.exports = app => {
   let Customer = model.define('customer', schema);
   Customer = concatModel(Customer);
   Customer.associate = () => {
-    Customer.hasMany(app.model.Order, {
-      foreignKey: 'uuid',
-      targetKey: 'uuid'
-    });
+    // Customer.hasMany(app.model.Order, {
+    //   foreignKey: 'uuid',
+    //   targetKey: 'id'
+    // });
+    // Customer.hasOne(app.model.Comment);
   };
   return Customer;
 };

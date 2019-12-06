@@ -1,0 +1,73 @@
+.tab-bar{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: start;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 800;
+    .bar-item{
+        flex: 1;
+        padding: 18px 0 5px 0;
+        color: #333;
+        font-size: 0;
+        height: 75px;
+        transition: all .2s;
+        text-align: center;
+        position: relative;
+        background: black;
+        flex-flow: column;
+        justify-content: center;
+        .icon{
+            width: 36px;
+            height: 36px;
+            object-fit: cover;
+            margin-bottom: 12px;
+        }
+        .text{
+            display: block;
+            line-height: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size:20px;
+            font-weight:400;
+            color:rgba(255,255,255,1);
+        }
+        .bage{
+            width: 8px;
+            height: 8px;
+            top: -4px;
+            right: -4px;
+            border-radius: 50%;
+            position: absolute;
+            background: #ff4949;
+            box-shadow: 0 0.08533rem 0.17067rem 0 rgba(255,73,73,.2);
+            overflow: hidden;
+        }
+        .bage-num{
+            padding: -4px;
+            top: -4px;
+            right: -6PX;
+            color: #fff;
+            font-size: .42667rem;
+            line-height: 1.4;
+            border-radius: .29867rem .29867rem .29867rem 0;
+            transform: translate(50%,0);
+            z-index: 1;
+            position: absolute;
+            background: #ff4949;
+            box-shadow: 0 0.08533rem 0.17067rem 0 rgba(255,73,73,.2);
+            overflow: hidden;
+        }
+    }
+    .active{
+        
+    }
+}

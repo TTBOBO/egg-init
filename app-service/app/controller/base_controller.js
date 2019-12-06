@@ -15,7 +15,6 @@ class BaseController extends Controller {
       height: 44
     };
     var captcha = svgCaptcha.create(codeConfig);
-    console.log(captcha.text);
     this.ctx.cookies.set('code', captcha.text.toLowerCase()); // 存session用于验证接口获取文字码
     var codeData = {
       img: captcha.data
@@ -73,18 +72,24 @@ class BaseController extends Controller {
   }
   async uploadFile() {
     let filePath = await this.upload();
-    this.success({ data: filePath });
+    this.success({ result: filePath });
+  }
+  async getSTS() {
+    const Cos = new CosController(this.config.cos);
+    this.success({
+      result: await Cos.getCredential()
+    });
   }
 
   verifyCode(code) {
     return code.toLowerCase() === this.ctx.cookies.get('code');
   }
 
-  success({ data, status, message = '' }) {
+  success({ result, status, message = '' }) {
     this.ctx.body = {
       code: this.ctx.SUCCESS_CODE,
       message,
-      data
+      result
     };
     this.ctx.status = status || 200;
   }

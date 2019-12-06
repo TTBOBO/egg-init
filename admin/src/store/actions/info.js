@@ -1,1 +1,1 @@
-export const infoAction = {}
+export const infoAction = {};

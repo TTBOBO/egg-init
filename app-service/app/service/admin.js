@@ -41,7 +41,7 @@ class AdminService extends Service {
   async getAdminList() {
     return await this.app.model.Admin.getAdminList();
     // return await this.app.model.Admin.grid({
-    //   pagination: { page: 1, pageSize: 1 },
+    //   pagination: { page: 1, size: 1 },
     //   type: 'findAll'
     // });
   }

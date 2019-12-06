@@ -1,6 +1,6 @@
 'use strict';
 module.exports = app => {
-  const { STRING, UUIDV1, INTEGER } = app.Sequelize;
+  const { STRING, INTEGER } = app.Sequelize;
   return {
     schema: {
       id: {

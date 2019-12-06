@@ -1,0 +1,135 @@
+@import '../../../assets/css/base.scss';
+
+.container {
+  width: 100%;
+  min-height: 100%;
+  background: $margin-con-color;
+  position: relative;
+
+  &:last-child {
+    margin-bottom: 50px;
+  }
+
+  .address-item {
+    // height: 226px;
+    margin-bottom: 20px;
+    background: #fff;
+
+
+
+    .item-con {
+      padding: 46px 30px 34px 30px;
+      border-bottom: 2px solid rgba(230, 230, 230, 1);
+
+      .item-info {
+        display: flex;
+        justify-content: flex-start;
+
+        &:first-child {
+          margin-bottom: 33px;
+        }
+
+        .some {
+          font-size: 28px;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 1);
+        }
+
+        .name {
+          width: 100px;
+          margin-right: 37px;
+          display: inline-block;
+        }
+
+        .phone {
+          font-size: 22px;
+          font-weight: 400;
+          color: rgba(0, 0, 0, 1);
+        }
+
+        .mr-icon {
+          font-size: 20px;
+          line-height: 34px;
+          text-align: center;
+          color: $btn-bgcolor;
+          border: 1px solid $btn-bgcolor;
+          border-radius: 4px;
+          width: 64px !important;
+        }
+
+        .mr {
+          display: inline-block;
+          width: 66px;
+          height: 34px;
+          margin-right: 70px;
+        }
+      }
+
+    }
+
+    .item-bottom {
+      padding: 7px 5px 4px 5px;
+      display: flex;
+      flex-flow: row;
+      justify-content: space-between;
+
+      .icon {
+        width: 34px !important;
+        height: 34px !important;
+        margin-right: 20px;
+      }
+
+      .label {
+        height: 60px;
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+        font-size: 24px;
+        line-height: 24px;
+        font-weight: 400;
+        color: rgba(1, 1, 1, 1);
+        width: 300px;
+      }
+
+      .icon-con {
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .delete-icon {
+        width: 60px;
+        height: 60px;
+        background-size: cover;
+      }
+    }
+  }
+
+  .address-tool {
+    position: fixed;
+    bottom: 80px;
+    left: 30px;
+    right: 30px;
+    height: 88px;
+    display: flex;
+    justify-content: space-between;
+
+    .btn {
+      height: 100%;
+      text-align: center;
+      line-height: 88px;
+      color: #fff;
+      font-size: 30px;
+      border-radius: 6px;
+      width: 334px;
+    }
+
+    .import-btn {
+      background: linear-gradient(225deg, $base-color 90%, #fff)
+    }
+
+    .add-btn {
+      background: linear-gradient(45deg, $base-color 90%, #fff)
+    }
+  }
+}

@@ -29,10 +29,6 @@ module.exports = app => {
         type: STRING(38),
         allowNull: false
       },
-      customerId: {
-        type: STRING(38),
-        allowNull: false
-      },
       shopName: STRING(76),
       remark: STRING(255),
       freightAmount: {
@@ -45,7 +41,12 @@ module.exports = app => {
       },
       reductionAmount: {
         type: DECIMAL,
-        comment: '订单金额'
+        comment: '折扣金额',
+        defaultValue: 0.0
+      },
+      totalAmount: {
+        type: DECIMAL,
+        comment: '总金额'
       }
     },
     option: {

@@ -5,7 +5,6 @@
  */
 export const getMenuByRouter = (routers, access) => {
   let res = []
-
   routers.forEach(item => {
     if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
       let obj = {

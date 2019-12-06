@@ -1,0 +1,44 @@
+@import "~taro-ui/dist/style/index.scss";
+@import './assets/css/base.scss';
+
+.item-extra__icon-arrow {
+  font-size: 36px !important;
+}
+
+.at-list__item {
+  &::after {
+    left: 0 !important;
+  }
+}
+
+page {
+  height: 100%;
+}
+
+.submit-btn {
+  width: 250px !important;
+  border: none !important;
+  background: linear-gradient(45deg, $base-color 90%, #fff);
+}
+
+.at-input {
+  margin-left: 0;
+  padding: 16px;
+}
+
+.at-tabs__item--active {
+  color: $base-color;
+
+  .at-tabs__item-underline {
+    background-color: $base-color;
+  }
+}
+
+.at-tabs__body {
+  height: calc(100% - 86px) !important;
+  position: relative;
+}
+
+.at-tabs-pane {
+  height: 100% !important;
+}

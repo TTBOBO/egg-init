@@ -1,57 +1,58 @@
 <template>
   <div class="">
     <el-form ref="form"
-             :model="paramsData"
-             :inline="optionData['inline'] || false"
-             :rules="validata"
-             :label-width="optionData.LabelWidth || '120px'"
              v-if="showForm"
-             :inline-message="optionData['inline-message']"
+             :model="paramsData"
+             :inline="formOption['inline'] || false"
+             :rules="validata"
+             :label-width="formOption.LabelWidth || '120px'"
+             :inline-message="formOption['inline-message']"
              :status-icon="true"
-             :border="optionData.border || true"
+             :border="formOption.border || true"
              @submit.native.prevent>
-      <el-form-item v-for="(item,index) in optionData.formList"
-                    :label="item.title+'：'"
+      <el-form-item v-for="(item,index) in formOption.formList"
+                    v-show="!item.hidden"
                     :prop="item.field"
                     :key='index'
-                    :style="{width:item.width}"
-                    v-show="!item.hidden">
+                    :style="{width:'100%'}">
         <span slot="label">
           <span class="mb"
                 v-show="item.slotMark"> ~ </span>
-          {{item.title}}
+          <span v-if="item.title">{{item.title+'：'}}</span>
           <el-tooltip v-if="item.slotLabel"
                       class="item"
                       effect="dark"
-                      :content="item.tip || ''"
                       :placement="item.tipAli || 'top'">
+            <div slot="content"
+                 v-html="item.tip || ''"></div>
             <i class="el-icon-question"></i>
           </el-tooltip>
         </span>
 
         <!-- && !item.format -->
         <template v-if="(!item.type && !item.scoped) || (item.type == 'input' || item.type == 'textarea' && !item.scoped)">
-          <div style="display: flex;">
-            <el-input v-if="item.inputType"
+          <div :style="{display:item.otherScoped ? '' : 'flex'}">
+            <el-input v-if="item.valueType"
                       :min="0"
-                      style="width:100%"
-                      :type="item.inputType || 'text'"
+                      :style="{width:item.width || '100%'}"
+                      :type="item.valueType || 'text'"
                       v-model.number="paramsData[item.field]"
-                      :clearable="item.inputType ? false : true"
+                      :clearable="item.valueType ? false : true"
                       :disabled="item.disabled"
                       :placeholder="'请输入'+(item.pla || item.title)"></el-input>
             <el-input v-else
-                      style="width:100%"
+                      :style="{width:item.width || '100%'}"
                       :type="(item.type == 'input' || item.type == 'input') ? 'text' : item.type"
                       :autosize="item.autosize"
                       v-model="paramsData[item.field]"
-                      :clearable="item.inputType ? false : true"
+                      :clearable="item.valueType ? false : true"
                       :disabled="item.disabled"
                       :placeholder="'请输入'+(item.pla || item.title)"></el-input>
             <span style="margin-left:20px;"
                   v-if="item.append">{{item.append}}</span>
           </div>
         </template>
+
         <template v-else-if="item.type == 'select'  && !item.scoped">
           <el-select v-model="paramsData[item.field]"
                      filterable
@@ -82,7 +83,6 @@
         <template v-else-if="item.type == 'radio'">
           <el-radio-group v-model="paramsData[item.field]">
             <el-radio v-for="(cheOpt,_index) in item.option"
-                      :name="paramsData[item.field]"
                       :label="cheOpt.value"
                       :key='_index'>{{cheOpt.label}}</el-radio>
           </el-radio-group>
@@ -92,21 +92,37 @@
                      active-color="#13ce66"
                      :active-text="item.activeT"
                      :inactive-text="item.inactiveT"
+                     :active-value="item.activeV !== undefined ? item.activeV : true"
+                     :inactive-value="item.inactiveV !== undefined ? item.inactiveV : false"
                      inactive-color="#ff4949"> </el-switch>
+        </template>
+
+        <template v-else-if="item.type == 'time'">
+          <el-time-picker style="width:100%"
+                          :format="item.timeFormat || ''"
+                          :value-format="item.valueFormat || 'HH:mm:ss'"
+                          v-model="paramsData[item.field]"
+                          :disabled="item.disabled"
+                          align="right"
+                          :placeholder="'请选择'+(item.pla || item.title)"
+                          :picker-options="item.pickerOpt"
+                          :style="{width:item.width || '100%'}"> </el-time-picker>
         </template>
         <template v-else-if="item.type == 'datetime'">
           <el-date-picker style="width:100%"
-                          :format="item.format || ''"
+                          :format="item.timeFormat || ''"
+                          :value-format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
                           v-model="paramsData[item.field]"
                           :disabled="item.disabled"
                           align="right"
                           :placeholder="'请选择'+(item.pla || item.title)"
                           :type="item.dateType || 'date'"
-                          :picker-options="item.pickerOpt"> </el-date-picker>
+                          :picker-options="item.pickerOpt"
+                          :style="{width:item.width || '100%'}"> </el-date-picker>
         </template>
         <template v-else-if="item.type == 'datetimerange'">
-          <el-date-picker style="width:100%"
-                          :format="item.format || ''"
+          <el-date-picker :style="{width:item.width || '100%'}"
+                          :format="item.valueFormat || 'yyyy-MM-dd HH:mm:ss'"
                           v-model="paramsData['a']['b']['c']"
                           :disabled="item.disabled"
                           type="datetimerange"
@@ -129,7 +145,7 @@
         </template>
         <template v-else-if="item.type == 'customSelect'">
           <div @click="showDio(item)">
-            <el-input style="width:100%"
+            <el-input :style="{width:item.width || '100%'}"
                       v-model="paramsData[item.field]"
                       readonly
                       :placeholder="'点击添加'+(item.pla || item.title)"></el-input>
@@ -137,7 +153,7 @@
         </template>
         <template v-else-if="item.type == 'lable'">
           <div v-html="paramsData[item.field]"
-               style="width:100%"></div>
+               :style="{width:item.width || '100%'}"></div>
         </template>
         <expand-dom v-if="item.otherScoped"
                     :data="paramsData"
@@ -160,12 +176,15 @@ export default {
   },
   data () {
     return {
+      formOption: {},
       paramsData: {}, //存放form表单数据
+      initFormDefaultData: {},
       validata: {}, //存放校验数据
       deleteValidata: {}, //hidden存放的校验数据
       showForm: false,
       promises: [], //异步接口
-      showConf: false
+      showConf: false,
+      formOptionData: {}
     };
   },
   props: {
@@ -181,7 +200,7 @@ export default {
     formDataInfo: {
       type: Object,
       default: function () {
-        return null;
+        return {};
       }
     },
     dataKey: {
@@ -203,7 +222,6 @@ export default {
         rule: [Array]
       },
       render: (h, ctx) => {
-        // return h('div','123')
         const params = {
           index: ctx.props.index,
           rule: ctx.props.rule,
@@ -221,8 +239,8 @@ export default {
     }
   },
   methods: {
-    change (val) {
-      console.log(val);
+    change () {
+      // console.log(val);
     },
     getEval () {
 
@@ -239,17 +257,17 @@ export default {
 
     },
     selectChange (item) {
+      this.$set(this.paramsData, item.field, this.paramsData[item.field])
       if (item.emitCb) {
         this.$emit(item.field, {
           value: this.paramsData[item.field],
           field: item.field
         });
       }
-
     },
 
     setItemHidden (field, state) {
-      this.optionData.formList.forEach(item => {
+      this.formOption.formList.forEach(item => {
         if (field == item.field) {
           item.hidden = state ? true : false; //设置formitem 显示隐藏
           state ? delete this.paramsData[item.field] : this.paramsData[item.field] = (this.paramsData[item
@@ -264,110 +282,88 @@ export default {
         }
       })
     },
-    setSelectOption (params) {
-      this.paramsData[this.selectItem] = JSON.stringify(params);
-      this.showConf = false;
+    setSelectOption (params, field) {
+      this.paramsData[field || this.selectItem] = JSON.stringify(params);
+      if (!field)
+        this.showConf = false;
     },
-    initForm () {
-      if (this.optionData.formList.length == 0) return false;
-      this.optionData.formList.forEach(item => {
+    async initForm () {
+      let item = null;
+      let selArr = [];
+      if (!this.formOption.formList.length) return false;
+      for (var i = 0; i < this.formOption.formList.length; i++) {
+        selArr = [];
+        item = this.formOption.formList[i];
         if (item.optionUrl) {
-          item.option = [];
-          this.promises.push(this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3).then(res => {
-            res.result[item.urlkey || 'images'].forEach(_item => {
-              (item.colKey && item.colName) ? item.option.push({
-                value: _item[item.colKey],
-                label: _item[item.colName]
-              }) : item.option.push({
-                value: _item,
-                label: _item
-              });
-            });
-          }))
-        }
-      })
-      //编辑
-      Promise.all(this.promises).then(() => {
-        //添加
-        this.optionData.formList.forEach(item => {
-          // item.hidden = false;
-          if ((item.type == "select" && item.multiple) || item.type == 'datetimerange' || item.type ==
-            'upload' || item.type == "checkbox") {
-            this.paramsData[item.field] = item.value || []; // item.value = [];
+          let data = null;
+          if (!this.formOptionData[item.optionUrl]) {
+            let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar);
+            this.formOptionData[item.optionUrl] = result.data;
+            data = result.data;
           } else {
-            this.paramsData[item.field] = item.value !== '' ? item.value : "";
-            // this.paramsData[item.field] = item.value != '' || typeof  item.value != 'boolean' ?  item.value : "";
+            data = this.formOptionData[item.optionUrl];
           }
-          //防止重新修改option参数  getSelectOpt
-          if ((item.type == "select" || item.type == "radio" || item.type == "checkbox" || item.type ==
-            "radio") && !item.optionUrl) {
-            item.option = this.getSelectOpt(item.option);
-          }
-        })
-        this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
-        this.initvalidata();
-        // console.log(this.validata)
-        this.showForm = !this.showForm; //显示form
-        this.updateData();
-      })
+          selArr = (item.valueType || item.colKey) ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType) : data;
+        }
+        if (item.option) {
+          selArr = [...util.getSelectOpt(item.option, item.selectDataType || 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
+        }
+        item.option = selArr;
+        // let currentArr = ['datetimerange', 'upload', 'checkbox']
+        // this.paramsData[item.field] = item.value || ((item.type == "select" && item.multiple) || currentArr.indexOf(item.type) != -1 ? [] : '');
+      }
+      this.$emit('afterInit');
+      this.initvalidata();
+      this.updateData();
+      this.$nextTick(() => this.showForm = !this.showForm)
     },
     initvalidata () {
       this.validata = util.initValidate({
-        valideDate: this.optionData.formList,
-        CustomValidata: this.optionData.validata
+        valideDate: this.formOption.formList,
+        CustomValidata: this.formOption.validata
       });
     },
     //更新数据
     updateData () {
-      if (this.formDataInfo) {
-        this.$nextTick(() => {
-          let obj = {};
-          this.optionData.formList.forEach(item => {
-            obj[item.field] = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
-              "" && this.formDataInfo[item.field] != undefined ? this.formDataInfo[item.field] : (this
-                .formDataInfo[item.field])); // || item.value
-            // this.$set(this.paramsData,item.field, obj[item.field])
-            // this.setVal(item.field,obj[item.field])
-          })
-          this.paramsData = Object.assign(this.paramsData, obj);
-        })
-      }
-    },
-    setVal (field, val) {
-      this.paramsData[field] = val;
-    },
-    updateSelectOption (field, newV = '') {
-      this.optionData.formList.forEach((item, index) => {
-        if (item.field == field && item.optionUrl) {
-          this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3).then(res => {
-            item.option = [];
-            res.result[item.urlkey || 'images'].forEach(_item => {
-              (item.colKey && item.colName) ? item.option.push({
-                value: _item[item.colKey],
-                label: _item[item.colName]
-              }) : item.option.push({
-                value: _item,
-                label: _item
-              });
-            });
-            this.$set(this.optionData.formList, index, item);
-            this.$set(this.paramsData, field, newV); //设置新的值
-          })
-        }
+      let value = null;
+      this.formOption.formList.forEach(item => {
+
+        value = item.format ? this.getFormat(item.format) : (this.formDataInfo[item.field] !==
+          "" && this.formDataInfo[item.field] !== undefined ? this.formDataInfo[item.field] : item.value); // || item.value
+        this.$set(this.paramsData, item.field, value)
       })
     },
-    getSelectOpt (data) {
-      let optArr = [];
-      if (!Array.isArray(data)) {
-        for (var i in data) {
-          optArr.push({
-            value: i, // == 'true' ? true : (i == 'false' ? false : i)
-            label: data[i]
-          });
+    setVal (field, val) {
+      this.$set(this.paramsData, field, val); //设置新的值
+    },
+    async updateSelectOption (field, newV = '', noLoad = false) {
+      let selArr = [],
+        item = null;
+      for (var i = 0; i < this.optionData.formList.length; i++) {
+        item = util.copy(this.optionData.formList[i]);
+        if (item.field == field) {
+          selArr = [];
+          if (item.optionUrl) {
+            let data;
+            if (noLoad) {
+              data = this.formOptionData[field];
+            } else {
+              let { result } = await this.$ajaxGet(item.optionUrl, item.selectPar, item.dataType || 3);
+              data = result[item.urlkey];
+              this.formOptionData[field] = data;
+            }
+            selArr =
+              item.valueType || item.colKey
+                ? util.getSelectOpt(data, item.colKey ? 4 : 2, { colKey: item.colKey, colName: item.colName }, item.valueType)
+                : data;
+          }
+          if (item.option) {
+            selArr = [...util.getSelectOpt(item.option, item.selectDataType || 1, {}, item.valueType), ...selArr]; //默认的数据放前面，接口数据放后面
+          }
+          item.option = selArr;
+          this.$set(this.formOption.formList, i, item);
+          this.setVal(field, newV);
         }
-        return optArr;
-      } else {
-        return data;
       }
     },
     async validate () {
@@ -380,8 +376,8 @@ export default {
       })
     },
     resetFields () {
-      this.$refs['form'].resetFields();
-      this.optionData.formList.forEach(item => {
+      this.$refs['form'] && this.$refs['form'].resetFields();
+      this.formOption.formList.forEach(item => {
         this.paramsData[item.field] = item.value;
         // if ((item.type == "select" && item.multiple) || item.type == 'datetimerange' || item.type == 'upload' ||
         //   item.type == "checkbox") {
@@ -393,22 +389,28 @@ export default {
       this.paramsData = JSON.parse(JSON.stringify(this.paramsData));
     }
   },
-  mounted () { },
-  created () {
-    this.id = this.$route.query.id; //保存id
-    this.initForm(); //初始化 form  数组格式
+  beforeDestroy () {
+    this.resetFields();
+  },
+  async created () {
+    this.formOption = util.copyObj(this.optionData);
+    this.initFormDefaultData = util.copyObj(this.optionData);
+    await this.initForm(); //初始化 form  数组格式
+
   },
   watch: {
     paramsData: {
       handler (newVal) {
         this.$emit('changeData', newVal, this.dataKey);
-        // console.log(newVal)
-        this.$emit('input', newVal)
+        this.$emit('input', newVal);
       },
       deep: true
     },
-    formDataInfo () {
-      this.updateData();
+    formDataInfo: {
+      handler () {
+        this.updateData();
+      },
+      deep: true
     }
   }
 };

@@ -8,6 +8,10 @@ module.exports = app => {
   Order = concatModel(Order);
   Order.associate = () => {
     Order.belongsTo(app.model.Address);
+    Order.belongsTo(app.model.Customer, {
+      foreignKey: 'uuid',
+      targetKey: 'uuid'
+    });
   };
   return Order;
 };

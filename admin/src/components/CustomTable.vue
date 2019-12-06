@@ -1,45 +1,50 @@
 <template>
   <div style=''>
     <div ref="top-form">
-      <div>
-        <el-form :inline="true"
-                 size="mini"
-                 class="demo-form-inline"
-                 v-if="getSearchLength"
-                 @submit.native.prevent>
-          <template v-for="(item,index) in searchData">
-            <el-form-item :key='index'
-                          v-if="item"
-                          :label="item.lable+'：'">
-              <el-input v-if="item.type == '' || item.type == 'input'"
-                        :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
-                        v-model="item.value"
-                        :placeholder="item.pla || '请输入'+item.lable"></el-input>
-              <el-date-picker v-else-if="item.type == 'time'"
-                              :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
-                              v-model="item.value"
-                              type="daterange"
-                              range-separator="至"
-                              start-placeholder="开始日期"
-                              end-placeholder="结束日期">
-              </el-date-picker>
-              <el-select v-else-if="item.type == 'select' || item.type == 'switch' "
-                         filterable
-                         v-model="item.value"
-                         :placeholder="item.pla || '请选择'+item.lable">
-                <el-option v-for="_item in item.selectOPtion"
-                           :key="_item.value"
+      <el-form :inline="true"
+               size="mini"
+               v-if="getSearchLength"
+               class="search-form"
+               @submit.native.prevent>
+        <template v-for="(item,index) in searchData">
+          <el-form-item :key='index'
+                        v-if="item"
+                        :label="item.lable+'：'">
+            <el-input v-if="item.type == '' || item.type == 'input'"
+                      :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
+                      v-model="item.value"
+                      clearable
+                      :placeholder="item.pla || '请输入'+item.lable"></el-input>
+            <el-date-picker v-else-if="item.type == 'time'"
+                            :style="{width: item.seaW ? item.seaW+'px' : '190px'}"
+                            v-model="item.value"
+                            type="datetimerange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+            </el-date-picker>
+            <el-select v-else-if="item.type == 'multiple' || item.type == 'select'"
+                       filterable
+                       clearable
+                       v-model="item.value"
+                       :multiple="item.multiple"
+                       :placeholder="item.pla || '请选择'+item.lable"
+                       @change="(val) => changeSearchVal(val,index)">
+              <template v-if="item.selectOPtion">
+                <el-option v-for="(_item,_index) in item.selectOPtion"
+                           :key="_index"
+                           :disabled="_item.disabled"
                            :label="_item.label"
                            :value="_item.value">
                 </el-option>
-              </el-select>
-            </el-form-item>
-          </template>
-          <el-button type="primary"
-                     @click="onSubmit"
-                     size="mini">查询</el-button>
-        </el-form>
-      </div>
+              </template>
+            </el-select>
+          </el-form-item>
+        </template>
+        <el-button type="primary"
+                   @click="onSubmit"
+                   size="mini">查询</el-button>
+      </el-form>
       <el-button size="small"
                  v-if="optionData.showhideColumn"
                  @click.stop="setColums"
@@ -47,7 +52,7 @@
                  style="margin-right: 3px;margin-bottom:20px;"><a style="width:0px;height:0px;"></a>显示隐藏列</el-button>
       <span class="btn-items"
             v-if="btnGroup.length > 0"
-            style="margin-bottom:20px;">
+            style="margin-bottom:10px;display: inline-block;">
         <el-button v-for="(item,index) in btnGroup"
                    size="small"
                    :loading="item.loading"
@@ -61,16 +66,6 @@
              style="width:0px;height:0px;"></a>{{item.title}}</el-button>
       </span>
     </div>
-    <el-pagination style="margin-bottom: 9px;"
-                   v-if="!optionData.hiddenPage"
-                   @size-change='sizeChange'
-                   @current-change="pageChange"
-                   :current-page.sync="search.page"
-                   :page-size.sync="search.size"
-                   layout="total, prev, pager, next, jumper,sizes"
-                   :total="search.count"
-                   :page-sizes="optionData.pageSizes || pageSizes"
-                   class="page-wrap"></el-pagination>
     <el-table ref="table"
               :span-method="optionData.arraySpanMethod || arraySpanMethod"
               :data="taskTableData"
@@ -89,7 +84,9 @@
               @select-all="selectChange"
               @expand-change="expandChange"
               :row-key="optionData.evalKey || 'job_name'"
-              :expand-row-keys="expandedRows">
+              :expand-row-keys="expandedRows"
+              :default-sort="defaultSort"
+              v-if="showTable">
       <el-table-column type="selection"
                        align="center"
                        v-if="optionData.selection">
@@ -98,23 +95,23 @@
                        align="center"
                        v-if="optionData.indexNum">
       </el-table-column>
-      <template v-for="(item,index) in testColumn">
-        <column-item :t_columns="testColumn"
+      <!-- :t_columns="testColumn"
                      :columnDataObj="columnDataObj"
                      :columnData="columnData"
-                     :optionData="optionData"
-                     :item="item"
+                     :optionData="optionData" 
+                     :t_columns="testColumn"
+                       :columnDataObj="columnDataObj"
+                       :columnData="columnData"
+                       :optionData="optionData"-->
+      <template v-for="(item,index) in testColumn">
+        <column-item :item="item"
                      :key="index"
                      v-if="!item.child"></column-item>
         <el-table-column v-if="item.child"
                          :label="item.lable"
                          :width="item.width || '200'"
                          :key="index">
-          <column-item :t_columns="testColumn"
-                       :columnDataObj="columnDataObj"
-                       :columnData="columnData"
-                       :optionData="optionData"
-                       v-for="(_item,_index) in item.child"
+          <column-item v-for="(_item,_index) in item.child"
                        :key="_index"
                        :item="_item"></column-item>
         </el-table-column>
@@ -133,18 +130,22 @@
                        :key="index"
                        :type="btn.handStatus ? getHandType(scope.row[btn.handStatus.obj],btn.handStatus.type) : (btn.type || 'primary')"
                        size="mini"
+                       :loading="toolLoading[scope.$index] && btn.hasloading"
                        :icon="btn.icon"
+                       :class="btn.class ? [...btn.class] : []"
                        :disabled="getBtnStatus(scope,btn)"
                        :plain="btn.plain"
-                       @click.native.prevent="btnMethod(btn,scope.row, index)">
+                       @click.native.prevent="btnMethod(btn,scope.row, scope.$index)">
               {{btn.handStatus ? getHandTitle(scope.row[btn.handStatus.obj],btn.handStatus.title) : btn.title }}
             </el-button>
             <el-dropdown :key="index"
                          v-else
                          style="margin-left:10px;">
-              <el-button type="primary"
+              <el-button :type="btn.type || 'primary'"
+                         :class="btn.class ? [...btn.class] : []"
                          size="mini">
-                {{btn.title}}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{btn.title}}<i class="el-icon--right"
+                   :class="{[btn.icon]:btn.icon,'el-icon-arrow-down':!btn.icon}"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item v-for="(child,_index) in btn.child"
@@ -152,7 +153,9 @@
                   <el-button :key="index"
                              :type="child.handStatus ? getHandType(scope.row[child.handStatus.obj],child.handStatus.type) : (child.type || 'primary')"
                              size="mini"
+                             :class="btn.class ? [...btn.class] : []"
                              :icon="child.icon"
+                             :loading="toolLoading[scope.$index] && child.hasloading"
                              :disabled="getBtnStatus(scope,child)"
                              :plain="child.plain"
                              @click.native.prevent="btnMethod(child,scope.row, index)">
@@ -165,6 +168,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination style="margin-bottom: 9px;"
+                   v-if="!optionData.hiddenPage"
+                   @size-change='sizeChange'
+                   @current-change="pageChange"
+                   :current-page.sync="search.page"
+                   :page-size.sync="search.size"
+                   layout="total, prev, pager, next, jumper,sizes"
+                   :total="search.count"
+                   :page-sizes="optionData.pageSizes || pageSizes"
+                   class="page-wrap"></el-pagination>
     <el-dialog title="显示隐藏列"
                :visible.sync="showhideCol"
                width="50%"
@@ -199,9 +212,11 @@ export default {
     return {
       expandedRows: [],
       index: 0,
-      showTable: true,
+      showTable: false,
       columnData: null, //存储 列的数据
-      columnDataObj: {}
+      // columnDataObj: {},
+      defaultSort: null,
+      toolLoading: []
     }
   },
   props: {
@@ -228,7 +243,7 @@ export default {
   },
   computed: {
     getSearchLength () {
-      return this.searchData.filter(item => item).length > 0
+      return this.searchData.filter(item => item).length
     }
   },
   components: {
@@ -236,17 +251,16 @@ export default {
     columnItem,
   },
   methods: {
-    reverse (data, option = {
-      reverse: true
-    }) {
-      data.forEach(item => {
-        if (item.child)
-          item.child.unshift(item.child.pop()) //this.reverse(item.child);
-      })
-      return option.reverse ? JSON.parse(JSON.stringify(data)) : JSON.parse(JSON.stringify(data));
-    },
-    getRowKeys (row) {
-      return this.getEvalKey(this.optionData.evalKey, row);
+    getDefaultSort () {
+      let orderByConfig = {
+        desc: "descending",
+        asc: "ascending"
+      }
+      const res = this.optionData.columns.filter(item => item.sort)[0];
+      this.defaultSort = res ? { prop: res.value, order: orderByConfig[res.sortOrder] || 'descending' } : {};
+      if (!this.defaultSort.prop) {  //没有默认sort的时候不会触发sort-change事件，所以手动触发获取table表格数据
+        this.getTaskTableData();
+      }
     },
     getCol () {
       let obj = {};
@@ -255,12 +269,12 @@ export default {
       })
       this.testColumn = this.optionData.columnData ? this.assignData(this.optionData.columnData, obj) : this
         .columns; //是否有表头合并
-      this.getColumnDataObj();
+      // this.getColumnDataObj();
     },
-    getColumnDataObj () {
-      this.columnDataObj = this.getChildColumn(this.testColumn)
-      this.columnData = JSON.parse(JSON.stringify(this.testColumn));
-    },
+    // getColumnDataObj () {
+    //   this.columnDataObj = this.getChildColumn(this.testColumn)
+    //   this.columnData = JSON.parse(JSON.stringify(this.testColumn));
+    // },
     getChildColumn (item) {
       return item.reduce((total, cur) => {
         if (cur.child) {
@@ -285,21 +299,23 @@ export default {
     },
     getBtnStatus (scope, item) {
       let data = scope.row;
-      return item.judgement_con ? eval(item.judgement_con) : false;
+      let index = scope.$index;
+      this.end(data, index);
+      return item.judgement_con ? eval('data.' + item.judgement_con) : (item.index_con ? eval(item.index_con) : false);
     },
     end () { },
-    hideDialog () {
-      this.$set(this.columns, this.checkGroups);
-      this.showhideCol = false;
-    },
+    // hideDialog () {
+    //   this.$set(this.columns, this.checkGroups);
+    //   this.showhideCol = false;
+    // },
     changeGroup (group) {
       this.columns.forEach((item, index) => {
         item.isShow = group.indexOf(item.lable) != -1 ? true : false;
         this.$set(this.columns, index, item);
       });
       this.testColumn = JSON.parse(JSON.stringify(this.optionData.columnData ? this.assignData(this.optionData
-        .columnData, obj) : this.columns));
-      this.getColumnDataObj();
+        .columnData) : this.columns));
+      // this.getColumnDataObj();
       this.showTable = false;
       this.taskListloading = true;
       setTimeout(() => {
@@ -327,66 +343,49 @@ export default {
     setColums () {
       this.showhideCol = !this.showhideCol;
     },
-    getSearchList () {
+    async getSearchList () {
       let serArr;
       let obj = {};
-      if (!this.optionData.columns)
-        return false;
+      let item = null;
+      if (!this.optionData.columns) return false;
       this.searchData = new Array(this.optionData.columns.length);
-      this.optionData.columns.forEach((item, index) => {
+      for (var i = 0; i < this.optionData.columns.length; i++) {
+        item = this.optionData.columns[i];
         if (item.search && item.type != "img") {
-          if (item.type == 'select' || item.type == "switch" && item.selectOPtion) {
-            if (item.url) {
-              this[item.mock ? '$ajaxMock' : '$ajaxGet'](item.url, {}, item.urlType || 1).then(res => {
-                let currentIndex = index;
-                obj = {
-                  range: "",
-                  search: item.search, //搜索条件
-                  lable: item.lable, //显示的字
-                  value: item.searchVal || "", //默认值
-                  type: item.type, //搜索 type   类型  time   select   普通框
-                  pla: item.pla, // placeholder值
-                  seaW: item.seaW, //搜索宽度
-                };
-
-                //当selectDataType为1时，  selectOPtion为obj类型使用第一种方式处理数据 反之是数组类型  用第二种方式处理
-                serArr = item.mock ? util.getSelectOpt(res, 3) : util.getSelectOpt(res.result[item.url] || res
-                  .result[item.keyurl], item.selectDataType || 2);
-                if (item.selectOPtion) {
-                  serArr = [...util.getSelectOpt(item.selectOPtion, 1), ...serArr]; //默认的数据放前面，接口数据放后面
-                }
-                obj.selectOPtion = serArr; //下拉框数据   //select switch 存在
-                this.searchData.splice(currentIndex, 1, obj); // 防止
-                item.selectOPtion = util.getSelectReverse(serArr); //反序列化给table表格提供数据，合并 默认设置 以及接口返回的数据
-              })
-            } else {
-              obj = {
-                range: "",
-                search: item.search, //搜索条件
-                lable: item.lable, //显示的字
-                value: item.searchVal || "", //默认值
-                type: item.type, //搜索 type   类型  time   select   普通框
-                pla: item.pla, // placeholder值
-                seaW: item.seaW, //搜索宽度
-              };
+          obj = {
+            range: "",
+            search: item.search, //搜索条件
+            lable: item.lable, //显示的字
+            value: item.searchVal || "", //默认值
+            type: item.type, //搜索 type   类型  time   select   普通框
+            pla: item.pla, // placeholder值
+            seaW: item.seaW, //搜索宽度
+            multiple: item.multiple || false,
+            field: item.value
+          };
+          if (item.searchVal) {
+            this.search[item.search] = item.searchVal;
+          }
+          if (item.url) {
+            let res = await this[item.mock ? '$ajaxMock' : '$ajaxGet'](item.url, {}, item.urlType || 1);
+            //当selectDataType为1时，  selectOPtion为obj类型使用第一种方式处理数据 反之是数组类型  用第二种方式处理
+            serArr = item.mock ? util.getSelectOpt(res, 3) : util.getSelectOpt(res.result[item.url] || res
+              .result[item.keyurl], item.selectDataType || 2, { colKey: item.colKey, colName: item.colName });
+            if (item.selectOPtion) {
+              serArr = [...util.getSelectOpt(item.selectOPtion, 1), ...serArr]; //默认的数据放前面，接口数据放后面
+            }
+            obj.selectOPtion = serArr; //下拉框数据   //select switch 存在
+            this.searchData.splice(i, 1, obj); // 防止
+            item.selectOPtion = util.getSelectReverse(serArr); //反序列化给table表格提供数据，合并 默认设置 以及接口返回的数据
+          } else {
+            if (item.type == 'select' || item.type == "switch" && item.selectOPtion) {
               serArr = util.getSelectOpt(item.selectOPtion, 1);
               obj.selectOPtion = serArr;
-              this.searchData.splice(index, 0, obj);
             }
-          } else {
-            obj = {
-              range: "",
-              search: item.search, //搜索条件
-              lable: item.lable, //显示的字
-              value: item.searchVal || "", //默认值
-              type: item.type, //搜索 type   类型  time   select   普通框
-              pla: item.pla, // placeholder值
-              seaW: item.seaW, //搜索宽度
-            };
-            this.searchData.splice(index, 0, obj);
+            this.searchData.splice(i, 1, obj);
           }
         }
-      })
+      }
     },
     onSubmit () {
       let filter = {}; //[]
@@ -395,24 +394,31 @@ export default {
         /**
          * 分为   time  select  number 普通输入框
          */
-        if (item.search && item.value != "") {
-          if (item.type == "time") {
-            filter[item.search] = util.time.getTime(item.value[0], true) + "," + util.time.getTime(item.value[1],
-              true)
+        const { search, value, type, multiple } = item
+        if (search) {
+          if (value) {
+            if ((type == 'time' || multiple)) {
+              if (value.length && ((multiple && value[0] !== '全部') || (!multiple))) {
+                filter[search] = value.join(',');
+              } else {
+                delete this.search[search];
+              }
+              num += 1;
+            } else {
+              filter[search] = value;
+              num += 1;
+            }
           } else {
-            item.value != 'empty' ? filter[item.search] = item.value : (this.search[item.search] && delete this
-              .search[item.search]);
+            delete this.search[search];
           }
-          num += 1;
-        } else if (item.search && !item.value) {
-          delete this.search[item.search]
         }
       });
       this.$emit("getSearch", this.searchData);
       if (num == 0) {
         filter = {};
         this.search = JSON.parse(JSON.stringify(this.defaultSearch));
-        return false;
+        this.getTaskTableData();
+        // return false;
       } else {
         //初始化搜索数据  value为空
         // this.clearSearchValue();
@@ -466,8 +472,15 @@ export default {
         column
       });
     },
-    sortChange (params) {
-      this.$emit('sortChange', params);
+    sortChange ({ prop, order }) {
+      let orderByConfig = {
+        descending: "desc",
+        ascending: "asc"
+      }
+      this.search.sort_by = prop
+      this.search.sort_type = orderByConfig[order];
+      this.getTaskTableData();
+      this.$emit('sortChange', prop, order);
     },
     toggleRowSelection () {
       this.$nextTick(() => {
@@ -522,18 +535,16 @@ export default {
     },
     //跟局 状态 返回对应的字
     getHandTitle: function (data, obj) {
-      return obj[data] || "未发布";
+      return obj[data] || "";
     },
     //返回  按钮根据 状态 显示  的type 类型
     getHandType: function (data, obj) {
-      return obj[data] || "host";
+      return obj[data] || "";
     },
     topBtnGroup (group) {
       if (!group || group.length == 0)
         return false;
-      group.forEach(item => {
-        this.getButtonOption(item);
-      })
+      group.forEach(item => this.getButtonOption(item));
     },
     getButtonOption (item) {
       this.btnGroup.push({
@@ -545,24 +556,58 @@ export default {
         icon: item.icon || "",
         disabled: this.getDisStatus(item),
         loading: false,
-        noloading: item.noloading,
+        hasloading: item.hasloading,
         hasSel: item.hasSel, //需要选中几个
         hasMore: item.hasMore //( more,  less,   == ) =>  item.hasSel
       })
     },
+    setSelectOption (options, valParams) {
+      this.columns.forEach((item, index) => {
+        if (item.type === 'select' && options[item.value]) {
+          //反序列数据给table表格使用
+          item.selectOPtion = util.getSelectReverse(options[item.value]);
+          if (item.search) {
+            this.searchData[index].selectOPtion = options[item.search]
+          }
+          //给multiple项设置默认值并制定option设置成不可选择
+          if (valParams && valParams[item.search]) {
+            this.searchData[index].value = valParams[item.search]
+            this.changeSearchVal(valParams[item.search], index);
+          } else {
+            this.changeSearchVal(this.searchData[index].value, index);
+          }
+        }
+      })
+      this.getCol()
+    },
+    changeSearchVal (val, index) {
+      if (typeof val === 'object') {
+        if (val.indexOf('全部') !== -1) {
+          this.searchData[index].value = ['全部'];
+          this.searchData[index].selectOPtion.forEach((item, _index) => {
+            if (_index > 0) {
+              item.disabled = true;
+            }
+          })
+        } else {
+          this.searchData[index].selectOPtion.forEach(item => item.disabled = false)
+        }
+      }
+    },
     handBtn (item, index) {
-      if (!item.noloading) {
+      if (item.hasloading) {
         this.btnGroup[index].loading = true;
-        setTimeout(() => {
-          this.btnGroup[index].loading = false;
-        }, 1000)
+        setTimeout(() => this.btnGroup[index].loading = false, 1000);
       }
       if (item.emit)
         this.$emit(item.emit, this.selectItem)
     },
-
     //table  表格的 按钮事件
     btnMethod (item, row, key) {
+      if (item.hasloading) {
+        this.toolLoading[key] = true;
+        setTimeout(() => this.$set(this.toolLoading, key, false), 1000);
+      }
       if (item.emit)
         this.$emit(item.emit, {
           row,
@@ -604,7 +649,6 @@ export default {
       this.search = this.optionData.assignSearch ? this.optionData.search : Object.assign(this.search, this
         .optionData.search);
       this.topBtnGroup(this.optionData.topBtnGroup);
-
       await this.getSearchList();
       this.columns = this.optionData.columns;
       if (!this.columns)
@@ -616,7 +660,8 @@ export default {
       }); //设置显示隐藏列
       this.initDbClick();
       this.getCol();
-      this.getTaskTableData();
+      this.getDefaultSort();
+      this.showTable = true;
     },
     async getTaskTableData (params = {}) {
       if (this.optionData.tableLoadIcon)
@@ -625,36 +670,31 @@ export default {
         this.search.page = 1;
       if (this.defaultData) {
         this.setTabelData(this.defaultData);
-        this.$emit("tableData", this.defaultData);
+        // this.$emit("tableData", this.defaultData);
         return false;
       }
-      this[this.optionData.ajaxType || '$ajaxGet'](this.optionData.baseUrl, this.search, this.optionData.urlType ||
-        3).then(res => {
-          console.log(res);
-          if (res.err_code == 0 || res.code == 200 || res.code == 0) {
-            let dataKey = this.optionData.dataKey;
-            const data = this.optionData.urlType == 1 ? res.result[dataKey] : res.result.data;
-            this.$emit("tableData", res.result, this.dataKey);
-
-            this.setTabelData(data);
-            if (params.saveSelection)
-              this.toggleRowSelection();
-            if (this.optionData.tableLoadIcon)
-              this.taskListloading = false;
-            this.search.count = this.optionData.urlType == 1 ? res.result.jobs_total_num : res.result
-              .data_total_num;
-          } else {
-            this.$alert(res.err_msg || res.data.message || res.data.err_msg, "获取列表失败", {
-              dangerouslyUseHTMLString: true
-            });
-            this.taskTableData = [];
-          }
+      let res = await this[this.optionData.ajaxType || '$ajaxGet'](this.optionData.baseUrl, this.search, this.optionData.urlType || 3);
+      if (res.err_code == 0 || res.code == 200 || res.code == 0) {
+        let dataKey = this.optionData.dataKey;
+        const data = res.result[dataKey] || res.result.data;
+        // this.$emit("tableData", res.result, this.dataKey);
+        this.setTabelData(data);
+        if (params.saveSelection)
+          this.toggleRowSelection();
+        if (this.optionData.tableLoadIcon)
+          this.taskListloading = false;
+        this.search.count = res.result.jobs_total_num || res.result.data_total_num;
+      } else {
+        this.$alert(res.err_msg || res.data.message || res.data.err_msg, "获取列表失败", {
+          dangerouslyUseHTMLString: true
         });
+        this.taskTableData = [];
+      }
+      this.showTable = true;
     },
     setTabelData (data) {
-      if (this.formData) {
+      if (this.formData)
         data = this.formData(data);
-      }
       //当table 有双击编辑的功能的话
       if (this.optionData.dbEdit) {
         this.columns.forEach((col) => {
@@ -665,18 +705,19 @@ export default {
         })
       }
       this.taskTableData = data;
+      // this.$emit("tableData", this.defaultData);
       // this.$emit("tableData", {
       //   data
       // }, this.dataKey);
     },
-    addColumn (cols) {
+    async addColumn (cols) {
       let colsArr = cols.filter(item => {
         item.isShow = true;
         this.checkGroup.push(item.lable);
         return !item.hidden;
       });
       this.columns.push(...colsArr);
-      this.getSearchList();
+      await this.getSearchList();
       if (this.optionData.dbEdit) {
         this.columns.forEach((col) => {
           this.taskTableData.forEach((item, index) => {
@@ -704,43 +745,44 @@ export default {
     }
     this.init();
   },
+  created () { },
   destroyed () {
-    window.onresize = () => { }
+    window.onresize = () => { };
   },
   watch: {
     defaultData (newV) {
       this.setTabelData(newV);
+    },
+    taskTableData: {
+      deep: true,
+      handler (newV) {
+        this.$emit("tableData", newV);
+      }
     }
   }
 };
 </script>
-
 <style>
 .img {
   cursor: pointer;
   width: 50px;
   height: 50px;
 }
-
 .page-wrap {
-  /* margin-bottom: 30px; */
-  text-align: right;
+  margin: 10px 0;
+  text-align: center;
 }
-
 .checkbox-group .el-checkbox-group div {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
 }
-
 .checkbox-group .el-checkbox + .el-checkbox {
   margin-left: 0 !important;
 }
-
 .expand .el-table__expand-column .cell {
   display: none;
 }
-
 .el-table__expanded-cell {
   background: #f7f7f7 !important;
 }

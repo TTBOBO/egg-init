@@ -15,7 +15,7 @@ class User extends Service {
     // });
     return await app.model.User.grid({
       type: 'findAll',
-      // pagination: { page: 1, pageSize: 1000 },
+      // pagination: { page: 1, size: 1000 },
       attributes: [
         'name',
         'createdTime',
@@ -86,7 +86,7 @@ class User extends Service {
   }
 
   async createUser() {
-    const { User, UserInfo, Task } = this.app.model;
+    const { User } = this.app.model;
     const uuidv1 = require('uuid/v1');
     const createTime = new Date();
     let data = await User.findOrCreate({

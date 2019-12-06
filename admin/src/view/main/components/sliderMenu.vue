@@ -16,9 +16,9 @@
           <SidemenuItem v-if="showChildren(item)"
                         :key="index"
                         :parent-item="item"></SidemenuItem>
-          <el-menu-item v-else
+          <!-- <el-menu-item v-else
                         :index="getNameOrHref(item)"
-                        :key="`menu-${item.meta.title}`"><i :class="[item.meta.icon]"></i><span slot="title">{{ item.meta.title }}</span></el-menu-item>
+                        :key="`menu-${item.meta.title}`"><i :class="[item.meta.icon]"></i><span slot="title">{{ item.meta.title }}111</span></el-menu-item> -->
         </template>
       </template>
     </el-menu>
@@ -82,7 +82,6 @@ export default {
     }
   },
   mounted () {
-    console.log(this.menuList)
     this.openedNames = this.getUnion(
       this.openedNames,
       this.getOpenedNamesByActiveName(name)
@@ -98,11 +97,7 @@ export default {
         .filter(item => item != name);
       this.openedNames = res;
     },
-    openedNames (val) {
-      console.log(val)
-      // this.$nextTick(() => {
-      //   this.$refs.menu.open(val);
-      // });
+    openedNames () {
     }
   }
 }
@@ -111,6 +106,10 @@ export default {
 <style lang='less'>
 .slider-container {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  // height: 100%;
+  .el-menu {
+    border-right-width: 0px;
+  }
 }
 </style>

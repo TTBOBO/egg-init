@@ -1,4 +1,7 @@
 'use strict';
+const {
+  filterNull
+} = require('./util');
 class BaseModel {
   constructor(model) {
     this.model = model;
@@ -18,11 +21,15 @@ class BaseModel {
     transaction = null,
     type = 'findAndCountAll' // findAll
   }) {
-    const { page = 1, pageSize: limit = 10 } = pagination;
+    const {
+      page = 1, size: limit = 10
+    } = pagination;
     let option = {
-      offset: (page - 1) * limit,
-      order: sort.length ? [ sort ] : [[ 'createdTime', 'DESC' ]],
-      where,
+      offset: (Number(page) - 1) * limit,
+      order: sort.length && sort[1] ? [ sort ] : [
+        [ 'createdTime', 'DESC' ]
+      ],
+      where: filterNull(where),
       attributes,
       include,
       distinct // 唯一值
@@ -34,21 +41,25 @@ class BaseModel {
       option.include = include;
     }
     if (type !== 'findAll') {
-      option.limit = limit;
+      option.limit = Number(limit);
     }
     let data = await this[type](option);
-    return type === 'findAll'
-      ? data
-      : data || {
+    return type === 'findAll' ?
+      data : {
         data: data.rows,
         data_total_num: data.count,
         data_total_page: Math.ceil(data.count / limit)
       };
   }
   async createOne(data, option = {}) {
-    return await this.create(data, { ...option });
+    return await this.create(data, {
+      ...option
+    });
   }
-  async deleteOne({ where = {}, limit, transaction }) {
+  async deleteOne({
+    where = {},
+    transaction
+  }) {
     let option = {
       where
     };
