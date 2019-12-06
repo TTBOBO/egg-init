@@ -1,6 +1,10 @@
 <template>
   <div style="overflow-y:auto;    height: 100%;">
-    <el-button size="mini"
+    <div>
+      <!-- <svg class="pack-circle"
+           style="width:800;height:400"></svg> -->
+    </div>
+    <!-- <el-button size="mini"
                type="primary"
                @click="mouse('d3245456467','over')">高亮d3245456467</el-button>
     <el-button size="mini"
@@ -38,11 +42,12 @@
       <div id="chart"
            ref="chart"
            style="height:400px"></div>
-    </div>
-    <div style="width:800px">
+    </div> -->
+    <div :style="{width:width+'px'}">
       <div id="chart1"
            ref="chart1"
-           style="height:400px"></div>
+           :style="{height:height+'px'}"></div>
+      <!-- style="height:400px" -->
     </div>
     <div style="width:800px;height:800px;"
          id="viewBox">
@@ -69,7 +74,9 @@ export default {
       dataList: [
         [5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
         [410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
-      ]
+      ],
+      width: 800,
+      height: 400
     }
   },
   methods: {
@@ -359,7 +366,7 @@ export default {
         return pack(d3.hierarchy(root)
           .sum(d => d.radius * d.radius));
       }
-      var svg = d3.select('svg');
+      var svg = d3.select('.pack-circle');
       const circle = svg.selectAll("circle")
         .data(packFun(data).descendants().slice(1))
         .enter().append("circle")
@@ -367,10 +374,10 @@ export default {
       circle.attr("cx", function (d) { return d.data.distance ? Math.cos(d.data.distance) * (800 / Math.SQRT2 + 30) : 0; })
         .attr("cy", function (d) { return d.data.distance ? Math.sin(d.data.distance) * (800 / Math.SQRT2 + 30) : 0; })
         .attr("r", function (d) { return d.r || 0; })
-        .transition()
-        .ease(d3.easeCubicOut)
-        .delay(1000)
-        .duration(1000)
+        // .transition()
+        // .ease(d3.easeCubicOut)
+        // .delay(1000)
+        // .duration(1000)
         .attr("r", d => d.r)
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
@@ -770,150 +777,150 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
     // this.initD3();
     // this.initD3Line();
     // this.initD3Circle();
-    this.initLine();
-    this.chart = new Line(this.$refs.chart)
-    this.chart.setOption({
-      title: {
-        text: "多个grid多个series",
-        textStyle: {
-          color: "#5793f3",
-          fontSize: "12px"
-        }
-      },
-      legend: {
-        show: true,
-        data: ['d3245456467', 'd32'],
-        fontSize: 14
-      },
-      tooltip: {
-        // formatter: (d) => {
-        //   return 'Value:' + d.yData + '111'
-        // }
-      },
-      grid: [{
-        left: 50,
-        right: 50,
-        top: 60,
-        bottom: 50,
-        height: 120
-      }
-        , {
-        left: 50,
-        right: 50,
-        top: 220,
-        bottom: 50,
-        height: 120
-      }
-      ],
-      xAxis: [{
-        name: 'xtest',
-        align: 'bottom',
-        show: true,
-        type: 'time',
-        data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
-        // axisLabel: {
-        //   y: 10,
-        //   x: 2,
-        //   transform: 'rotate(30)',
-        //   'text-anchor': 'start'
-        // },
-        format: (svg) => {
-          svg.ticks(d3.timeDay.every(1))
-            .tickFormat(d3.timeFormat("%Y-%m-%d"))
-          return svg;
-        }
-      }
-        , {
-        name: 'xtest',
-        align: 'bottom',
-        show: true,
-        type: 'time',
-        data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
-        // axisLabel: {
-        //   y: 10,
-        //   x: 2,
-        //   transform: 'rotate(30)',
-        //   'text-anchor': 'start'
-        // },
-        format: (svg) => {
-          svg.ticks(d3.timeDay.every(1))
-            .tickFormat(d3.timeFormat("%Y-%m-%d"))
-          return svg;
-        }
-      }
-      ],
-      dataZoom: [{
-        inside: true,  //控制数据滑动变化区间的zoom功能
-        brush: true,
-        zoomIndex: [0, 1],  //指定grid使用zoom
-        realtime: true,
-        xAxisIndex: [0, 1]  //使用brush控制设置指定的grid
-      }],
-      yAxis: [{
-        align: 'left',
-        type: 'line',
-        name: 'test'
-      }
-        , {
-        align: 'left',
-        type: 'line',
-        name: 'test1'
-      }
-      ],
-      series: [{
-        name: "d3245456467",
-        type: 'line',
-        symbolSize: 3,
-        // transition: (cir) => {
-        //   return cir.transition()
-        //     .duration((d, i) => i * 600)
-        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
-        // },
-        lineStyle: {
-          'stroke-width': 2,
-          // 'stroke': 'blue',
-          transition: {
-            duration: 1000
-          }
-        },
-        areaStyle: {
-          // fill: "rgb(255, 158, 68)"
-        },
-        data: [100, 932, 400, 200, 600, 800, 700, 600]
-      }
-        , {
-        name: "d32",
-        type: 'line',
-        symbolSize: 3,
-        // transition: (cir) => {
-        //   return cir.transition()
-        //     .duration((d, i) => i * 600)
-        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
-        // },
-        lineStyle: {
-          'stroke-width': 2,
-          'stroke': 'red',
-          transition: {
-            duration: 1500
-          }
-        },
-        areaStyle: {
-          fill: {
-            x1: 0,
-            y1: 0,
-            x2: 1,
-            y2: 0,
-            colorStops: [
-              { offect: 0, color: "rgb(255, 158, 68)" },
-              { offect: 0.5, color: "rgb(255, 70, 131)" },
-              { offect: 1, color: "rgb(204, 86, 203)" }
-            ]
-          },
-        },
-        data: [20, 180, 600, 150, 1000, 770, 300, 700]
-      }
-      ]
-    })
+    // this.initLine();
+    // this.chart = new Line(this.$refs.chart)
+    // this.chart.setOption({
+    //   title: {
+    //     text: "多个grid多个series",
+    //     textStyle: {
+    //       color: "#5793f3",
+    //       fontSize: "12px"
+    //     }
+    //   },
+    //   legend: {
+    //     show: true,
+    //     data: ['d3245456467', 'd32'],
+    //     fontSize: 14
+    //   },
+    //   tooltip: {
+    //     // formatter: (d) => {
+    //     //   return 'Value:' + d.yData + '111'
+    //     // }
+    //   },
+    //   grid: [{
+    //     left: 50,
+    //     right: 50,
+    //     top: 60,
+    //     bottom: 50,
+    //     height: 120
+    //   }
+    //     , {
+    //     left: 50,
+    //     right: 50,
+    //     top: 220,
+    //     bottom: 50,
+    //     height: 120
+    //   }
+    //   ],
+    //   xAxis: [{
+    //     name: 'xtest',
+    //     align: 'bottom',
+    //     show: true,
+    //     type: 'time',
+    //     data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
+    //     // axisLabel: {
+    //     //   y: 10,
+    //     //   x: 2,
+    //     //   transform: 'rotate(30)',
+    //     //   'text-anchor': 'start'
+    //     // },
+    //     format: (svg) => {
+    //       svg.ticks(d3.timeDay.every(1))
+    //         .tickFormat(d3.timeFormat("%Y-%m-%d"))
+    //       return svg;
+    //     }
+    //   }
+    //     , {
+    //     name: 'xtest',
+    //     align: 'bottom',
+    //     show: true,
+    //     type: 'time',
+    //     data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
+    //     // axisLabel: {
+    //     //   y: 10,
+    //     //   x: 2,
+    //     //   transform: 'rotate(30)',
+    //     //   'text-anchor': 'start'
+    //     // },
+    //     format: (svg) => {
+    //       svg.ticks(d3.timeDay.every(1))
+    //         .tickFormat(d3.timeFormat("%Y-%m-%d"))
+    //       return svg;
+    //     }
+    //   }
+    //   ],
+    //   dataZoom: [{
+    //     inside: true,  //控制数据滑动变化区间的zoom功能
+    //     brush: true,
+    //     zoomIndex: [0, 1],  //指定grid使用zoom
+    //     realtime: true,
+    //     xAxisIndex: [0, 1]  //使用brush控制设置指定的grid
+    //   }],
+    //   yAxis: [{
+    //     align: 'left',
+    //     type: 'line',
+    //     name: 'test'
+    //   }
+    //     , {
+    //     align: 'left',
+    //     type: 'line',
+    //     name: 'test1'
+    //   }
+    //   ],
+    //   series: [{
+    //     name: "d3245456467",
+    //     type: 'line',
+    //     symbolSize: 3,
+    //     // transition: (cir) => {
+    //     //   return cir.transition()
+    //     //     .duration((d, i) => i * 600)
+    //     //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+    //     // },
+    //     lineStyle: {
+    //       'stroke-width': 2,
+    //       // 'stroke': 'blue',
+    //       transition: {
+    //         duration: 1000
+    //       }
+    //     },
+    //     areaStyle: {
+    //       // fill: "rgb(255, 158, 68)"
+    //     },
+    //     data: [100, 932, 400, 200, 600, 800, 700, 600]
+    //   }
+    //     , {
+    //     name: "d32",
+    //     type: 'line',
+    //     symbolSize: 3,
+    //     // transition: (cir) => {
+    //     //   return cir.transition()
+    //     //     .duration((d, i) => i * 600)
+    //     //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+    //     // },
+    //     lineStyle: {
+    //       'stroke-width': 2,
+    //       'stroke': 'red',
+    //       transition: {
+    //         duration: 1500
+    //       }
+    //     },
+    //     areaStyle: {
+    //       fill: {
+    //         x1: 0,
+    //         y1: 0,
+    //         x2: 1,
+    //         y2: 0,
+    //         colorStops: [
+    //           { offect: 0, color: "rgb(255, 158, 68)" },
+    //           { offect: 0.5, color: "rgb(255, 70, 131)" },
+    //           { offect: 1, color: "rgb(204, 86, 203)" }
+    //         ]
+    //       },
+    //     },
+    //     data: [20, 180, 600, 150, 1000, 770, 300, 700]
+    //   }
+    //   ]
+    // })
 
     this.chart1 = new Line(this.$refs.chart1)
     this.chart1.setOption({
@@ -926,7 +933,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       },
       legend: {
         show: true,
-        data: ['d3245456467', 'd32'],
+        data: ['d3245456467', 'd445788', 'd32'],
         fontSize: 14
       },
       tooltip: {
@@ -944,8 +951,8 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         name: 'xtest',
         align: 'bottom',
         show: true,
-        type: 'time',
-        data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
+        type: 'line',//[1,2,3,4,5,6,7,8,9,10,11,12,13,14] ||
+        data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] || ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20', '2016/12/21', '2016/12/22', '2016/12/23', '2016/12/24', '2016/12/25'],
         // axisLabel: {
         //   y: 10,
         //   x: 2,
@@ -953,8 +960,8 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         //   'text-anchor': 'start'
         // },
         format: (svg) => {
-          svg.ticks(d3.timeDay.every(1))
-            .tickFormat(d3.timeFormat("%Y-%m-%d"))
+          // svg.ticks(d3.timeDay.every(3))
+          //   .tickFormat(d3.timeFormat("%Y-%m-%d"))  //
           return svg;
         }
       }],
@@ -982,16 +989,28 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         lineStyle: {
           'stroke-width': 2,
           // 'stroke': 'blue',
-          transition: {
-            duration: 1002
-          }
+          // transition: {
+          //   duration: 2500
+          // }
         },
         areaStyle: {
           // fill: "rgb(255, 158, 68)"
         },
-        data: [100, 932, 400, 200, 600, 800, 700, 600]
-      }
-        , {
+        data: [100, 932, 400, 200, 600, 800, 700, 600, 1660, 360, 460, 560, 840]
+      },
+
+      {
+        name: "d445788",
+        type: 'scatter',
+        symbolSize: 3,
+        duration: 1000,
+        // transition: (cir) => {
+        //   return cir.transition()
+        //     .duration((d, i) => i * 600)
+        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+        // },
+        data: [100, 667, 785, 246, 168, 348, 661, 128, 697, 124, 358, 666, 123]
+      }, {
         name: "d32",
         type: 'line',
         symbolSize: 3,
@@ -1003,9 +1022,9 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         lineStyle: {
           'stroke-width': 2,
           'stroke': 'red',
-          transition: {
-            duration: 1500
-          }
+          // transition: {
+          //   duration: 1501
+          // }
         },
         areaStyle: {
           fill: {
@@ -1020,10 +1039,37 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
             ]
           },
         },
-        data: [20, 180, 600, 150, 1000, 770, 300, 700]
-      }
+        data: [40, 180, 600, 150, 1000, 770, 300, 700, 660, 380, 660, 430, 580]
+      },
       ]
     })
+
+
+    let xAxisData = [14, 15, 16, 17, 18, 19] || ['2016/12/26', '2016/12/27', '2016/12/28', '2016/12/29', '2016/12/30'];
+    let seriesData = [[670, 540, 129, 357, 666, 777], [666, 320, 169, 479, 2000, 776], [127, 475, 663, 441, 258, 487]]
+    let index = 0;
+    let timer = setInterval(() => {
+      this.chart1.updateChart({
+        xAxis: [xAxisData[index]],
+        series: seriesData.map(item => [item[index]])
+      })
+      index += 1;
+      if (index === 5) {
+        clearInterval(timer);
+      }
+    }, 2000)
+    var _this = this;
+    window.addEventListener(
+      'resize',
+      () => {
+        if (_this.width >= 698) {
+          _this.width -= 10;
+          _this.height -= 1;
+          _this.chart1.resize();
+        }
+      }
+    );
+
 
     // const { result } = await this.$ajaxGet('getCategoryTree', { level: 0 });
     // console.log(result);
