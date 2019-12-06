@@ -4,7 +4,7 @@
       <!-- <svg class="pack-circle"
            style="width:800;height:400"></svg> -->
     </div>
-    <!-- <el-button size="mini"
+    <el-button size="mini"
                type="primary"
                @click="mouse('d3245456467','over')">高亮d3245456467</el-button>
     <el-button size="mini"
@@ -42,7 +42,7 @@
       <div id="chart"
            ref="chart"
            style="height:400px"></div>
-    </div> -->
+    </div>
     <div :style="{width:width+'px'}">
       <div id="chart1"
            ref="chart1"
@@ -180,9 +180,9 @@ export default {
         .attr("r", (d) => {
           return rScale(d[1])
         })
-        .attr("fill", d => d[1] > 5 ? 'red' : 'blue').on("mouseenter", function (d) {
+        .attr("fill", d => d[1] > 5 ? 'red' : 'blue').on("mouseenter", function () {
           d3.select(this).style("fill", d => compute(linear(d)));
-        }).on("mouseout", function (d) {
+        }).on("mouseout", function () {
           d3.select(this).transition().duration(500).style("fill", d => d[1] > 5 ? 'red' : 'blue');
           // d3.select(this).style("stroke-width", "0");
         })
@@ -449,7 +449,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
       var topchart = svg.append("g").attr("class", "topchart")
       var bottomchart = svg.append("g").attr("class", "bottomchart").attr("transform", "translate(0," + height / 2 + ")");
 
-      let xGroup = bottomchart.append("g")
+      bottomchart.append("g")
         .attr("class", "axis x-axis")
         .attr("transform", "translate(0," + (height / 2 - padding) + ")")
         .call(xAxis);
@@ -669,7 +669,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         .on("zoom", zoomed);          //zoom事件，调用zoomed函数
 
 
-      let zoomRect = svg.append('g').append("rect") //设置缩放的区域，一般覆盖整个绘图区
+      svg.append('g').append("rect") //设置缩放的区域，一般覆盖整个绘图区
         .attr("width", 740)
         .attr("height", 730)
         .attr("transform", "translate(30,30)")
@@ -778,149 +778,149 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
     // this.initD3Line();
     // this.initD3Circle();
     // this.initLine();
-    // this.chart = new Line(this.$refs.chart)
-    // this.chart.setOption({
-    //   title: {
-    //     text: "多个grid多个series",
-    //     textStyle: {
-    //       color: "#5793f3",
-    //       fontSize: "12px"
-    //     }
-    //   },
-    //   legend: {
-    //     show: true,
-    //     data: ['d3245456467', 'd32'],
-    //     fontSize: 14
-    //   },
-    //   tooltip: {
-    //     // formatter: (d) => {
-    //     //   return 'Value:' + d.yData + '111'
-    //     // }
-    //   },
-    //   grid: [{
-    //     left: 50,
-    //     right: 50,
-    //     top: 60,
-    //     bottom: 50,
-    //     height: 120
-    //   }
-    //     , {
-    //     left: 50,
-    //     right: 50,
-    //     top: 220,
-    //     bottom: 50,
-    //     height: 120
-    //   }
-    //   ],
-    //   xAxis: [{
-    //     name: 'xtest',
-    //     align: 'bottom',
-    //     show: true,
-    //     type: 'time',
-    //     data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
-    //     // axisLabel: {
-    //     //   y: 10,
-    //     //   x: 2,
-    //     //   transform: 'rotate(30)',
-    //     //   'text-anchor': 'start'
-    //     // },
-    //     format: (svg) => {
-    //       svg.ticks(d3.timeDay.every(1))
-    //         .tickFormat(d3.timeFormat("%Y-%m-%d"))
-    //       return svg;
-    //     }
-    //   }
-    //     , {
-    //     name: 'xtest',
-    //     align: 'bottom',
-    //     show: true,
-    //     type: 'time',
-    //     data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
-    //     // axisLabel: {
-    //     //   y: 10,
-    //     //   x: 2,
-    //     //   transform: 'rotate(30)',
-    //     //   'text-anchor': 'start'
-    //     // },
-    //     format: (svg) => {
-    //       svg.ticks(d3.timeDay.every(1))
-    //         .tickFormat(d3.timeFormat("%Y-%m-%d"))
-    //       return svg;
-    //     }
-    //   }
-    //   ],
-    //   dataZoom: [{
-    //     inside: true,  //控制数据滑动变化区间的zoom功能
-    //     brush: true,
-    //     zoomIndex: [0, 1],  //指定grid使用zoom
-    //     realtime: true,
-    //     xAxisIndex: [0, 1]  //使用brush控制设置指定的grid
-    //   }],
-    //   yAxis: [{
-    //     align: 'left',
-    //     type: 'line',
-    //     name: 'test'
-    //   }
-    //     , {
-    //     align: 'left',
-    //     type: 'line',
-    //     name: 'test1'
-    //   }
-    //   ],
-    //   series: [{
-    //     name: "d3245456467",
-    //     type: 'line',
-    //     symbolSize: 3,
-    //     // transition: (cir) => {
-    //     //   return cir.transition()
-    //     //     .duration((d, i) => i * 600)
-    //     //     .ease(d3.easeElasticIn.amplitude(3).period(2))
-    //     // },
-    //     lineStyle: {
-    //       'stroke-width': 2,
-    //       // 'stroke': 'blue',
-    //       transition: {
-    //         duration: 1000
-    //       }
-    //     },
-    //     areaStyle: {
-    //       // fill: "rgb(255, 158, 68)"
-    //     },
-    //     data: [100, 932, 400, 200, 600, 800, 700, 600]
-    //   }
-    //     , {
-    //     name: "d32",
-    //     type: 'line',
-    //     symbolSize: 3,
-    //     // transition: (cir) => {
-    //     //   return cir.transition()
-    //     //     .duration((d, i) => i * 600)
-    //     //     .ease(d3.easeElasticIn.amplitude(3).period(2))
-    //     // },
-    //     lineStyle: {
-    //       'stroke-width': 2,
-    //       'stroke': 'red',
-    //       transition: {
-    //         duration: 1500
-    //       }
-    //     },
-    //     areaStyle: {
-    //       fill: {
-    //         x1: 0,
-    //         y1: 0,
-    //         x2: 1,
-    //         y2: 0,
-    //         colorStops: [
-    //           { offect: 0, color: "rgb(255, 158, 68)" },
-    //           { offect: 0.5, color: "rgb(255, 70, 131)" },
-    //           { offect: 1, color: "rgb(204, 86, 203)" }
-    //         ]
-    //       },
-    //     },
-    //     data: [20, 180, 600, 150, 1000, 770, 300, 700]
-    //   }
-    //   ]
-    // })
+    this.chart = new Line(this.$refs.chart)
+    this.chart.setOption({
+      title: {
+        text: "多个grid多个series",
+        textStyle: {
+          color: "#5793f3",
+          fontSize: "12px"
+        }
+      },
+      legend: {
+        show: true,
+        data: ['d3245456467', 'd32'],
+        fontSize: 14
+      },
+      tooltip: {
+        // formatter: (d) => {
+        //   return 'Value:' + d.yData + '111'
+        // }
+      },
+      grid: [{
+        left: 50,
+        right: 50,
+        top: 60,
+        bottom: 50,
+        height: 120
+      }
+        , {
+        left: 50,
+        right: 50,
+        top: 220,
+        bottom: 50,
+        height: 120
+      }
+      ],
+      xAxis: [{
+        name: 'xtest',
+        align: 'bottom',
+        show: true,
+        type: 'time',
+        data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
+        // axisLabel: {
+        //   y: 10,
+        //   x: 2,
+        //   transform: 'rotate(30)',
+        //   'text-anchor': 'start'
+        // },
+        format: (svg) => {
+          svg.ticks(d3.timeDay.every(1))
+            .tickFormat(d3.timeFormat("%Y-%m-%d"))
+          return svg;
+        }
+      }
+        , {
+        name: 'xtest',
+        align: 'bottom',
+        show: true,
+        type: 'time',
+        data: ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20'],
+        // axisLabel: {
+        //   y: 10,
+        //   x: 2,
+        //   transform: 'rotate(30)',
+        //   'text-anchor': 'start'
+        // },
+        format: (svg) => {
+          svg.ticks(d3.timeDay.every(1))
+            .tickFormat(d3.timeFormat("%Y-%m-%d"))
+          return svg;
+        }
+      }
+      ],
+      dataZoom: [{
+        inside: true,  //控制数据滑动变化区间的zoom功能
+        brush: true,
+        zoomIndex: [0, 1],  //指定grid使用zoom
+        realtime: true,
+        xAxisIndex: [0, 1]  //使用brush控制设置指定的grid
+      }],
+      yAxis: [{
+        align: 'left',
+        type: 'line',
+        name: 'test'
+      }
+        , {
+        align: 'left',
+        type: 'line',
+        name: 'test1'
+      }
+      ],
+      series: [{
+        name: "d3245456467",
+        type: 'line',
+        symbolSize: 3,
+        // transition: (cir) => {
+        //   return cir.transition()
+        //     .duration((d, i) => i * 600)
+        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+        // },
+        lineStyle: {
+          'stroke-width': 2,
+          // 'stroke': 'blue',
+          transition: {
+            duration: 1000
+          }
+        },
+        areaStyle: {
+          // fill: "rgb(255, 158, 68)"
+        },
+        data: [100, 932, 400, 200, 600, 800, 700, 600]
+      }
+        , {
+        name: "d32",
+        type: 'line',
+        symbolSize: 3,
+        // transition: (cir) => {
+        //   return cir.transition()
+        //     .duration((d, i) => i * 600)
+        //     .ease(d3.easeElasticIn.amplitude(3).period(2))
+        // },
+        lineStyle: {
+          'stroke-width': 2,
+          'stroke': 'red',
+          transition: {
+            duration: 1500
+          }
+        },
+        areaStyle: {
+          fill: {
+            x1: 0,
+            y1: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              { offect: 0, color: "rgb(255, 158, 68)" },
+              { offect: 0.5, color: "rgb(255, 70, 131)" },
+              { offect: 1, color: "rgb(204, 86, 203)" }
+            ]
+          },
+        },
+        data: [20, 180, 600, 150, 1000, 770, 300, 700]
+      }
+      ]
+    })
 
     this.chart1 = new Line(this.$refs.chart1)
     this.chart1.setOption({
@@ -951,7 +951,7 @@ Star distance: ${isNaN(d.data.distance) ? "N/A" : `${d.data.distance} pc`}`)
         name: 'xtest',
         align: 'bottom',
         show: true,
-        type: 'line',//[1,2,3,4,5,6,7,8,9,10,11,12,13,14] ||
+        type: 'line',
         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13] || ['2016/12/13', '2016/12/14', '2016/12/15', '2016/12/16', '2016/12/17', '2016/12/18', '2016/12/19', '2016/12/20', '2016/12/21', '2016/12/22', '2016/12/23', '2016/12/24', '2016/12/25'],
         // axisLabel: {
         //   y: 10,
