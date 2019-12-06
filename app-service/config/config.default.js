@@ -73,18 +73,18 @@ module.exports = appInfo => {
         enable: false
         // ignoreJSON: true
       },
-      domainWhiteList: [ 'http://10.29.34.43:8080' ] // , 'http://10.6.52.41:8080', 'http://bobo.boooool.com'
+      domainWhiteList: ['http://10.29.34.43:8080'] // , 'http://10.6.52.41:8080', 'http://bobo.boooool.com'
     },
     origin: {
-      whiteList: [ '*' ]
+      whiteList: ['*']
     },
     cors: {
-      origin: [ 'http://10.29.34.43:8080' ],
+      origin: ['http://10.29.34.43:8080'],
       credentials: true,
       allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
     },
     multipart: {
-      fileExtensions: [ '.py' ]
+      fileExtensions: ['.py']
     },
     jwt: {
       secret: 'application'
@@ -92,8 +92,8 @@ module.exports = appInfo => {
     openCos: true, // 是否上传到 cos 云储存里面
     cos: {
       Appid: '1251403076',
-      SecretId: 'AKIDwga7SX6tAk58PcoFKFxOcePt51mEeNDn',
-      SecretKey: 'TjodF4d192hBP4SZUBLGDvNdmgCTUJre',
+      SecretId: '',
+      SecretKey: '',
       Bucket: 'tab-1251403076',
       Region: 'ap-shenzhen-fsi',
       baseUrl: 'https://tab-1251403076.cos.ap-shenzhen-fsi.myqcloud.com'
@@ -108,7 +108,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1565625687216_9155';
 
   // add your middleware config here
-  config.middleware = [ 'auth', 'dataHandler', 'origin' ];
+  config.middleware = ['auth', 'dataHandler', 'origin'];
   // egg-grpc配置
   // config.grpc = {
   //   endpoint: 'localhost:50051' // 服务端地址
