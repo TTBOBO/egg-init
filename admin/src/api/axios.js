@@ -47,7 +47,7 @@ axios.interceptors.response.use(
 axios.defaults.baseURL =
   process.env.NODE_ENV === 'production' ?
   'http://bb.boooool.com' :
-  'http://10.29.34.43:7002';
+  'http://localhost:8081';
 export const ajaxGet = async (url, params = {}) =>
   await doAjax(url, params, 'get');
 export const ajaxPost = async (url, params = {}) =>
