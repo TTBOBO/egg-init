@@ -15,7 +15,7 @@ module.exports = appInfo => {
   const config = (exports = {
     cluster: appInfo.env === 'local' ? {
       listen: {
-        port: 8081,
+        port: 7002,
         hostname: '0.0.0.0'
       }
     } : {},
