@@ -151,7 +151,7 @@ export default [{
         name: 'goodsSku',
         meta: {
           icon: 'el-icon-eleme',
-          title: '商品SKU管理',
+          title: 'D3 Example',
           hideInMenu: false
         },
         component: resolve => {
